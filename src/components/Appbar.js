@@ -162,7 +162,7 @@ export default function PrimarySearchAppBar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar position="static" style={{ background: "#00AAE3" }}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -177,7 +177,7 @@ export default function PrimarySearchAppBar() {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder="Buscar..."
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
