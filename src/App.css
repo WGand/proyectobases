@@ -55,6 +55,9 @@
 .carousel-indicators li {
   background-color: #00aae3;
   background-color: #00aae3;
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
 }
 
 .fixImage img {
@@ -63,4 +66,11 @@
   height: 300px;
   max-height: 300px;
   margin: auto;
+}
+
+.tamañoLista {
+  width: 100px;
+  height: 100px;
+  max-width: 100px;
+  max-height: 100px;
 }
