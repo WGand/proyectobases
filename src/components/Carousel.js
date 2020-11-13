@@ -7,7 +7,7 @@ export default function Carousel() {
   return (
     <div
       id="carouselExampleIndicators"
-      class="carousel slide border border-primary m-4"
+      class="carousel slide border border-primary m-4 rounded"
       data-ride="carousel"
       data-interval="4000"
     >
