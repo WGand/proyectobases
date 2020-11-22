@@ -7,8 +7,9 @@ export default function Carousel() {
   return (
     <div
       id="carouselExampleIndicators"
-      class="carousel slide"
+      class="carousel slide border border-primary m-4 rounded"
       data-ride="carousel"
+      data-interval="4000"
     >
       <ol class="carousel-indicators">
         <li
@@ -22,7 +23,7 @@ export default function Carousel() {
       <div class="carousel-inner">
         <div class="carousel-item active fixImage">
           <img
-            src="https://http2.mlstatic.com/preservativo-duo-set-de-3-caja-x-12-unidades-D_NQ_NP_976175-MLV31252137208_062019-O.webp"
+            src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
             class="img-responsive d-block w-100"
             alt="..."
           />

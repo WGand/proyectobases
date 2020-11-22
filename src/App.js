@@ -1,6 +1,7 @@
 import React from "react";
 import PrimarySearchAppBar from "./components/Appbar";
 import Carousel from "./components/Carousel";
+import InteractiveList from "./components/ListaDestacados";
 import "./App.css";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
     <React.Fragment>
       <PrimarySearchAppBar />
       <Carousel />
+      <InteractiveList />
     </React.Fragment>
   );
 }
