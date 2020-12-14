@@ -5,6 +5,11 @@ import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Popover from "@material-ui/core/Popover";
+import Card from "@material-ui/core/Card";
+import CardActionArea from "@material-ui/core/CardActionArea";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import CardMedia from "@material-ui/core/CardMedia";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +23,18 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
 }));
+
+const useStylesCard = makeStyles({
+  root: {
+    maxWidth: 400,
+  },
+  media: {
+    height: 300,
+    maxHeight: 300,
+    width: 400,
+    maxWidth: 400,
+  },
+});
 
 const Boton = withStyles({
   root: {
@@ -60,6 +77,7 @@ const Boton = withStyles({
 export default function ListaDestacados() {
   const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
+  const classesCard = useStylesCard();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -105,26 +123,40 @@ export default function ListaDestacados() {
                   }}
                   elevation="1"
                 >
-                  <Typography variant="h3" className="m-3">
-                    Producto
-                    <img
-                      src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-                      class="tamañoPopover"
-                      alt=""
+                  <Card className={classesCard.root}>
+                    <CardMedia
+                      className={classesCard.media}
+                      image="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+                      title="Contemplative Reptile"
                     />
-                    <Typography variant="h4">500$</Typography>
-                    <Typography variant="h6">
-                      Descripcion del producto
-                    </Typography>
-                  </Typography>
-                  <Boton
-                    variant="contained"
-                    color="primary"
-                    disableRipple
-                    className="m-3"
-                  >
-                    Agregar
-                  </Boton>
+                    <CardContent>
+                      <Typography variant="h4" component="h1">
+                        Producto
+                      </Typography>
+                      <Typography gutterBottom variant="h6">
+                        500$
+                      </Typography>
+                      <Typography
+                        paragraph
+                        variant="body1"
+                        color="textSecondary"
+                        component="p"
+                      >
+                        Descripción del producto
+                      </Typography>
+                    </CardContent>
+
+                    <CardActions>
+                      <Boton
+                        variant="contained"
+                        color="primary"
+                        disableRipple
+                        className="m-3"
+                      >
+                        Agregar
+                      </Boton>
+                    </CardActions>
+                  </Card>
                 </Popover>
               </Grid>
             ))}
