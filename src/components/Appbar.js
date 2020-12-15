@@ -170,7 +170,7 @@ export default function PrimarySearchAppBar() {
             color="inherit"
             aria-label="open drawer"
           >
-            <img src={"ucabmart_logo.png"} width="70" height="70" alt="" />
+            <img src={process.env.PUBLIC_URL + "/ucabmart_logo.png"} width="70" height="70" alt="" />
           </IconButton>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
