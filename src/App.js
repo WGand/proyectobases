@@ -11,7 +11,6 @@ function App() {
     <React.Fragment>
       <PrimarySearchAppBar />
       <Carousel />
-      <MyComponent/>
       <InteractiveList />
     </React.Fragment>
   );
