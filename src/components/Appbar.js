@@ -14,6 +14,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import { ShoppingCart } from "@material-ui/icons";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Select from "@material-ui/core/Select";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -94,6 +95,7 @@ export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [categoria, setCategoria] = React.useState("");
+  const history = useHistory();
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -111,6 +113,14 @@ export default function PrimarySearchAppBar() {
 
   const handleChange = (event) => {
     setCategoria(event.target.value);
+  };
+
+  const irCarrito = () => {
+    history.push("/carrito");
+  };
+
+  const irHome = () => {
+    history.push("/");
   };
 
   const menuId = "primary-search-account-menu";
@@ -134,7 +144,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <Typography>Notificaciones</Typography>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={irCarrito}>
         <IconButton color="inherit">
           <ShoppingCart fontSize="large" />
         </IconButton>
@@ -159,6 +169,7 @@ export default function PrimarySearchAppBar() {
       <AppBar position="static" style={{ background: "#00AAE3" }}>
         <Toolbar>
           <IconButton
+            onClick={irHome}
             edge="start"
             className={classes.menuButton}
             color="inherit"
@@ -212,7 +223,7 @@ export default function PrimarySearchAppBar() {
                 <NotificationsIcon fontSize="large" />
               </Badge>
             </IconButton>
-            <IconButton color="inherit">
+            <IconButton color="inherit" onClick={irCarrito}>
               <ShoppingCart fontSize="large" />
             </IconButton>
             <IconButton

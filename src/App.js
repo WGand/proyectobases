@@ -1,18 +1,23 @@
 import React from "react";
+import Home from "./components/Home";
+import Carrito from "./components/Carrito";
 import PrimarySearchAppBar from "./components/Appbar";
-import Carousel from "./components/Carousel";
-import InteractiveList from "./components/ListaDestacados";
 import "./App.css";
-import MyComponent from "./components/CallApi.js";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
-  document.title = "UCABMart";
   return (
-    <React.Fragment>
+    <BrowserRouter>
       <PrimarySearchAppBar />
-      <Carousel />
-      <InteractiveList />
-    </React.Fragment>
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route path="/carrito">
+          <Carrito />
+        </Route>
+      </Switch>
+    </BrowserRouter>
   );
 }
 
