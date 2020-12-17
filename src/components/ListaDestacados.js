@@ -58,8 +58,8 @@ const Boton = withStyles({
       '"Segoe UI Symbol"',
     ].join(","),
     "&:hover": {
-      backgroundColor: "0063cc#",
-      borderColor: "0063cc#",
+      backgroundColor: "#1d8fb5",
+      borderColor: "#1d8fb5",
       boxShadow: "none",
     },
     "&:active": {
@@ -144,7 +144,6 @@ export default function ListaDestacados() {
                         Descripción del producto
                       </Typography>
                     </CardContent>
-
                     <CardActions>
                       <Boton
                         variant="contained"

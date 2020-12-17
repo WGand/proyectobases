@@ -14,7 +14,7 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import { ShoppingCart } from "@material-ui/icons";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Select from "@material-ui/core/Select";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   grow: {

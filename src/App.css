@@ -75,9 +75,9 @@
   max-height: 100px;
 }
 
-.tamañoPopover {
-  width: 200px;
-  height: 200px;
-  max-width: 200px;
-  max-height: 200px;
+.tamañoCarrito {
+  width: 150px;
+  height: 150px;
+  max-width: 150px;
+  max-height: 150px;
 }
