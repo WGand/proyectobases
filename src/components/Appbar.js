@@ -99,10 +99,6 @@ export default function PrimarySearchAppBar() {
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -144,13 +140,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <Typography>Notificaciones</Typography>
       </MenuItem>
-      <MenuItem onClick={irCarrito}>
-        <IconButton color="inherit">
-          <ShoppingCart fontSize="large" />
-        </IconButton>
-        <Typography>Carrito</Typography>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -160,6 +150,12 @@ export default function PrimarySearchAppBar() {
           <AccountCircleIcon fontSize="large" />
         </IconButton>
         <Typography>Perfil</Typography>
+      </MenuItem>
+      <MenuItem onClick={irCarrito}>
+        <IconButton color="inherit">
+          <ShoppingCart fontSize="large" />
+        </IconButton>
+        <Typography>Carrito</Typography>
       </MenuItem>
     </Menu>
   );
@@ -223,18 +219,18 @@ export default function PrimarySearchAppBar() {
                 <NotificationsIcon fontSize="large" />
               </Badge>
             </IconButton>
-            <IconButton color="inherit" onClick={irCarrito}>
-              <ShoppingCart fontSize="large" />
-            </IconButton>
+
             <IconButton
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
               color="inherit"
             >
               <AccountCircleIcon fontSize="large" />
+            </IconButton>
+            <IconButton color="inherit" onClick={irCarrito}>
+              <ShoppingCart fontSize="large" />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>

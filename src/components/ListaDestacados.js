@@ -162,7 +162,7 @@ export default function ListaDestacados() {
           </Grid>
         </Grid>
       </Grid>
-      <Divider variant="middle" class="border border-primary" />
+      <Divider variant="middle" class="border border-primary m-4" />
     </React.Fragment>
   );
 }

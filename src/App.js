@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter>
       <PrimarySearchAppBar />
       <Switch>
-        <Route exact path="/">
+        <Route exact path={["/", "/proyectobases"]}>
           <Home />
         </Route>
         <Route path="/carrito">
