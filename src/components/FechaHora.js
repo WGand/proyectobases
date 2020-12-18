@@ -21,7 +21,7 @@ export default function DateAndTimePickers() {
 
   return (
     <React.Fragment>
-      <Typography variant="h4" className="m-4">
+      <Typography variant="h3" className="m-4">
         Carrito de Compras
       </Typography>
       <form className={classes.container} noValidate>
