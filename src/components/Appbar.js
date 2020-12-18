@@ -9,9 +9,12 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+import Typography from "@material-ui/core/Typography";
 import MoreIcon from "@material-ui/icons/MoreVert";
+import { ShoppingCart } from "@material-ui/icons";
+import NotificationsIcon from "@material-ui/icons/Notifications";
+import Select from "@material-ui/core/Select";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -38,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
-      width: "40%",
+      width: "100%",
     },
   },
   searchIcon: {
@@ -76,48 +79,47 @@ const useStyles = makeStyles((theme) => ({
       display: "none",
     },
   },
+  selectSearch: {
+    position: "relative",
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    "&:hover": {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    color: "white",
+  },
 }));
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [categoria, setCategoria] = React.useState("");
+  const history = useHistory();
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleChange = (event) => {
+    setCategoria(event.target.value);
+  };
+
+  const irCarrito = () => {
+    history.push("/carrito");
+  };
+
+  const irHome = () => {
+    history.push("/");
+  };
+
   const menuId = "primary-search-account-menu";
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
   const renderMobileMenu = (
@@ -131,31 +133,29 @@ export default function PrimarySearchAppBar() {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
+        <IconButton color="inherit">
+          <Badge badgeContent={1} color="secondary">
+            <NotificationsIcon fontSize="large" />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <Typography>Notificaciones</Typography>
       </MenuItem>
       <MenuItem>
-        <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
         >
-          <AccountCircleIcon />
+          <AccountCircleIcon fontSize="large" />
         </IconButton>
-        <p>Profile</p>
+        <Typography>Perfil</Typography>
+      </MenuItem>
+      <MenuItem onClick={irCarrito}>
+        <IconButton color="inherit">
+          <ShoppingCart fontSize="large" />
+        </IconButton>
+        <Typography>Carrito</Typography>
       </MenuItem>
     </Menu>
   );
@@ -165,13 +165,40 @@ export default function PrimarySearchAppBar() {
       <AppBar position="static" style={{ background: "#00AAE3" }}>
         <Toolbar>
           <IconButton
+            onClick={irHome}
             edge="start"
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
           >
-            <img src={process.env.PUBLIC_URL + "/ucabmart_logo.png"} width="70" height="70" alt="" />
+            <img
+              src={process.env.PUBLIC_URL + "/ucabmart_logo.png"}
+              width="70"
+              height="70"
+              alt=""
+            />
           </IconButton>
+          <Select
+            value={categoria}
+            onChange={handleChange}
+            displayEmpty
+            className={classes.selectSearch}
+            inputProps={{ "aria-label": "Without label" }}
+          >
+            <MenuItem value="">
+              <em>Categorías</em>
+            </MenuItem>
+            <MenuItem value={1}>Frutas y Vegetales</MenuItem>
+            <MenuItem value={2}>Víveres</MenuItem>
+            <MenuItem value={3}>Reffrigerados y Congelados</MenuItem>
+            <MenuItem value={4}>Cuidado Personal y Salud</MenuItem>
+            <MenuItem value={5}>Limpieza</MenuItem>
+            <MenuItem value={6}>Hogar y Temporada</MenuItem>
+            <MenuItem value={7}>Mascotas</MenuItem>
+            <MenuItem value={8}>Licores</MenuItem>
+            <MenuItem value={9}>Vehículos</MenuItem>
+            <MenuItem value={10}>Oficina y Tecnología</MenuItem>
+          </Select>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -187,25 +214,23 @@ export default function PrimarySearchAppBar() {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <MailIcon />
+            <IconButton color="inherit">
+              <Badge badgeContent={1} color="secondary">
+                <NotificationsIcon fontSize="large" />
               </Badge>
             </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+
             <IconButton
               edge="end"
               aria-label="account of current user"
               aria-controls={menuId}
               aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircleIcon />
+              <AccountCircleIcon fontSize="large" />
+            </IconButton>
+            <IconButton color="inherit" onClick={irCarrito}>
+              <ShoppingCart fontSize="large" />
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
@@ -222,7 +247,6 @@ export default function PrimarySearchAppBar() {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
     </div>
   );
 }

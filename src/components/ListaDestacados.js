@@ -6,10 +6,12 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Popover from "@material-ui/core/Popover";
 import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,8 +61,8 @@ const Boton = withStyles({
       '"Segoe UI Symbol"',
     ].join(","),
     "&:hover": {
-      backgroundColor: "0063cc#",
-      borderColor: "0063cc#",
+      backgroundColor: "#1d8fb5",
+      borderColor: "#1d8fb5",
       boxShadow: "none",
     },
     "&:active": {
@@ -85,10 +87,25 @@ export default function ListaDestacados() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    handleCloseSnackbar();
   };
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+  const handleClickSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
 
   return (
     <React.Fragment>
@@ -145,16 +162,37 @@ export default function ListaDestacados() {
                         Descripción del producto
                       </Typography>
                     </CardContent>
-
                     <CardActions>
                       <Boton
                         variant="contained"
                         color="primary"
-                        disableRipple
                         className="m-3"
+                        onClick={handleClickSnackbar}
                       >
                         Agregar
                       </Boton>
+                      <Snackbar
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "left",
+                        }}
+                        open={openSnackbar}
+                        autoHideDuration={4000}
+                        onClose={handleCloseSnackbar}
+                        message="Producto agregado al carrito"
+                        action={
+                          <React.Fragment>
+                            <IconButton
+                              size="small"
+                              aria-label="close"
+                              color="inherit"
+                              onClick={handleCloseSnackbar}
+                            >
+                              <CloseIcon fontSize="small" />
+                            </IconButton>
+                          </React.Fragment>
+                        }
+                      />
                     </CardActions>
                   </Card>
                 </Popover>
@@ -163,7 +201,7 @@ export default function ListaDestacados() {
           </Grid>
         </Grid>
       </Grid>
-      <Divider variant="middle" class="border border-primary" />
+      <Divider variant="middle" class="border border-primary m-4" />
     </React.Fragment>
   );
 }
