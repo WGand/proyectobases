@@ -29,6 +29,7 @@ export default function ProductoCarrito() {
       />
       <ListItemText primary="Producto" secondary="100$" />
       <Select
+        variant="outlined"
         value={cantidad}
         onChange={handleChange}
         displayEmpty

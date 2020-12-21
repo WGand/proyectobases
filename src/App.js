@@ -7,7 +7,6 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
-  document.body.style.background = "#E0FFCE";
   return (
     <BrowserRouter>
       <PrimarySearchAppBar />

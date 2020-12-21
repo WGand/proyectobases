@@ -26,6 +26,7 @@ export default function DateAndTimePickers() {
       </Typography>
       <form className={classes.container} noValidate>
         <TextField
+          variant="outlined"
           id="datetime-local"
           type="datetime-local"
           defaultValue="2017-05-24T10:30"
