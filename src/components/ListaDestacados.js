@@ -109,8 +109,8 @@ export default function ListaDestacados() {
 
   return (
     <React.Fragment>
-      <Typography variant="h2" className="m-5 container">
-        Destacados
+      <Typography variant="h3" className="m-5">
+        <b>Destacados</b>
       </Typography>
       <Grid container className={classes.root} spacing={5}>
         <Grid item xs={12}>
