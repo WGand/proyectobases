@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import PerfilDatos from "./PerfilDatos";
 import PerfilOrdenes from "./PerfilOrdenes";
+import Responsabilidades from "./Responsabilidades";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -50,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
   },
   tabs: {
     borderRight: `2px solid ${theme.palette.divider}`,
+    width: 250,
   },
 }));
 
@@ -61,6 +63,8 @@ export default function Perfil() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    switch (newValue) {
+    }
   };
 
   return (
@@ -93,7 +97,7 @@ export default function Perfil() {
           Item Three
         </TabPanel>
         <TabPanel value={value} index={3}>
-          Item Four
+          <Responsabilidades />
         </TabPanel>
       </div>
     </React.Fragment>

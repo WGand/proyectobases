@@ -1,0 +1,87 @@
+import React from "react";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  paper: {
+    height: 140,
+    width: 100,
+  },
+  control: {
+    padding: theme.spacing(3),
+  },
+  boton: {
+    width: 140,
+    height: 120,
+    margin: 20,
+  },
+}));
+
+export default function Responsabilidades() {
+  const history = useHistory();
+
+  const classes = useStyles();
+  const [spacing, setSpacing] = React.useState(2);
+
+  const irReposicion = () => {
+    history.push("/perfil/reposicion");
+  };
+
+  const irProcesarPedidos = () => {
+    history.push("/perfil/procesarpedidos");
+  };
+
+  return (
+    <React.Fragment>
+      <Typography variant="h5">Responsabilidades</Typography>
+      <Grid container className={classes.root} spacing={5}>
+        <Grid item xs={12}>
+          <Grid container justify="center" spacing={spacing}>
+            <Button variant="outlined" className={classes.boton}>
+              NotiMart
+            </Button>
+            <Button variant="outlined" className={classes.boton}>
+              Reportes
+            </Button>
+            <Button variant="outlined" className={classes.boton}>
+              Control de Usuario
+            </Button>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irReposicion}
+            >
+              Reposición de Inventario
+            </Button>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irProcesarPedidos}
+            >
+              Procesar Pedidos
+            </Button>
+            <Button variant="outlined" className={classes.boton}>
+              Control de Proveedor
+            </Button>
+            <Button variant="outlined" className={classes.boton}>
+              Control de Empleado
+            </Button>
+            <Button variant="outlined" className={classes.boton}>
+              Control de Tienda
+            </Button>
+            <Button variant="outlined" className={classes.boton}>
+              Control de Productos
+            </Button>
+          </Grid>
+        </Grid>
+      </Grid>
+    </React.Fragment>
+  );
+}
