@@ -37,7 +37,7 @@ export default function ProcesarPedidos() {
       <Button className="m-3" onClick={irPerfil}>
         <Typography variant="h5">Responsabilidades</Typography>
       </Button>
-      <Typography variant="h5" className="m-3">
+      <Typography variant="h4" className="m-3">
         <b>Procesar Pedidos</b>
       </Typography>
       <Paper className={classes.paper} variant="outlined">

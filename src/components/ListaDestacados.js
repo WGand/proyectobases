@@ -1,7 +1,6 @@
 import React from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
-import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Popover from "@material-ui/core/Popover";
@@ -201,7 +200,6 @@ export default function ListaDestacados() {
           </Grid>
         </Grid>
       </Grid>
-      <Divider variant="middle" class="border border-primary m-4" />
     </React.Fragment>
   );
 }

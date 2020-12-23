@@ -4,7 +4,6 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
-import { Route, Switch } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,6 +37,18 @@ export default function Responsabilidades() {
     history.push("/perfil/procesarpedidos");
   };
 
+  const irReportes = () => {
+    history.push("/perfil/reportes");
+  };
+
+  const irControlEmpleado = () => {
+    history.push("/perfil/controlempleado");
+  };
+
+  const irControlUsuario = () => {
+    history.push("/perfil/controlusuario");
+  };
+
   return (
     <React.Fragment>
       <Typography variant="h5">Responsabilidades</Typography>
@@ -47,10 +58,18 @@ export default function Responsabilidades() {
             <Button variant="outlined" className={classes.boton}>
               NotiMart
             </Button>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irReportes}
+            >
               Reportes
             </Button>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irControlUsuario}
+            >
               Control de Usuario
             </Button>
             <Button
@@ -70,7 +89,11 @@ export default function Responsabilidades() {
             <Button variant="outlined" className={classes.boton}>
               Control de Proveedor
             </Button>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irControlEmpleado}
+            >
               Control de Empleado
             </Button>
             <Button variant="outlined" className={classes.boton}>
