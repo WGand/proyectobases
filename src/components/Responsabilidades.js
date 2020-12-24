@@ -49,6 +49,14 @@ export default function Responsabilidades() {
     history.push("/perfil/controlusuario");
   };
 
+  const irControlProveedor = () => {
+    history.push("/perfil/controlproveedor");
+  };
+
+  const irControlTienda = () => {
+    history.push("/perfil/controltienda");
+  };
+
   return (
     <React.Fragment>
       <Typography variant="h5">Responsabilidades</Typography>
@@ -86,7 +94,11 @@ export default function Responsabilidades() {
             >
               Procesar Pedidos
             </Button>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irControlProveedor}
+            >
               Control de Proveedor
             </Button>
             <Button
@@ -96,7 +108,11 @@ export default function Responsabilidades() {
             >
               Control de Empleado
             </Button>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irControlTienda}
+            >
               Control de Tienda
             </Button>
             <Button variant="outlined" className={classes.boton}>
