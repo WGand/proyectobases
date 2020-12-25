@@ -32,6 +32,14 @@ export default function ControlTienda() {
     history.push("/perfil/controltienda/registrar");
   };
 
+  const irTiendaModificar = () => {
+    history.push("/perfil/controltienda/modificar");
+  };
+
+  const irTiendaInventario = () => {
+    history.push("/perfil/controltienda/inventario");
+  };
+
   return (
     <React.Fragment>
       <Button className="m-3" onClick={irPerfil}>
@@ -43,7 +51,11 @@ export default function ControlTienda() {
       <Grid container className={classes.root} spacing={5}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={spacing}>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irTiendaModificar}
+            >
               Modificar o Eliminar Tiendas
             </Button>
             <Button
@@ -53,7 +65,11 @@ export default function ControlTienda() {
             >
               Registrar Tienda
             </Button>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irTiendaInventario}
+            >
               Ver Inventario de Tienda
             </Button>
           </Grid>

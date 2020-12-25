@@ -57,13 +57,21 @@ export default function Responsabilidades() {
     history.push("/perfil/controltienda");
   };
 
+  const irNotimart = () => {
+    history.push("/perfil/notimart");
+  };
+
   return (
     <React.Fragment>
       <Typography variant="h5">Responsabilidades</Typography>
       <Grid container className={classes.root} spacing={5}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={spacing}>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irNotimart}
+            >
               NotiMart
             </Button>
             <Button

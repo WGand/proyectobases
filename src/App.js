@@ -12,6 +12,9 @@ import ControlUsuario from "./components/ControlUsuario";
 import ControlProveedor from "./components/ControlProveedor";
 import ControlTienda from "./components/ControlTienda";
 import TiendaRegistrar from "./components/TiendaRegistrar";
+import TiendaModificar from "./components/TiendaModificar";
+import TiendaInventario from "./components/TiendaInventario";
+import NotiMart from "./components/NotiMart";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -47,8 +50,17 @@ function App() {
         <Route exact path="/perfil/controltienda">
           <ControlTienda />
         </Route>
+        <Route exact path="/perfil/notimart">
+          <NotiMart />
+        </Route>
         <Route exact path="/perfil/controltienda/registrar">
           <TiendaRegistrar />
+        </Route>
+        <Route exact path="/perfil/controltienda/modificar">
+          <TiendaModificar />
+        </Route>
+        <Route exact path="/perfil/controltienda/inventario">
+          <TiendaInventario />
         </Route>
         <Route path="/perfil">
           <Perfil />
