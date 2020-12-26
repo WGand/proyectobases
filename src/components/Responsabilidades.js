@@ -61,6 +61,10 @@ export default function Responsabilidades() {
     history.push("/perfil/notimart");
   };
 
+  const irControlProducto = () => {
+    history.push("/perfil/controlproducto");
+  };
+
   return (
     <React.Fragment>
       <Typography variant="h5">Responsabilidades</Typography>
@@ -123,7 +127,11 @@ export default function Responsabilidades() {
             >
               Control de Tienda
             </Button>
-            <Button variant="outlined" className={classes.boton}>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irControlProducto}
+            >
               Control de Productos
             </Button>
           </Grid>

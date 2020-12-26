@@ -15,6 +15,9 @@ import TiendaRegistrar from "./components/TiendaRegistrar";
 import TiendaModificar from "./components/TiendaModificar";
 import TiendaInventario from "./components/TiendaInventario";
 import NotiMart from "./components/NotiMart";
+import ControlProducto from "./components/ControlProducto";
+import ProductoRegistrar from "./components/ProductoRegistrar";
+import ProductoModificar from "./components/ProductoModificar";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -61,6 +64,15 @@ function App() {
         </Route>
         <Route exact path="/perfil/controltienda/inventario">
           <TiendaInventario />
+        </Route>
+        <Route exact path="/perfil/controlproducto">
+          <ControlProducto />
+        </Route>
+        <Route exact path="/perfil/controlproducto/registrar">
+          <ProductoRegistrar />
+        </Route>
+        <Route exact path="/perfil/controlproducto/modificar">
+          <ProductoModificar />
         </Route>
         <Route path="/perfil">
           <Perfil />
