@@ -7,10 +7,14 @@ import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import SearchIcon from "@material-ui/icons/Search";
 import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import IconButton from "@material-ui/core/IconButton";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -18,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 30,
   },
   paper: {
-    width: 500,
+    width: 550,
     margin: 30,
   },
   paperSelec: {
@@ -27,6 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
   boton: {
     marginLeft: 300,
+  },
+  table: {
+    width: 500,
+    margin: "auto",
   },
 }));
 
@@ -68,6 +76,18 @@ const Boton = withStyles({
   },
 })(Button);
 
+function createData(producto, descripcion, cantidad, precio) {
+  return { producto, descripcion, cantidad, precio };
+}
+
+const rows = [
+  createData("Producto 1", "Descripción 1", 5, 1),
+  createData("Producto 2", "Descripción 2", 10, 2),
+  createData("Producto 3", "Descripción 3", 15, 3),
+  createData("Producto 4", "Descripción 4", 20, 4),
+  createData("Producto 5", "Descripción 5", 25, 5),
+];
+
 export default function ProductoModificar() {
   const history = useHistory();
   const classes = useStyles();
@@ -97,40 +117,38 @@ export default function ProductoModificar() {
         placeholder="Ingrese nombre de producto"
       />
       <Paper className={classes.paper} variant="outlined">
-        <List>
-          <ListItem>
-            <Button>
-              <Typography>
-                {" "}
-                Producto 1 / Descripción / Cantidad / Precio
-              </Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography>
-                {" "}
-                Producto 2 / Descripción / Cantidad / Precio
-              </Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography>
-                {" "}
-                Producto 3 / Descripción / Cantidad / Precio
-              </Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography>
-                {" "}
-                Producto 4 / Descripción / Cantidad / Precio
-              </Typography>
-            </Button>
-          </ListItem>
-        </List>
+        <TableContainer component={Paper}>
+          <Table className={classes.table} aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  <b>Producto</b>
+                </TableCell>
+                <TableCell align="right">
+                  <b>Descripción</b>
+                </TableCell>
+                <TableCell align="right">
+                  <b>Cantidad</b>
+                </TableCell>
+                <TableCell align="right">
+                  <b>Precio</b>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.name} hover>
+                  <TableCell component="th" scope="row">
+                    {row.producto}
+                  </TableCell>
+                  <TableCell align="right">{row.descripcion}</TableCell>
+                  <TableCell align="right">{row.cantidad}</TableCell>
+                  <TableCell align="right">{row.precio}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Paper>
       <Paper
         className={classes.paperSelec}
