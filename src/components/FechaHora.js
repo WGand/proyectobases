@@ -22,10 +22,11 @@ export default function DateAndTimePickers() {
   return (
     <React.Fragment>
       <Typography variant="h3" className="m-4">
-        Carrito de Compras
+        <b>Carrito de Compras</b>
       </Typography>
       <form className={classes.container} noValidate>
         <TextField
+          variant="outlined"
           id="datetime-local"
           type="datetime-local"
           defaultValue="2017-05-24T10:30"

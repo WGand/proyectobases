@@ -119,6 +119,10 @@ export default function PrimarySearchAppBar() {
     history.push("/");
   };
 
+  const irPerfil = () => {
+    history.push("/perfil");
+  };
+
   const menuId = "primary-search-account-menu";
 
   const mobileMenuId = "primary-search-account-menu-mobile";
@@ -140,7 +144,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <Typography>Notificaciones</Typography>
       </MenuItem>
-      <MenuItem>
+      <MenuItem onClick={irPerfil}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -226,6 +230,7 @@ export default function PrimarySearchAppBar() {
               aria-controls={menuId}
               aria-haspopup="true"
               color="inherit"
+              onClick={irPerfil}
             >
               <AccountCircleIcon fontSize="large" />
             </IconButton>
