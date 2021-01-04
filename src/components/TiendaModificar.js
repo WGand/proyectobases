@@ -3,14 +3,10 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import SearchIcon from "@material-ui/icons/Search";
 import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
 import IconButton from "@material-ui/core/IconButton";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import TablaTiendas from "./TablaTiendas";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -20,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     width: 500,
     margin: 30,
+    marginTop: 60,
   },
   paperSelec: {
     width: 800,
@@ -84,41 +81,8 @@ export default function TiendaModificar() {
       <Typography variant="h4" className="m-3">
         <b>Control de Tienda: Modificar o Eliminar</b>
       </Typography>
-      <TextField
-        InputProps={{
-          startAdornment: (
-            <InputAdornment>
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-        className={classes.search}
-        variant="outlined"
-        placeholder="Ingrese locación o código de tienda"
-      />
       <Paper className={classes.paper} variant="outlined">
-        <List>
-          <ListItem>
-            <Button>
-              <Typography> Tienda 1 / Ubicación</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Tienda 2 / Ubicación</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Tienda 3 / Ubicación</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Tienda 4 / Ubicación</Typography>
-            </Button>
-          </ListItem>
-        </List>
+        <TablaTiendas />
       </Paper>
       <Paper
         className={classes.paperSelec}

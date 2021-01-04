@@ -4,12 +4,8 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import SearchIcon from "@material-ui/icons/Search";
 import Paper from "@material-ui/core/Paper";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Link from "@material-ui/core/Link";
+import TablaUsuarios from "./TablaUsuarios";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -95,41 +91,11 @@ export default function ControlUsuario() {
       <Typography variant="h4" className="m-3">
         <b>Control de Usaurio</b>
       </Typography>
-      <div style={{ display: "flex" }}>
-        <Boton variant="contained" className={classes.boton} color="primary">
-          Crear usuario
-        </Boton>
-        <TextField
-          InputProps={{
-            startAdornment: (
-              <InputAdornment>
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
-          className={classes.search}
-          variant="outlined"
-          placeholder="Ingrese cédula"
-        />
-      </div>
+      <Boton variant="contained" className={classes.boton} color="primary">
+        Crear usuario
+      </Boton>
       <Paper className={classes.paper} variant="outlined">
-        <List>
-          <ListItem>
-            <Link>Cliente 1</Link>
-          </ListItem>
-          <ListItem>
-            <Link>Cliente 2</Link>
-          </ListItem>
-          <ListItem>
-            <Link>Cliente 3</Link>
-          </ListItem>
-          <ListItem>
-            <Link>Cliente 4</Link>
-          </ListItem>
-          <ListItem>
-            <Link>Cliente 5</Link>
-          </ListItem>
-        </List>
+        <TablaUsuarios />
       </Paper>
       <Typography variant="h4" className="m-3">
         <b>Generar Carnet</b>

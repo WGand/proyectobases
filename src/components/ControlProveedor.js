@@ -4,14 +4,10 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import SearchIcon from "@material-ui/icons/Search";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import TablaProveedores from "./TablaProveedores";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -19,8 +15,9 @@ const useStyles = makeStyles((theme) => ({
     margin: 30,
   },
   paper: {
-    width: 500,
+    width: 650,
     margin: 30,
+    marginTop: 60,
   },
   paperSelec: {
     width: 800,
@@ -88,48 +85,16 @@ export default function ControlProveedor() {
       <Typography variant="h4" className="m-3">
         <b>Control de Proveedor</b>
       </Typography>
-      <TextField
-        InputProps={{
-          startAdornment: (
-            <InputAdornment>
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-        className={classes.search}
-        variant="outlined"
-        placeholder="Ingrese RIF"
-      />
       <Paper className={classes.paper} variant="outlined">
-        <List>
-          <ListItem>
-            <Button>
-              <Typography> Proveedor 1 / Rubros</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Proveedor 2 / Rubros</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Proveedor 3 / Rubros</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Proveedor 4 / Rubros</Typography>
-            </Button>
-          </ListItem>
-        </List>
+        <TablaProveedores />
       </Paper>
       <Paper
         className={classes.paperSelec}
         variant="outlined"
         style={{ display: "flex" }}
       >
-        RIF / Nombre del Proveedor / Rubros **EMPLEADO SELECCIONADO** / UCABMART
+        RIF / Nombre del Proveedor / Rubros **PROVEEDOR SELECCIONADO** /
+        UCABMART
         <IconButton className={classes.boton}>
           <AddCircleIcon className={classes.plus} />
         </IconButton>
