@@ -11,10 +11,9 @@ import ListItem from "@material-ui/core/ListItem";
 
 const useStyles = makeStyles((theme) => ({
   campo: {
-    width: 500,
-    maxWidth: 500,
-    display: "flex",
-    marginLeft: "auto",
+    width: 300,
+    maxWidth: 300,
+    marginLeft: 10,
   },
   tlf: { marginLeft: 50, marginRight: 40 },
   tlfSub: {
@@ -88,22 +87,40 @@ export default function PerfilDatos() {
       </Typography>
       <div style={{ display: "flex" }} class="m-4">
         <Typography variant="h6" className="m-2">
-          Nombre:
+          Primer Nombre:
         </Typography>
         <TextField
-          id="outlined-nombre"
-          label="Nombre del Usuario"
+          id="outlined-primNombre"
+          label="Primer Nombre"
+          variant="outlined"
+          className={classes.campo}
+        />
+        <Typography variant="h6" className="m-2">
+          Segundo Nombre:
+        </Typography>
+        <TextField
+          id="outlined-segNombre"
+          label="Segundo Nombre"
           variant="outlined"
           className={classes.campo}
         />
       </div>
       <div style={{ display: "flex" }} class="m-4">
         <Typography variant="h6" className="m-2">
-          Apellidos:
+          Primer Apellido:
         </Typography>
         <TextField
-          id="outlined-apellidos"
-          label="Apellidos"
+          id="outlined-primApellido"
+          label="Primer Apellido"
+          variant="outlined"
+          className={classes.campo}
+        />
+        <Typography variant="h6" className="m-2">
+          Segundo Apellido:
+        </Typography>
+        <TextField
+          id="outlined-segApellido"
+          label="Segundo Apellido"
           variant="outlined"
           className={classes.campo}
         />
@@ -145,6 +162,7 @@ export default function PerfilDatos() {
             variant="outlined"
             className={classes.campo}
             label="Teléfono actual"
+            type="tel"
           />
         </div>
         <Typography variant="subtitle1" className={classes.tlfSub}>
@@ -169,6 +187,7 @@ export default function PerfilDatos() {
             variant="outlined"
             className={classes.campo}
             label="Teléfono actual"
+            type="tel"
           />
         </div>
       </div>
@@ -180,6 +199,7 @@ export default function PerfilDatos() {
           id="outlined-correo"
           label="Correo electrónico"
           variant="outlined"
+          type="email"
           className={classes.campo}
         />
       </div>
