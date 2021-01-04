@@ -12,11 +12,13 @@ import IconButton from "@material-ui/core/IconButton";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import TablaEmpleados from "./TablaEmpleados";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    width: 500,
+    width: 650,
     margin: 30,
+    marginTop: 60,
   },
   paperSelec: {
     width: 800,
@@ -88,41 +90,8 @@ export default function ControlEmpleado() {
       <Typography variant="h4" className="m-3">
         <b>Control de Empleado</b>
       </Typography>
-      <TextField
-        InputProps={{
-          startAdornment: (
-            <InputAdornment>
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-        className={classes.search}
-        variant="outlined"
-        placeholder="Ingrese cédula"
-      />
       <Paper className={classes.paper} variant="outlined">
-        <List>
-          <ListItem>
-            <Button>
-              <Typography> Empleado 1 / Cargos</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Empleado 2 / Cargos</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Empleado 3 / Cargos</Typography>
-            </Button>
-          </ListItem>
-          <ListItem>
-            <Button>
-              <Typography> Empleado 4 / Cargos</Typography>
-            </Button>
-          </ListItem>
-        </List>
+        <TablaEmpleados />
       </Paper>
       <Paper
         className={classes.paperSelec}
