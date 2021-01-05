@@ -14,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
     width: 300,
     maxWidth: 300,
     marginLeft: 10,
+    marginRight: 30,
   },
   tlf: { marginLeft: 50, marginRight: 40 },
   tlfSub: {

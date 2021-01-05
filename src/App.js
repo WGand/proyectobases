@@ -18,6 +18,7 @@ import NotiMart from "./components/NotiMart";
 import ControlProducto from "./components/ControlProducto";
 import ProductoRegistrar from "./components/ProductoRegistrar";
 import ProductoModificar from "./components/ProductoModificar";
+import Registrar from "./components/Registrar";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -76,6 +77,9 @@ function App() {
         </Route>
         <Route path="/perfil">
           <Perfil />
+        </Route>
+        <Route path="/registrar">
+          <Registrar />
         </Route>
       </Switch>
       <Divider variant="middle" class="border border-primary m-4" />

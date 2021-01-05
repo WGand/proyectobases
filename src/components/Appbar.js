@@ -188,6 +188,11 @@ export default function PrimarySearchAppBar() {
     history.push("/perfil");
   };
 
+  const irRegistrar = () => {
+    history.push("/registrar");
+    setOpen(false);
+  };
+
   const menuId = "primary-search-account-menu";
 
   const mobileMenuId = "primary-search-account-menu-mobile";
@@ -296,7 +301,7 @@ export default function PrimarySearchAppBar() {
               aria-controls={menuId}
               aria-haspopup="true"
               color="inherit"
-              onClick={irPerfil}
+              onClick={handleClickOpen}
             >
               <AccountCircleIcon fontSize="large" />
             </IconButton>
@@ -344,7 +349,7 @@ export default function PrimarySearchAppBar() {
                 </Boton>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleClose} color="primary" className="m-3">
+                <Button onClick={irRegistrar} color="primary" className="m-3">
                   Registrarse
                 </Button>
                 <Button onClick={handleClose} color="primary" className="m-3">
