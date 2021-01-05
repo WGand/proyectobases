@@ -1,5 +1,5 @@
 import React from "react";
-import { fade, makeStyles } from "@material-ui/core/styles";
+import { fade, makeStyles, withStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,6 +15,14 @@ import { ShoppingCart } from "@material-ui/icons";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 import Select from "@material-ui/core/Select";
 import { useHistory } from "react-router-dom";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import PersonIcon from "@material-ui/icons/Person";
+import LockIcon from "@material-ui/icons/Lock";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -88,13 +96,62 @@ const useStyles = makeStyles((theme) => ({
     },
     color: "white",
   },
+  dialog: {
+    marginLeft: 30,
+    marginRight: 40,
+    width: 250,
+  },
+  boton: {
+    margin: 20,
+    marginRight: "auto",
+    marginLeft: 200,
+  },
 }));
+
+const Boton = withStyles({
+  root: {
+    boxShadow: "none",
+    textTransform: "none",
+    fontSize: 16,
+    padding: "6px 12px",
+    border: "1px solid",
+    lineHeight: 1.5,
+    backgroundColor: "#00aae3",
+    borderColor: "#00aae3",
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
+    "&:hover": {
+      backgroundColor: "#1d8fb5",
+      borderColor: "#1d8fb5",
+      boxShadow: "none",
+    },
+    "&:active": {
+      boxShadow: "none",
+      backgroundColor: "#0062cc",
+      borderColor: "#005cbf",
+    },
+    "&:focus": {
+      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
+    },
+  },
+})(Button);
 
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [categoria, setCategoria] = React.useState("");
+  const [open, setOpen] = React.useState(false);
   const history = useHistory();
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -109,6 +166,14 @@ export default function PrimarySearchAppBar() {
 
   const handleChange = (event) => {
     setCategoria(event.target.value);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const irCarrito = () => {
@@ -214,6 +279,7 @@ export default function PrimarySearchAppBar() {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              type="search"
             />
           </div>
           <div className={classes.grow} />
@@ -234,6 +300,58 @@ export default function PrimarySearchAppBar() {
             >
               <AccountCircleIcon fontSize="large" />
             </IconButton>
+            <Dialog //********INICIO DE SESION, FUNCIONA PERO SE DEBE SABER SI HAY SESION INICIADA O NO  */
+              open={open}
+              onClose={handleClose}
+              aria-labelledby="form-dialog-title"
+            >
+              <DialogTitle id="form-dialog-title" align="center">
+                Iniciar Sesión
+              </DialogTitle>
+              <DialogContent>
+                <div style={{ display: "flex" }}>
+                  <PersonIcon fontSize="large" className="m-2" />
+                  <TextField
+                    className={classes.dialog}
+                    margin="dense"
+                    fullWidth
+                    autoFocus
+                    id="name"
+                    label="Correo Electrónico"
+                    type="email"
+                    variant="outlined"
+                  />
+                </div>
+                <div style={{ display: "flex" }}>
+                  <LockIcon fontSize="large" className="m-2" />
+                  <TextField
+                    className={classes.dialog}
+                    margin="dense"
+                    fullWidth
+                    autoFocus
+                    id="name"
+                    label="Constraseña"
+                    type="password"
+                    variant="outlined"
+                  />
+                </div>
+                <Boton
+                  variant="contained"
+                  className={classes.boton}
+                  color="primary"
+                >
+                  Iniciar Sesión
+                </Boton>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} color="primary" className="m-3">
+                  Registrarse
+                </Button>
+                <Button onClick={handleClose} color="primary" className="m-3">
+                  ¿Olvidó su Contraseña?
+                </Button>
+              </DialogActions>
+            </Dialog>
             <IconButton color="inherit" onClick={irCarrito}>
               <ShoppingCart fontSize="large" />
             </IconButton>
