@@ -107,15 +107,18 @@ export default function Registrar() {
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
   const [estado, setEstado] = React.useState(0);
-  const [municipio, setMunicipio] = React.useState("");
-  const [parroquia, setParroquia] = React.useState("");
+  const [municipio, setMunicipio] = React.useState(0);
+  const [parroquia, setParroquia] = React.useState(0);
   const [estadoF, setEstadoF] = React.useState("");
   const [municipioF, setMunicipioF] = React.useState("");
   const [parroquiaF, setParroquiaF] = React.useState("");
   const [tipo, setTipo] = React.useState("");
   const [cedula, setCedula] = React.useState("");
   const [listaEstados, setListaEstados] = React.useState([]);
+  const [estadoSelec, setEstadoSelec] = React.useState("");
   const [listaMunicipios, setListaMunicipios] = React.useState([]);
+  const [municipioSelec, setMunicipioSelec] = React.useState("");
+  const [listaParroquias, setListaParroquias] = React.useState([]);
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -161,32 +164,72 @@ export default function Registrar() {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
+  const fetchEstados = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "ESTADO",
+      },
+    }).then((response) => {
+      setListaEstados(response.data);
+    });
+  };
+
+  const fetchMunicipios = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "MUNICIPIO",
+        lugar: estadoSelec,
+      },
+    }).then((response) => {
+      setListaMunicipios(response.data);
+    });
+  };
+
+  const fetchParroquias = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "PARROQUIA",
+        lugar: municipioSelec,
+        estado: estadoSelec,
+      },
+    }).then((response) => {
+      setListaParroquias(response.data);
+    });
+  };
+
   React.useEffect(() => {
-    axios
-      .all([
-        axios({
-          method: "post",
-          url: "https://proyectobases1.herokuapp.com/especificolugar",
-          data: {
-            tipo_lugar: "ESTADO",
-          },
-        }),
-        axios({
-          method: "post",
-          url: "https://proyectobases1.herokuapp.com/especificolugar",
-          data: {
-            tipo_lugar: "MUNICIPIO",
-            lugar: "Amazonas",
-          },
-        }),
-      ])
-      .then((response) => {
-        setListaEstados(response[0].data);
-        setListaMunicipios(response[1].data);
-      });
-  }, [estado, listaEstados]);
+    fetchEstados();
+  }, []);
+
+  React.useEffect(() => {
+    if (!listaEstados) {
+      fetchEstados();
+    } else {
+      fetchMunicipios();
+      setEstadoSelec(listaEstados[estado].nombre);
+    }
+  }, [listaEstados, estado, estadoSelec]);
+
+  React.useEffect(() => {
+    if (!listaMunicipios) {
+      fetchMunicipios();
+    } else {
+      //fetchParroquias();
+      // setMunicipioSelec(listaMunicipios[municipio].nombre);
+    }
+  }, [listaEstados, listaMunicipios, municipio]);
+
+  console.log(listaEstados);
+  console.log(estadoSelec);
   console.log(listaMunicipios);
-  console.log(estado);
+  console.log(municipioSelec);
+  console.log(listaParroquias);
 
   if (tipo === "") {
     return (
@@ -470,12 +513,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Parroquia 1</MenuItem>{" "}
-                <MenuItem value={1}>Parroquia 2</MenuItem>
-                <MenuItem value={2}>Parroquia 3</MenuItem>
-                <MenuItem value={3}>Parroquia 4</MenuItem>
-                <MenuItem value={3}>Parroquia 5</MenuItem>
-                <MenuItem value={3}>Parroquia 6</MenuItem>
+                {listaParroquias.map((parroquia, value) => (
+                  <MenuItem value={value}>{parroquia.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
           </List>
