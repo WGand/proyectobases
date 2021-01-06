@@ -225,12 +225,6 @@ export default function Registrar() {
     }
   }, [listaEstados, listaMunicipios, municipio, municipioSelec]);
 
-  console.log(listaEstados);
-  console.log(estadoSelec);
-  console.log(listaMunicipios);
-  console.log(municipioSelec);
-  console.log(listaParroquias);
-
   if (tipo === "") {
     return (
       <React.Fragment>
