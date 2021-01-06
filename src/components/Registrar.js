@@ -10,6 +10,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   campo: {
@@ -100,11 +101,12 @@ export default function Registrar() {
     checkedCredito: true,
     checkedCheque: true,
   });
+
   const classes = useStyles();
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
-  const [estado, setEstado] = React.useState("");
+  const [estado, setEstado] = React.useState(0);
   const [municipio, setMunicipio] = React.useState("");
   const [parroquia, setParroquia] = React.useState("");
   const [estadoF, setEstadoF] = React.useState("");
@@ -112,6 +114,8 @@ export default function Registrar() {
   const [parroquiaF, setParroquiaF] = React.useState("");
   const [tipo, setTipo] = React.useState("");
   const [cedula, setCedula] = React.useState("");
+  const [listaEstados, setListaEstados] = React.useState([]);
+  const [listaMunicipios, setListaMunicipios] = React.useState([]);
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -156,6 +160,33 @@ export default function Registrar() {
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+
+  React.useEffect(() => {
+    axios
+      .all([
+        axios({
+          method: "post",
+          url: "https://proyectobases1.herokuapp.com/especificolugar",
+          data: {
+            tipo_lugar: "ESTADO",
+          },
+        }),
+        axios({
+          method: "post",
+          url: "https://proyectobases1.herokuapp.com/especificolugar",
+          data: {
+            tipo_lugar: "MUNICIPIO",
+            lugar: "Amazonas",
+          },
+        }),
+      ])
+      .then((response) => {
+        setListaEstados(response[0].data);
+        setListaMunicipios(response[1].data);
+      });
+  }, [estado, listaEstados]);
+  console.log(listaMunicipios);
+  console.log(estado);
 
   if (tipo === "") {
     return (
@@ -411,12 +442,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Amazonas</MenuItem>{" "}
-                <MenuItem value={1}>Anzoátegui</MenuItem>
-                <MenuItem value={2}>Apure</MenuItem>
-                <MenuItem value={3}>Aragua</MenuItem>
-                <MenuItem value={3}>Barinas</MenuItem>
-                <MenuItem value={3}>Bolívar</MenuItem>
+                {listaEstados.map((estado, value) => (
+                  <MenuItem value={value}>{estado.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
             <ListItem>
@@ -428,12 +456,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Municipio 1</MenuItem>{" "}
-                <MenuItem value={1}>Municipio 2</MenuItem>
-                <MenuItem value={2}>Municipio 3</MenuItem>
-                <MenuItem value={3}>Municipio 4</MenuItem>
-                <MenuItem value={3}>Municipio 5</MenuItem>
-                <MenuItem value={3}>Municipio 6</MenuItem>
+                {listaMunicipios.map((municipio, value) => (
+                  <MenuItem value={value}>{municipio.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
             <ListItem>
@@ -718,7 +743,7 @@ export default function Registrar() {
             </div>
           </div>
         </div>
-        <Divider variant="middle" class="border border-primary m-4" />
+        <Divider variant="middle" className="border border-primary m-4" />
         <div class="m-4">
           <Typography variant="h6" className="m-2">
             Medios de pago:
