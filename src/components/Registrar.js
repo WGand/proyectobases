@@ -208,7 +208,7 @@ export default function Registrar() {
   }, []);
 
   React.useEffect(() => {
-    if (!listaEstados) {
+    if (!listaEstados[estado]) {
       fetchEstados();
     } else {
       fetchMunicipios();
@@ -217,13 +217,13 @@ export default function Registrar() {
   }, [listaEstados, estado, estadoSelec]);
 
   React.useEffect(() => {
-    if (!listaMunicipios) {
+    if (!listaMunicipios[municipio]) {
       fetchMunicipios();
     } else {
-      //fetchParroquias();
-      // setMunicipioSelec(listaMunicipios[municipio].nombre);
+      fetchParroquias();
+      setMunicipioSelec(listaMunicipios[municipio].nombre);
     }
-  }, [listaEstados, listaMunicipios, municipio]);
+  }, [listaEstados, listaMunicipios, municipio, municipioSelec]);
 
   console.log(listaEstados);
   console.log(estadoSelec);
