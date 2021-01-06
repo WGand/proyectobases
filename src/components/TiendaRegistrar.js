@@ -5,11 +5,12 @@ import { useHistory } from "react-router-dom";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   ubi: {
     marginLeft: 30,
-    width: 200,
+    width: 250,
   },
 }));
 
@@ -55,9 +56,14 @@ export default function TiendaRegistrar() {
   const history = useHistory();
   const classes = useStyles();
 
-  const [estado, setEstado] = React.useState("");
-  const [municipio, setMunicipio] = React.useState("");
-  const [parroquia, setParroquia] = React.useState("");
+  const [estado, setEstado] = React.useState(0);
+  const [municipio, setMunicipio] = React.useState(0);
+  const [parroquia, setParroquia] = React.useState(0);
+  const [listaEstados, setListaEstados] = React.useState([]);
+  const [estadoSelec, setEstadoSelec] = React.useState("");
+  const [listaMunicipios, setListaMunicipios] = React.useState([]);
+  const [municipioSelec, setMunicipioSelec] = React.useState("");
+  const [listaParroquias, setListaParroquias] = React.useState([]);
 
   const irControlTienda = () => {
     history.push("/perfil/controltienda");
@@ -74,6 +80,67 @@ export default function TiendaRegistrar() {
   const handleChangeParroquia = (event) => {
     setParroquia(event.target.value);
   };
+
+  const fetchEstados = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "ESTADO",
+      },
+    }).then((response) => {
+      setListaEstados(response.data);
+    });
+  };
+
+  const fetchMunicipios = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "MUNICIPIO",
+        lugar: estadoSelec,
+      },
+    }).then((response) => {
+      setListaMunicipios(response.data);
+    });
+  };
+
+  const fetchParroquias = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "PARROQUIA",
+        lugar: municipioSelec,
+        estado: estadoSelec,
+      },
+    }).then((response) => {
+      setListaParroquias(response.data);
+    });
+  };
+
+  React.useEffect(() => {
+    fetchEstados();
+  }, []);
+
+  React.useEffect(() => {
+    if (!listaEstados[estado]) {
+      fetchEstados();
+    } else {
+      fetchMunicipios();
+      setEstadoSelec(listaEstados[estado].nombre);
+    }
+  }, [listaEstados, estado, estadoSelec]);
+
+  React.useEffect(() => {
+    if (!listaMunicipios[municipio]) {
+      fetchMunicipios();
+    } else {
+      fetchParroquias();
+      setMunicipioSelec(listaMunicipios[municipio].nombre);
+    }
+  }, [listaMunicipios, municipio, municipioSelec]);
 
   return (
     <React.Fragment>
@@ -99,12 +166,9 @@ export default function TiendaRegistrar() {
           variant="outlined"
           className={classes.ubi}
         >
-          <MenuItem value="">Amazonas</MenuItem>{" "}
-          <MenuItem value={1}>Anzoátegui</MenuItem>
-          <MenuItem value={2}>Apure</MenuItem>
-          <MenuItem value={3}>Aragua</MenuItem>
-          <MenuItem value={3}>Barinas</MenuItem>
-          <MenuItem value={3}>Bolívar</MenuItem>
+          {listaEstados.map((estado, value) => (
+            <MenuItem value={value}>{estado.nombre}</MenuItem>
+          ))}
         </Select>
       </div>
       <div style={{ display: "flex" }} class="m-4">
@@ -119,12 +183,9 @@ export default function TiendaRegistrar() {
           className={classes.ubi}
           variant="outlined"
         >
-          <MenuItem value="">Municipio 1</MenuItem>{" "}
-          <MenuItem value={1}>Municipio 2</MenuItem>
-          <MenuItem value={2}>Municipio 3</MenuItem>
-          <MenuItem value={3}>Municipio 4</MenuItem>
-          <MenuItem value={3}>Municipio 5</MenuItem>
-          <MenuItem value={3}>Municipio 6</MenuItem>
+          {listaMunicipios.map((municipio, value) => (
+            <MenuItem value={value}>{municipio.nombre}</MenuItem>
+          ))}
         </Select>
       </div>
       <div style={{ display: "flex" }} class="m-4">
@@ -139,12 +200,9 @@ export default function TiendaRegistrar() {
           className={classes.ubi}
           variant="outlined"
         >
-          <MenuItem value="">Parroquia 1</MenuItem>{" "}
-          <MenuItem value={1}>Parroquia 2</MenuItem>
-          <MenuItem value={2}>Parroquia 3</MenuItem>
-          <MenuItem value={3}>Parroquia 4</MenuItem>
-          <MenuItem value={3}>Parroquia 5</MenuItem>
-          <MenuItem value={3}>Parroquia 6</MenuItem>
+          {listaParroquias.map((parroquia, value) => (
+            <MenuItem value={value}>{parroquia.nombre}</MenuItem>
+          ))}
         </Select>
       </div>
       <Boton variant="contained" className="m-4" color="primary">
