@@ -109,16 +109,20 @@ export default function Registrar() {
   const [estado, setEstado] = React.useState(0);
   const [municipio, setMunicipio] = React.useState(0);
   const [parroquia, setParroquia] = React.useState(0);
-  const [estadoF, setEstadoF] = React.useState("");
-  const [municipioF, setMunicipioF] = React.useState("");
-  const [parroquiaF, setParroquiaF] = React.useState("");
+  const [estadoF, setEstadoF] = React.useState(0);
+  const [municipioF, setMunicipioF] = React.useState(0);
+  const [parroquiaF, setParroquiaF] = React.useState(0);
   const [tipo, setTipo] = React.useState("");
   const [cedula, setCedula] = React.useState("");
   const [listaEstados, setListaEstados] = React.useState([]);
   const [estadoSelec, setEstadoSelec] = React.useState("");
+  const [estadoFSelec, setEstadoFSelec] = React.useState("");
   const [listaMunicipios, setListaMunicipios] = React.useState([]);
+  const [listaMunicipiosF, setListaMunicipiosF] = React.useState([]);
   const [municipioSelec, setMunicipioSelec] = React.useState("");
+  const [municipioFSelec, setMunicipioFSelec] = React.useState("");
   const [listaParroquias, setListaParroquias] = React.useState([]);
+  const [listaParroquiasF, setListaParroquiasF] = React.useState([]);
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -203,6 +207,33 @@ export default function Registrar() {
     });
   };
 
+  const fetchMunicipiosF = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "MUNICIPIO",
+        lugar: estadoFSelec,
+      },
+    }).then((response) => {
+      setListaMunicipiosF(response.data);
+    });
+  };
+
+  const fetchParroquiasF = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "PARROQUIA",
+        lugar: municipioFSelec,
+        estado: estadoFSelec,
+      },
+    }).then((response) => {
+      setListaParroquiasF(response.data);
+    });
+  };
+
   React.useEffect(() => {
     fetchEstados();
   }, []);
@@ -223,7 +254,28 @@ export default function Registrar() {
       fetchParroquias();
       setMunicipioSelec(listaMunicipios[municipio].nombre);
     }
-  }, [listaEstados, listaMunicipios, municipio, municipioSelec]);
+  }, [listaMunicipios, municipio, municipioSelec]);
+
+  React.useEffect(() => {
+    if (!listaEstados[estadoF]) {
+      fetchEstados();
+    } else {
+      fetchMunicipiosF();
+      setEstadoFSelec(listaEstados[estadoF].nombre);
+    }
+  }, [listaEstados, estadoF, estadoFSelec]);
+
+  React.useEffect(() => {
+    if (!listaMunicipiosF[municipioF]) {
+      fetchMunicipiosF();
+    } else {
+      fetchParroquiasF();
+      setMunicipioFSelec(listaMunicipiosF[municipioF].nombre);
+    }
+  }, [listaMunicipiosF, municipioF, municipioFSelec]);
+
+  console.log(estadoSelec);
+  console.log(estadoFSelec);
 
   if (tipo === "") {
     return (
@@ -865,12 +917,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Amazonas</MenuItem>{" "}
-                <MenuItem value={1}>Anzoátegui</MenuItem>
-                <MenuItem value={2}>Apure</MenuItem>
-                <MenuItem value={3}>Aragua</MenuItem>
-                <MenuItem value={3}>Barinas</MenuItem>
-                <MenuItem value={3}>Bolívar</MenuItem>
+                {listaEstados.map((estado, value) => (
+                  <MenuItem value={value}>{estado.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
             <ListItem>
@@ -882,12 +931,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Municipio 1</MenuItem>{" "}
-                <MenuItem value={1}>Municipio 2</MenuItem>
-                <MenuItem value={2}>Municipio 3</MenuItem>
-                <MenuItem value={3}>Municipio 4</MenuItem>
-                <MenuItem value={3}>Municipio 5</MenuItem>
-                <MenuItem value={3}>Municipio 6</MenuItem>
+                {listaMunicipios.map((municipio, value) => (
+                  <MenuItem value={value}>{municipio.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
             <ListItem>
@@ -899,12 +945,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Parroquia 1</MenuItem>{" "}
-                <MenuItem value={1}>Parroquia 2</MenuItem>
-                <MenuItem value={2}>Parroquia 3</MenuItem>
-                <MenuItem value={3}>Parroquia 4</MenuItem>
-                <MenuItem value={3}>Parroquia 5</MenuItem>
-                <MenuItem value={3}>Parroquia 6</MenuItem>
+                {listaParroquias.map((parroquia, value) => (
+                  <MenuItem value={value}>{parroquia.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
           </List>
@@ -932,12 +975,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Amazonas</MenuItem>{" "}
-                <MenuItem value={1}>Anzoátegui</MenuItem>
-                <MenuItem value={2}>Apure</MenuItem>
-                <MenuItem value={3}>Aragua</MenuItem>
-                <MenuItem value={3}>Barinas</MenuItem>
-                <MenuItem value={3}>Bolívar</MenuItem>
+                {listaEstados.map((estadoF, value) => (
+                  <MenuItem value={value}>{estadoF.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
             <ListItem>
@@ -949,12 +989,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Municipio 1</MenuItem>{" "}
-                <MenuItem value={1}>Municipio 2</MenuItem>
-                <MenuItem value={2}>Municipio 3</MenuItem>
-                <MenuItem value={3}>Municipio 4</MenuItem>
-                <MenuItem value={3}>Municipio 5</MenuItem>
-                <MenuItem value={3}>Municipio 6</MenuItem>
+                {listaMunicipiosF.map((municipioF, value) => (
+                  <MenuItem value={value}>{municipioF.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
             <ListItem>
@@ -966,12 +1003,9 @@ export default function Registrar() {
                 className={classes.dir}
                 variant="outlined"
               >
-                <MenuItem value="">Parroquia 1</MenuItem>{" "}
-                <MenuItem value={1}>Parroquia 2</MenuItem>
-                <MenuItem value={2}>Parroquia 3</MenuItem>
-                <MenuItem value={3}>Parroquia 4</MenuItem>
-                <MenuItem value={3}>Parroquia 5</MenuItem>
-                <MenuItem value={3}>Parroquia 6</MenuItem>
+                {listaParroquiasF.map((parroquiaF, value) => (
+                  <MenuItem value={value}>{parroquiaF.nombre}</MenuItem>
+                ))}
               </Select>
             </ListItem>
           </List>
