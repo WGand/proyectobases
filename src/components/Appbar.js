@@ -23,6 +23,11 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PersonIcon from "@material-ui/icons/Person";
 import LockIcon from "@material-ui/icons/Lock";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormControl from "@material-ui/core/FormControl";
+import FormLabel from "@material-ui/core/FormLabel";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -103,8 +108,12 @@ const useStyles = makeStyles((theme) => ({
   },
   boton: {
     margin: 20,
-    marginRight: "auto",
-    marginLeft: 200,
+    marginRight: 30,
+    marginLeft: 60,
+  },
+  radio: {
+    marginTop: 20,
+    marginLeft: 50,
   },
 }));
 
@@ -146,12 +155,24 @@ const Boton = withStyles({
   },
 })(Button);
 
+const GreenRadio = withStyles({
+  root: {
+    color: "#00aae3",
+    "&$checked": {
+      color: "#00aae3",
+    },
+  },
+  checked: {},
+})((props) => <Radio color="default" {...props} />);
+
 export default function PrimarySearchAppBar() {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [categoria, setCategoria] = React.useState("");
   const [open, setOpen] = React.useState(false);
+  const [empleado, setEmpleado] = React.useState("no");
+
   const history = useHistory();
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -174,6 +195,10 @@ export default function PrimarySearchAppBar() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const handleChangeRadio = (event) => {
+    setEmpleado(event.target.value);
   };
 
   const irCarrito = () => {
@@ -340,13 +365,36 @@ export default function PrimarySearchAppBar() {
                     variant="outlined"
                   />
                 </div>
-                <Boton
-                  variant="contained"
-                  className={classes.boton}
-                  color="primary"
-                >
-                  Iniciar Sesión
-                </Boton>
+                <div style={{ display: "flex" }}>
+                  <FormControl component="fieldset" className={classes.radio}>
+                    <FormLabel component="legend">¿Empleado?</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-label="gender"
+                      name="gender1"
+                      value={empleado}
+                      onChange={handleChangeRadio}
+                    >
+                      <FormControlLabel
+                        value="no"
+                        control={<GreenRadio />}
+                        label="No"
+                      />
+                      <FormControlLabel
+                        value="si"
+                        control={<GreenRadio />}
+                        label="Si"
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                  <Boton
+                    variant="contained"
+                    className={classes.boton}
+                    color="primary"
+                  >
+                    Iniciar Sesión
+                  </Boton>
+                </div>
               </DialogContent>
               <DialogActions>
                 <Button onClick={irRegistrar} color="primary" className="m-3">
