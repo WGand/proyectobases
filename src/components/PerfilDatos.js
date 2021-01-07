@@ -8,12 +8,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   campo: {
     width: 300,
     maxWidth: 300,
     marginLeft: 10,
+    marginRight: 30,
   },
   tlf: { marginLeft: 50, marginRight: 40 },
   tlfSub: {
@@ -52,9 +54,14 @@ export default function PerfilDatos() {
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
-  const [estado, setEstado] = React.useState("");
-  const [municipio, setMunicipio] = React.useState("");
-  const [parroquia, setParroquia] = React.useState("");
+  const [estado, setEstado] = React.useState(0);
+  const [municipio, setMunicipio] = React.useState(0);
+  const [parroquia, setParroquia] = React.useState(0);
+  const [listaEstados, setListaEstados] = React.useState([]);
+  const [estadoSelec, setEstadoSelec] = React.useState("");
+  const [listaMunicipios, setListaMunicipios] = React.useState([]);
+  const [municipioSelec, setMunicipioSelec] = React.useState("");
+  const [listaParroquias, setListaParroquias] = React.useState([]);
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -79,6 +86,67 @@ export default function PerfilDatos() {
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
+
+  const fetchEstados = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "ESTADO",
+      },
+    }).then((response) => {
+      setListaEstados(response.data);
+    });
+  };
+
+  const fetchMunicipios = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "MUNICIPIO",
+        lugar: estadoSelec,
+      },
+    }).then((response) => {
+      setListaMunicipios(response.data);
+    });
+  };
+
+  const fetchParroquias = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      data: {
+        tipo_lugar: "PARROQUIA",
+        lugar: municipioSelec,
+        estado: estadoSelec,
+      },
+    }).then((response) => {
+      setListaParroquias(response.data);
+    });
+  };
+
+  React.useEffect(() => {
+    fetchEstados();
+  }, []);
+
+  React.useEffect(() => {
+    if (!listaEstados[estado]) {
+      fetchEstados();
+    } else {
+      fetchMunicipios();
+      setEstadoSelec(listaEstados[estado].nombre);
+    }
+  }, [listaEstados, estado, estadoSelec]);
+
+  React.useEffect(() => {
+    if (!listaMunicipios[municipio]) {
+      fetchMunicipios();
+    } else {
+      fetchParroquias();
+      setMunicipioSelec(listaMunicipios[municipio].nombre);
+    }
+  }, [listaMunicipios, municipio, municipioSelec]);
 
   return (
     <React.Fragment>
@@ -290,12 +358,9 @@ export default function PerfilDatos() {
               className={classes.dir}
               variant="outlined"
             >
-              <MenuItem value="">Amazonas</MenuItem>{" "}
-              <MenuItem value={1}>Anzoátegui</MenuItem>
-              <MenuItem value={2}>Apure</MenuItem>
-              <MenuItem value={3}>Aragua</MenuItem>
-              <MenuItem value={3}>Barinas</MenuItem>
-              <MenuItem value={3}>Bolívar</MenuItem>
+              {listaEstados.map((estado, value) => (
+                <MenuItem value={value}>{estado.nombre}</MenuItem>
+              ))}
             </Select>
           </ListItem>
           <ListItem>
@@ -307,12 +372,9 @@ export default function PerfilDatos() {
               className={classes.dir}
               variant="outlined"
             >
-              <MenuItem value="">Municipio 1</MenuItem>{" "}
-              <MenuItem value={1}>Municipio 2</MenuItem>
-              <MenuItem value={2}>Municipio 3</MenuItem>
-              <MenuItem value={3}>Municipio 4</MenuItem>
-              <MenuItem value={3}>Municipio 5</MenuItem>
-              <MenuItem value={3}>Municipio 6</MenuItem>
+              {listaMunicipios.map((municipio, value) => (
+                <MenuItem value={value}>{municipio.nombre}</MenuItem>
+              ))}
             </Select>
           </ListItem>
           <ListItem>
@@ -324,12 +386,9 @@ export default function PerfilDatos() {
               className={classes.dir}
               variant="outlined"
             >
-              <MenuItem value="">Parroquia 1</MenuItem>{" "}
-              <MenuItem value={1}>Parroquia 2</MenuItem>
-              <MenuItem value={2}>Parroquia 3</MenuItem>
-              <MenuItem value={3}>Parroquia 4</MenuItem>
-              <MenuItem value={3}>Parroquia 5</MenuItem>
-              <MenuItem value={3}>Parroquia 6</MenuItem>
+              {listaParroquias.map((parroquia, value) => (
+                <MenuItem value={value}>{parroquia.nombre}</MenuItem>
+              ))}
             </Select>
           </ListItem>
         </List>
