@@ -28,6 +28,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -171,7 +172,11 @@ export default function PrimarySearchAppBar() {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const [categoria, setCategoria] = React.useState("");
   const [open, setOpen] = React.useState(false);
-  const [empleado, setEmpleado] = React.useState("no");
+  const [empleado, setEmpleado] = React.useState("natural");
+  const [correo, setCorreo] = React.useState("");
+  const [contraseña, setContraseña] = React.useState("");
+  const [datos, setDatos] = React.useState([]);
+  const [error, setError] = React.useState(false);
 
   const history = useHistory();
 
@@ -201,6 +206,14 @@ export default function PrimarySearchAppBar() {
     setEmpleado(event.target.value);
   };
 
+  const handleChangeCorreo = (event) => {
+    setCorreo(event.target.value);
+  };
+
+  const handleChangeContraseña = (event) => {
+    setContraseña(event.target.value);
+  };
+
   const irCarrito = () => {
     history.push("/carrito");
   };
@@ -218,9 +231,35 @@ export default function PrimarySearchAppBar() {
     setOpen(false);
   };
 
-  const menuId = "primary-search-account-menu";
+  const compararDatos = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/login",
+      data: {
+        correo: correo,
+        contrasena: contraseña,
+        tipo: empleado,
+      },
+    }).then((response) => {
+      setDatos(response.data);
+    });
+  };
 
+  React.useEffect(() => {
+    if (correo.length === 0 && contraseña.length === 0) {
+      setError(false);
+    } else {
+      if (datos.length === 0) {
+        setError(true);
+      } else {
+        setError(false);
+      }
+    }
+  }, [datos]);
+
+  const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
+
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -239,7 +278,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <Typography>Notificaciones</Typography>
       </MenuItem>
-      <MenuItem onClick={irPerfil}>
+      <MenuItem onClick={handleClickOpen}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -350,6 +389,8 @@ export default function PrimarySearchAppBar() {
                     label="Correo Electrónico"
                     type="email"
                     variant="outlined"
+                    onChange={handleChangeCorreo}
+                    error={error}
                   />
                 </div>
                 <div style={{ display: "flex" }}>
@@ -363,6 +404,8 @@ export default function PrimarySearchAppBar() {
                     label="Constraseña"
                     type="password"
                     variant="outlined"
+                    onChange={handleChangeContraseña}
+                    error={error}
                   />
                 </div>
                 <div style={{ display: "flex" }}>
@@ -376,12 +419,12 @@ export default function PrimarySearchAppBar() {
                       onChange={handleChangeRadio}
                     >
                       <FormControlLabel
-                        value="no"
+                        value="natural"
                         control={<GreenRadio />}
                         label="No"
                       />
                       <FormControlLabel
-                        value="si"
+                        value="empleado"
                         control={<GreenRadio />}
                         label="Si"
                       />
@@ -391,6 +434,7 @@ export default function PrimarySearchAppBar() {
                     variant="contained"
                     className={classes.boton}
                     color="primary"
+                    onClick={compararDatos}
                   >
                     Iniciar Sesión
                   </Boton>
