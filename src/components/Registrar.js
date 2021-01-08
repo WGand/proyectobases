@@ -117,6 +117,7 @@ export default function Registrar() {
   const [parroquiaF, setParroquiaF] = React.useState(0);
 
   const [tipo, setTipo] = React.useState("");
+  const [tipoPersona, setTipoPersona] = React.useState("");
   const [cedula, setCedula] = React.useState("");
   const [tipoCedula, setTipoCedula] = React.useState("");
 
@@ -133,8 +134,16 @@ export default function Registrar() {
 
   const [contraseña, setContraseña] = React.useState("");
   const [contraseña2, setContraseña2] = React.useState("");
+
   const [noIguales, setNoIguales] = React.useState(false);
+  const [correoRespuesta, setCorreoRespuesta] = React.useState(0);
+  const [correoExiste, setCorreoExiste] = React.useState(false);
+  const [rifRespuesta, setRifRespuesta] = React.useState(0);
+  const [rifExiste, setRifExiste] = React.useState(false);
+
   const [labelContraseña2, setLabelContraseña2] = React.useState("");
+  const [labelCorreo, setLabelCorreo] = React.useState("");
+  const [labelRif, setLabelRif] = React.useState("");
 
   const [primNombre, setPrimNombre] = React.useState("");
   const [segNombre, setSegNombre] = React.useState("");
@@ -250,6 +259,32 @@ export default function Registrar() {
     });
   };
 
+  const compararCorreo = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/correo",
+      data: {
+        correo_electronico: correo,
+        tipo: tipoPersona,
+      },
+    }).then((response) => {
+      setCorreoRespuesta(response.data);
+    });
+  };
+
+  const compararRif = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/rif",
+      data: {
+        rif: rif,
+        tipo: tipoPersona,
+      },
+    }).then((response) => {
+      setRifRespuesta(response.data);
+    });
+  };
+
   const validar = () => {
     if (
       rif.length !== 0 &&
@@ -259,9 +294,12 @@ export default function Registrar() {
       primApellido.length !== 0 &&
       contraseña.length !== 0
     ) {
-      console.log("datos completos");
       if (contraseña === contraseña2) {
-        console.log("contraseñas iguales");
+        compararCorreo();
+        compararRif();
+        if (correoRespuesta === 0 && rifRespuesta === 0) {
+          enviarDatos();
+        }
       }
     } else {
       console.log("faltan datos");
@@ -397,6 +435,26 @@ export default function Registrar() {
   }, [contraseña, contraseña2]);
 
   React.useEffect(() => {
+    if (correoRespuesta === 0) {
+      setCorreoExiste(false);
+      setLabelCorreo("Correo electrónico");
+    } else {
+      setCorreoExiste(true);
+      setLabelCorreo("Ya existe un usuario con este correo");
+    }
+  }, [correoRespuesta]);
+
+  React.useEffect(() => {
+    if (rifRespuesta === 0) {
+      setRifExiste(false);
+      setLabelRif("RIF");
+    } else {
+      setRifExiste(true);
+      setLabelRif("Ya existe un usuario con este RIF");
+    }
+  }, [rifRespuesta]);
+
+  React.useEffect(() => {
     if (cedula === "") {
       setTipoCedula("v");
     } else {
@@ -423,6 +481,20 @@ export default function Registrar() {
     }
   }, [prefijoMov]);
 
+  React.useEffect(() => {
+    switch (tipo) {
+      case "":
+        setTipoPersona("NATURAL");
+        break;
+      case 1:
+        setTipoPersona("JURIDICO");
+        break;
+      default:
+        break;
+    }
+  }, [tipo]);
+
+  console.log("tipo persona: ", tipoPersona);
   console.log("primer nombre: " + primNombre);
   console.log("segundo nombre: " + segNombre);
   console.log("primer apellido: " + primApellido);
@@ -591,10 +663,11 @@ export default function Registrar() {
           </Typography>
           <TextField
             id="outlined-rif"
-            label="RIF"
+            label={labelRif}
             variant="outlined"
             className={classes.campo}
             onChange={handleChangeRif}
+            error={rifExiste}
           />
         </div>
         <div style={{ display: "flex" }} class="m-4">
@@ -603,11 +676,12 @@ export default function Registrar() {
           </Typography>
           <TextField
             id="outlined-correo"
-            label="Correo electrónico"
+            label={labelCorreo}
             variant="outlined"
             type="email"
             className={classes.campo}
             onChange={handleChangeCorreo}
+            error={correoExiste}
           />
         </div>
         <div class="m-4">
