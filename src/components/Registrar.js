@@ -106,14 +106,21 @@ export default function Registrar() {
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
+  const [preMovil, setPreMovil] = React.useState(0);
+  const [movil, setMovil] = React.useState(0);
+
   const [estado, setEstado] = React.useState(0);
   const [municipio, setMunicipio] = React.useState(0);
   const [parroquia, setParroquia] = React.useState(0);
   const [estadoF, setEstadoF] = React.useState(0);
   const [municipioF, setMunicipioF] = React.useState(0);
   const [parroquiaF, setParroquiaF] = React.useState(0);
+
   const [tipo, setTipo] = React.useState("");
+  const [tipoPersona, setTipoPersona] = React.useState("");
   const [cedula, setCedula] = React.useState("");
+  const [tipoCedula, setTipoCedula] = React.useState("");
+
   const [listaEstados, setListaEstados] = React.useState([]);
   const [estadoSelec, setEstadoSelec] = React.useState("");
   const [estadoFSelec, setEstadoFSelec] = React.useState("");
@@ -123,6 +130,28 @@ export default function Registrar() {
   const [municipioFSelec, setMunicipioFSelec] = React.useState("");
   const [listaParroquias, setListaParroquias] = React.useState([]);
   const [listaParroquiasF, setListaParroquiasF] = React.useState([]);
+  const [parroquiaSelec, setParroquiaSelec] = React.useState("");
+
+  const [contraseña, setContraseña] = React.useState("");
+  const [contraseña2, setContraseña2] = React.useState("");
+
+  const [noIguales, setNoIguales] = React.useState(false);
+  const [correoRespuesta, setCorreoRespuesta] = React.useState(0);
+  const [correoExiste, setCorreoExiste] = React.useState(false);
+  const [rifRespuesta, setRifRespuesta] = React.useState(0);
+  const [rifExiste, setRifExiste] = React.useState(false);
+
+  const [labelContraseña2, setLabelContraseña2] = React.useState("");
+  const [labelCorreo, setLabelCorreo] = React.useState("");
+  const [labelRif, setLabelRif] = React.useState("");
+
+  const [primNombre, setPrimNombre] = React.useState("");
+  const [segNombre, setSegNombre] = React.useState("");
+  const [primApellido, setPrimApellido] = React.useState("");
+  const [segApellido, setSegApellido] = React.useState("");
+  const [numCedula, setNumCedula] = React.useState(0);
+  const [rif, setRif] = React.useState(0);
+  const [correo, setCorreo] = React.useState("");
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -166,6 +195,115 @@ export default function Registrar() {
 
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
+  };
+
+  const handleChangeContraseña = (event) => {
+    setContraseña(event.target.value);
+  };
+
+  const handleChangeContraseña2 = (event) => {
+    setContraseña2(event.target.value);
+  };
+
+  const handleChangePrimNombre = (event) => {
+    setPrimNombre(event.target.value);
+  };
+
+  const handleChangeSegNombre = (event) => {
+    setSegNombre(event.target.value);
+  };
+
+  const handleChangePrimApellido = (event) => {
+    setPrimApellido(event.target.value);
+  };
+
+  const handleChangeSegApellido = (event) => {
+    setSegApellido(event.target.value);
+  };
+
+  const handleChangeNumCedula = (event) => {
+    setNumCedula(event.target.value);
+  };
+
+  const handleChangeRif = (event) => {
+    setRif(event.target.value);
+  };
+
+  const handleChangeCorreo = (event) => {
+    setCorreo(event.target.value);
+  };
+
+  const handleChangeMovil = (event) => {
+    setMovil(event.target.value);
+  };
+
+  const enviarDatos = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/usuarioNatural",
+      data: {
+        rif: rif,
+        correo: correo,
+        cedula: numCedula,
+        primer_nombre: primNombre,
+        segundo_nombre: segNombre,
+        primer_apellido: primApellido,
+        segundo_apellido: segApellido,
+        contrasena: contraseña,
+        tipo_cedula: tipoCedula,
+        telefono: preMovil + movil,
+        lugar: parroquiaSelec,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+  };
+
+  const compararCorreo = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/correo",
+      data: {
+        correo_electronico: correo,
+        tipo: tipoPersona,
+      },
+    }).then((response) => {
+      setCorreoRespuesta(response.data);
+    });
+  };
+
+  const compararRif = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/rif",
+      data: {
+        rif: rif,
+        tipo: tipoPersona,
+      },
+    }).then((response) => {
+      setRifRespuesta(response.data);
+    });
+  };
+
+  const validar = () => {
+    if (
+      rif.length !== 0 &&
+      correo.length !== 0 &&
+      numCedula.length !== 0 &&
+      primNombre.length !== 0 &&
+      primApellido.length !== 0 &&
+      contraseña.length !== 0
+    ) {
+      if (contraseña === contraseña2) {
+        compararCorreo();
+        compararRif();
+        if (correoRespuesta === 0 && rifRespuesta === 0) {
+          enviarDatos();
+        }
+      }
+    } else {
+      console.log("faltan datos");
+    }
   };
 
   const fetchEstados = async () => {
@@ -257,6 +395,14 @@ export default function Registrar() {
   }, [listaMunicipios, municipio, municipioSelec]);
 
   React.useEffect(() => {
+    if (!listaParroquias[parroquia]) {
+      fetchParroquias();
+    } else {
+      setParroquiaSelec(listaParroquias[parroquia].fk_lugar);
+    }
+  }, [listaParroquias, parroquia, parroquiaSelec]);
+
+  React.useEffect(() => {
     if (!listaEstados[estadoF]) {
       fetchEstados();
     } else {
@@ -274,8 +420,92 @@ export default function Registrar() {
     }
   }, [listaMunicipiosF, municipioF, municipioFSelec]);
 
-  console.log(estadoSelec);
-  console.log(estadoFSelec);
+  React.useEffect(() => {
+    if (contraseña.length === 0 && contraseña2.length === 0) {
+      setLabelContraseña2("Verificar contraseña");
+    } else {
+      if (contraseña === contraseña2) {
+        setNoIguales(false);
+        setLabelContraseña2("Las contraseñas coinciden");
+      } else {
+        setNoIguales(true);
+        setLabelContraseña2("Las contraseñas deben ser iguales");
+      }
+    }
+  }, [contraseña, contraseña2]);
+
+  React.useEffect(() => {
+    if (correoRespuesta === 0) {
+      setCorreoExiste(false);
+      setLabelCorreo("Correo electrónico");
+    } else {
+      setCorreoExiste(true);
+      setLabelCorreo("Ya existe un usuario con este correo");
+    }
+  }, [correoRespuesta]);
+
+  React.useEffect(() => {
+    if (rifRespuesta === 0) {
+      setRifExiste(false);
+      setLabelRif("RIF");
+    } else {
+      setRifExiste(true);
+      setLabelRif("Ya existe un usuario con este RIF");
+    }
+  }, [rifRespuesta]);
+
+  React.useEffect(() => {
+    if (cedula === "") {
+      setTipoCedula("v");
+    } else {
+      setTipoCedula("e");
+    }
+  }, [cedula]);
+
+  React.useEffect(() => {
+    switch (prefijoMov) {
+      case "":
+        setPreMovil("0414");
+        break;
+      case 1:
+        setPreMovil("0424");
+        break;
+      case 2:
+        setPreMovil("0412");
+        break;
+      case 3:
+        setPreMovil("0416");
+        break;
+      default:
+        break;
+    }
+  }, [prefijoMov]);
+
+  React.useEffect(() => {
+    switch (tipo) {
+      case "":
+        setTipoPersona("NATURAL");
+        break;
+      case 1:
+        setTipoPersona("JURIDICO");
+        break;
+      default:
+        break;
+    }
+  }, [tipo]);
+
+  console.log("tipo persona: ", tipoPersona);
+  console.log("primer nombre: " + primNombre);
+  console.log("segundo nombre: " + segNombre);
+  console.log("primer apellido: " + primApellido);
+  console.log("segundo apellido: " + segApellido);
+  console.log("correo: " + correo);
+  console.log("tipo cedula: " + tipoCedula);
+  console.log("cedula: " + numCedula);
+  console.log("rif: " + rif);
+  console.log("contraseña: " + contraseña);
+  console.log("parroquia fk: " + parroquiaSelec);
+  console.log("telefono: " + preMovil + movil);
 
   if (tipo === "") {
     return (
@@ -308,6 +538,7 @@ export default function Registrar() {
             label="Primer Nombre"
             variant="outlined"
             className={classes.campo}
+            onChange={handleChangePrimNombre}
           />
           <Typography variant="h6" className="m-2">
             Segundo Nombre:
@@ -317,6 +548,7 @@ export default function Registrar() {
             label="Segundo Nombre"
             variant="outlined"
             className={classes.campo}
+            onChange={handleChangeSegNombre}
           />
         </div>
         <div style={{ display: "flex" }} class="m-4">
@@ -328,6 +560,7 @@ export default function Registrar() {
             label="Primer Apellido"
             variant="outlined"
             className={classes.campo}
+            onChange={handleChangePrimApellido}
           />
           <Typography variant="h6" className="m-2">
             Segundo Apellido:
@@ -337,6 +570,7 @@ export default function Registrar() {
             label="Segundo Apellido"
             variant="outlined"
             className={classes.campo}
+            onChange={handleChangeSegApellido}
           />
         </div>
         <div class="m-4">
@@ -366,6 +600,7 @@ export default function Registrar() {
               className={classes.campo}
               label="Teléfono actual"
               type="tel"
+              onChange={handleChangeMovil}
             />
           </div>
           <Typography variant="subtitle1" className={classes.sub}>
@@ -416,6 +651,7 @@ export default function Registrar() {
             className={classes.campo}
             type="number"
             InputProps={{ inputProps: { min: 0 } }}
+            onChange={handleChangeNumCedula}
           />
         </div>
         <div style={{ display: "flex" }} class="m-4">
@@ -427,9 +663,11 @@ export default function Registrar() {
           </Typography>
           <TextField
             id="outlined-rif"
-            label="RIF"
+            label={labelRif}
             variant="outlined"
             className={classes.campo}
+            onChange={handleChangeRif}
+            error={rifExiste}
           />
         </div>
         <div style={{ display: "flex" }} class="m-4">
@@ -438,10 +676,12 @@ export default function Registrar() {
           </Typography>
           <TextField
             id="outlined-correo"
-            label="Correo electrónico"
+            label={labelCorreo}
             variant="outlined"
             type="email"
             className={classes.campo}
+            onChange={handleChangeCorreo}
+            error={correoExiste}
           />
         </div>
         <div class="m-4">
@@ -574,7 +814,39 @@ export default function Registrar() {
             className={classes.dirEsp}
           />
         </div>
-        <Boton variant="contained" className={classes.boton} color="primary">
+        <div style={{ display: "flex" }} class="m-4">
+          <Typography variant="h6" className="m-2">
+            Contraseña:
+          </Typography>
+          <TextField
+            id="outlined-contraseña"
+            label="Contraseña"
+            variant="outlined"
+            type="password"
+            className={classes.campo}
+            onChange={handleChangeContraseña}
+          />
+        </div>
+        <div style={{ display: "flex" }} class="m-4">
+          <Typography variant="h6" className="m-2">
+            Verificar contraseña:
+          </Typography>
+          <TextField
+            id="outlined-contraseña2"
+            label={labelContraseña2}
+            variant="outlined"
+            type="password"
+            className={classes.campo}
+            onChange={handleChangeContraseña2}
+            error={noIguales}
+          />
+        </div>
+        <Boton
+          variant="contained"
+          className={classes.boton}
+          color="primary"
+          onClick={validar}
+        >
           Registrarse
         </Boton>
       </React.Fragment>
@@ -1016,6 +1288,33 @@ export default function Registrar() {
             multiline
             rows="3"
             className={classes.dirEsp}
+          />
+        </div>
+        <div style={{ display: "flex" }} class="m-4">
+          <Typography variant="h6" className="m-2">
+            Contraseña:
+          </Typography>
+          <TextField
+            id="outlined-contraseña"
+            label="Contraseña"
+            variant="outlined"
+            type="password"
+            className={classes.campo}
+            onChange={handleChangeContraseña}
+          />
+        </div>
+        <div style={{ display: "flex" }} class="m-4">
+          <Typography variant="h6" className="m-2">
+            Verificar contraseña:
+          </Typography>
+          <TextField
+            id="outlined-contraseña2"
+            label={labelContraseña2}
+            variant="outlined"
+            type="password"
+            className={classes.campo}
+            onChange={handleChangeContraseña2}
+            error={noIguales}
           />
         </div>
         <Boton variant="contained" className={classes.boton} color="primary">
