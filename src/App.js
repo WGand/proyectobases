@@ -23,9 +23,15 @@ import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
+  const [datos, setDatos] = React.useState([]);
+
+  const datosUsuario = (datosAppbar) => {
+    setDatos(datosAppbar);
+  };
+
   return (
     <BrowserRouter>
-      <PrimarySearchAppBar />
+      <PrimarySearchAppBar conseguirDatos={datosUsuario} />
       <Switch>
         <Route exact path={["/", "/proyectobases"]}>
           <Home />
@@ -76,7 +82,7 @@ function App() {
           <ProductoModificar />
         </Route>
         <Route path="/perfil">
-          <Perfil />
+          <Perfil datos={datos} />
         </Route>
         <Route path="/registrar">
           <Registrar />

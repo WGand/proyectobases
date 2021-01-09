@@ -8,6 +8,8 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import Button from "@material-ui/core/Button";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -30,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     width: 300,
     maxWidth: 300,
   },
+  helper: {
+    marginLeft: 20,
+  },
 }));
 
 const GreenCheckbox = withStyles({
@@ -42,7 +47,45 @@ const GreenCheckbox = withStyles({
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-export default function PerfilDatos() {
+const Boton = withStyles({
+  root: {
+    boxShadow: "none",
+    textTransform: "none",
+    fontSize: 16,
+    padding: "6px 12px",
+    border: "1px solid",
+    lineHeight: 1.5,
+    backgroundColor: "#00aae3",
+    borderColor: "#00aae3",
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
+    "&:hover": {
+      backgroundColor: "#1d8fb5",
+      borderColor: "#1d8fb5",
+      boxShadow: "none",
+    },
+    "&:active": {
+      boxShadow: "none",
+      backgroundColor: "#0062cc",
+      borderColor: "#005cbf",
+    },
+    "&:focus": {
+      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
+    },
+  },
+})(Button);
+
+export default function PerfilDatos(props) {
   const [state, setState] = React.useState({
     checkedNinguno: true,
     checkedEfectivo: true,
@@ -62,6 +105,12 @@ export default function PerfilDatos() {
   const [listaMunicipios, setListaMunicipios] = React.useState([]);
   const [municipioSelec, setMunicipioSelec] = React.useState("");
   const [listaParroquias, setListaParroquias] = React.useState([]);
+
+  const [labelPrimNombre, setLabelPrimNombre] = React.useState("");
+  const [labelSegNombre, setLabelSegNombre] = React.useState("");
+  const [labelPrimApellido, setLabelPrimApellido] = React.useState("");
+  const [labelSegApellido, setLabelSegApellido] = React.useState("");
+  const [labelCorreo, setLabelCorreo] = React.useState("");
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -148,6 +197,16 @@ export default function PerfilDatos() {
     }
   }, [listaMunicipios, municipio, municipioSelec]);
 
+  React.useEffect(() => {
+    setLabelPrimNombre(props.datos[0].primer_nombre);
+    setLabelSegNombre(props.datos[0].segundo_nombre);
+    setLabelPrimApellido(props.datos[0].primer_apellido);
+    setLabelSegApellido(props.datos[0].segundo_apellido);
+    setLabelCorreo(props.datos[0].correo_electronico);
+  }, []);
+
+  console.log(props.datos[0]);
+
   return (
     <React.Fragment>
       <Typography variant="h5">
@@ -159,7 +218,7 @@ export default function PerfilDatos() {
         </Typography>
         <TextField
           id="outlined-primNombre"
-          label="Primer Nombre"
+          label={labelPrimNombre}
           variant="outlined"
           className={classes.campo}
         />
@@ -168,7 +227,7 @@ export default function PerfilDatos() {
         </Typography>
         <TextField
           id="outlined-segNombre"
-          label="Segundo Nombre"
+          label={labelSegNombre}
           variant="outlined"
           className={classes.campo}
         />
@@ -179,7 +238,7 @@ export default function PerfilDatos() {
         </Typography>
         <TextField
           id="outlined-primApellido"
-          label="Primer Apellido"
+          label={labelPrimApellido}
           variant="outlined"
           className={classes.campo}
         />
@@ -188,7 +247,7 @@ export default function PerfilDatos() {
         </Typography>
         <TextField
           id="outlined-segApellido"
-          label="Segundo Apellido"
+          label={labelSegApellido}
           variant="outlined"
           className={classes.campo}
         />
@@ -265,7 +324,7 @@ export default function PerfilDatos() {
         </Typography>
         <TextField
           id="outlined-correo"
-          label="Correo electrónico"
+          label={labelCorreo}
           variant="outlined"
           type="email"
           className={classes.campo}
@@ -362,6 +421,10 @@ export default function PerfilDatos() {
                 <MenuItem value={value}>{estado.nombre}</MenuItem>
               ))}
             </Select>
+            <FormHelperText className={classes.helper}>
+              {" "}
+              Estado actual
+            </FormHelperText>
           </ListItem>
           <ListItem>
             <Select
@@ -376,6 +439,10 @@ export default function PerfilDatos() {
                 <MenuItem value={value}>{municipio.nombre}</MenuItem>
               ))}
             </Select>
+            <FormHelperText className={classes.helper}>
+              {" "}
+              Municipio actual
+            </FormHelperText>
           </ListItem>
           <ListItem>
             <Select
@@ -390,6 +457,10 @@ export default function PerfilDatos() {
                 <MenuItem value={value}>{parroquia.nombre}</MenuItem>
               ))}
             </Select>
+            <FormHelperText className={classes.helper}>
+              {" "}
+              Parroquia actual
+            </FormHelperText>
           </ListItem>
         </List>
         <TextField
@@ -401,6 +472,9 @@ export default function PerfilDatos() {
           className={classes.dirEsp}
         />
       </div>
+      <Boton variant="contained" color="primary">
+        Guardar cambios
+      </Boton>
     </React.Fragment>
   );
 }

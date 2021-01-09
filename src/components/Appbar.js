@@ -166,7 +166,7 @@ const GreenRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -231,6 +231,18 @@ export default function PrimarySearchAppBar() {
     setOpen(false);
   };
 
+  const manejarInicio = () => {
+    if (datos.length === 0) {
+      handleClickOpen();
+    } else {
+      irPerfil();
+    }
+  };
+
+  const datosApp = () => {
+    props.conseguirDatos(datos);
+  };
+
   const compararDatos = async () => {
     await axios({
       method: "post",
@@ -252,7 +264,9 @@ export default function PrimarySearchAppBar() {
       if (datos.length === 0) {
         setError(true);
       } else {
+        datosApp();
         setError(false);
+        handleClose();
       }
     }
   }, [datos]);
@@ -278,7 +292,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <Typography>Notificaciones</Typography>
       </MenuItem>
-      <MenuItem onClick={handleClickOpen}>
+      <MenuItem onClick={manejarInicio}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
