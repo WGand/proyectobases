@@ -251,7 +251,8 @@ export default function Registrar() {
         segundo_apellido: segApellido,
         contrasena: contraseña,
         tipo_cedula: tipoCedula,
-        telefono: preMovil + movil,
+        telefono: movil,
+        prefijo: preMovil,
         lugar: parroquiaSelec,
       },
     }).then((response) => {
@@ -398,7 +399,7 @@ export default function Registrar() {
     if (!listaParroquias[parroquia]) {
       fetchParroquias();
     } else {
-      setParroquiaSelec(listaParroquias[parroquia].fk_lugar);
+      setParroquiaSelec(listaParroquias[parroquia].lugar_id);
     }
   }, [listaParroquias, parroquia, parroquiaSelec]);
 
@@ -505,7 +506,9 @@ export default function Registrar() {
   console.log("rif: " + rif);
   console.log("contraseña: " + contraseña);
   console.log("parroquia fk: " + parroquiaSelec);
-  console.log("telefono: " + preMovil + movil);
+  console.log(listaParroquias);
+  console.log("prefijo: " + preMovil);
+  console.log("telefono: " + movil);
 
   if (tipo === "") {
     return (

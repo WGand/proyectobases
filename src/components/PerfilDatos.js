@@ -105,6 +105,7 @@ export default function PerfilDatos(props) {
   const [listaMunicipios, setListaMunicipios] = React.useState([]);
   const [municipioSelec, setMunicipioSelec] = React.useState("");
   const [listaParroquias, setListaParroquias] = React.useState([]);
+  const [ubicacion, setUbicacion] = React.useState([]);
 
   const [labelPrimNombre, setLabelPrimNombre] = React.useState("");
   const [labelSegNombre, setLabelSegNombre] = React.useState("");
@@ -175,8 +176,21 @@ export default function PerfilDatos(props) {
     });
   };
 
+  const ubicacionActual = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/lugarparroquia",
+      data: {
+        parroquia: props.datos[0].fk_lugar,
+      },
+    }).then((response) => {
+      setUbicacion(response.data);
+    });
+  };
+
   React.useEffect(() => {
     fetchEstados();
+    ubicacionActual();
   }, []);
 
   React.useEffect(() => {
@@ -204,8 +218,6 @@ export default function PerfilDatos(props) {
     setLabelSegApellido(props.datos[0].segundo_apellido);
     setLabelCorreo(props.datos[0].correo_electronico);
   }, []);
-
-  console.log(props.datos[0]);
 
   return (
     <React.Fragment>
@@ -422,8 +434,7 @@ export default function PerfilDatos(props) {
               ))}
             </Select>
             <FormHelperText className={classes.helper}>
-              {" "}
-              Estado actual
+              {ubicacion[0].value}
             </FormHelperText>
           </ListItem>
           <ListItem>
@@ -440,8 +451,7 @@ export default function PerfilDatos(props) {
               ))}
             </Select>
             <FormHelperText className={classes.helper}>
-              {" "}
-              Municipio actual
+              {ubicacion[1].value}
             </FormHelperText>
           </ListItem>
           <ListItem>
@@ -458,8 +468,7 @@ export default function PerfilDatos(props) {
               ))}
             </Select>
             <FormHelperText className={classes.helper}>
-              {" "}
-              Parroquia actual
+              {ubicacion[2].value}
             </FormHelperText>
           </ListItem>
         </List>

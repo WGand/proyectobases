@@ -274,6 +274,8 @@ export default function PrimarySearchAppBar(props) {
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
 
+  console.log(datos);
+
   const renderMobileMenu = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
@@ -379,7 +381,7 @@ export default function PrimarySearchAppBar(props) {
               aria-controls={menuId}
               aria-haspopup="true"
               color="inherit"
-              onClick={handleClickOpen}
+              onClick={manejarInicio}
             >
               <AccountCircleIcon fontSize="large" />
             </IconButton>
