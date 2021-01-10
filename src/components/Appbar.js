@@ -28,7 +28,10 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
 import axios from "axios";
+import { set } from "date-fns";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -116,6 +119,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
     marginLeft: 50,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 
 const Boton = withStyles({
@@ -177,6 +184,7 @@ export default function PrimarySearchAppBar(props) {
   const [contraseña, setContraseña] = React.useState("");
   const [datos, setDatos] = React.useState([]);
   const [error, setError] = React.useState(false);
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const history = useHistory();
 
@@ -244,6 +252,7 @@ export default function PrimarySearchAppBar(props) {
   };
 
   const compararDatos = async () => {
+    setOpenBackdrop(true);
     await axios({
       method: "post",
       url: "https://proyectobases1.herokuapp.com/login",
@@ -255,6 +264,7 @@ export default function PrimarySearchAppBar(props) {
     }).then((response) => {
       setDatos(response.data);
     });
+    setOpenBackdrop(false);
   };
 
   React.useEffect(() => {
@@ -338,6 +348,7 @@ export default function PrimarySearchAppBar(props) {
             displayEmpty
             className={classes.selectSearch}
             inputProps={{ "aria-label": "Without label" }}
+            variant="outlined"
           >
             <MenuItem value="">
               <em>Categorías</em>
@@ -464,6 +475,9 @@ export default function PrimarySearchAppBar(props) {
                   ¿Olvidó su Contraseña?
                 </Button>
               </DialogActions>
+              <Backdrop className={classes.backdrop} open={openBackdrop}>
+                <CircularProgress color="inherit" />
+              </Backdrop>
             </Dialog>
             <IconButton color="inherit" onClick={irCarrito}>
               <ShoppingCart fontSize="large" />

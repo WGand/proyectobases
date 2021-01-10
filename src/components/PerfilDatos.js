@@ -97,6 +97,7 @@ export default function PerfilDatos(props) {
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
+
   const [estado, setEstado] = React.useState(0);
   const [municipio, setMunicipio] = React.useState(0);
   const [parroquia, setParroquia] = React.useState(0);
@@ -105,13 +106,19 @@ export default function PerfilDatos(props) {
   const [listaMunicipios, setListaMunicipios] = React.useState([]);
   const [municipioSelec, setMunicipioSelec] = React.useState("");
   const [listaParroquias, setListaParroquias] = React.useState([]);
+
   const [ubicacion, setUbicacion] = React.useState([]);
+  const [ubicacionEstado, setUbicacionEstado] = React.useState("");
+  const [ubicacionMunicipio, setUbicacionMunicipio] = React.useState("");
+  const [ubicacionParroquia, setUbicacionParroquia] = React.useState("");
 
   const [labelPrimNombre, setLabelPrimNombre] = React.useState("");
   const [labelSegNombre, setLabelSegNombre] = React.useState("");
   const [labelPrimApellido, setLabelPrimApellido] = React.useState("");
   const [labelSegApellido, setLabelSegApellido] = React.useState("");
   const [labelCorreo, setLabelCorreo] = React.useState("");
+  const [labelCelular, setLabelCelular] = React.useState("");
+  const [labelTelefono, setLabelTelefono] = React.useState("");
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -217,7 +224,53 @@ export default function PerfilDatos(props) {
     setLabelPrimApellido(props.datos[0].primer_apellido);
     setLabelSegApellido(props.datos[0].segundo_apellido);
     setLabelCorreo(props.datos[0].correo_electronico);
+    setLabelCelular(props.datos[0].celular);
+    setLabelTelefono(props.datos[0].telefono);
+    switch (props.datos[0].prefijo_celular) {
+      case "0414":
+        setPrefijoMov(0);
+        break;
+      case "0424":
+        setPrefijoMov(1);
+        break;
+      case "0412":
+        setPrefijoMov(2);
+        break;
+      case "0416":
+        setPrefijoMov(3);
+        break;
+      default:
+        break;
+    }
+    switch (props.datos[0].prefijo_telefono) {
+      case "0241":
+        setPrefijoHab(0);
+        break;
+      case "0242":
+        setPrefijoHab(1);
+        break;
+      case "0243":
+        setPrefijoHab(2);
+        break;
+      case "0212":
+        setPrefijoHab(3);
+        break;
+      default:
+        break;
+    }
   }, []);
+
+  React.useEffect(() => {
+    if (!ubicacion[0] || !ubicacion[1] || !ubicacion[2]) {
+      ubicacionActual();
+    } else {
+      setUbicacionEstado(ubicacion[2].value);
+      setUbicacionMunicipio(ubicacion[1].value);
+      setUbicacionParroquia(ubicacion[0].value);
+    }
+  }, [ubicacion]);
+
+  console.log(props.datos);
 
   return (
     <React.Fragment>
@@ -300,7 +353,7 @@ export default function PerfilDatos(props) {
             id="outlined-telefono-mov"
             variant="outlined"
             className={classes.campo}
-            label="Teléfono actual"
+            label={labelCelular}
             type="tel"
           />
         </div>
@@ -325,7 +378,7 @@ export default function PerfilDatos(props) {
             id="outlined-telefono-hab"
             variant="outlined"
             className={classes.campo}
-            label="Teléfono actual"
+            label={labelTelefono}
             type="tel"
           />
         </div>
@@ -434,7 +487,7 @@ export default function PerfilDatos(props) {
               ))}
             </Select>
             <FormHelperText className={classes.helper}>
-              {ubicacion[0].value}
+              {ubicacionEstado}
             </FormHelperText>
           </ListItem>
           <ListItem>
@@ -451,7 +504,7 @@ export default function PerfilDatos(props) {
               ))}
             </Select>
             <FormHelperText className={classes.helper}>
-              {ubicacion[1].value}
+              {ubicacionMunicipio}
             </FormHelperText>
           </ListItem>
           <ListItem>
@@ -468,7 +521,7 @@ export default function PerfilDatos(props) {
               ))}
             </Select>
             <FormHelperText className={classes.helper}>
-              {ubicacion[2].value}
+              {ubicacionParroquia}
             </FormHelperText>
           </ListItem>
         </List>

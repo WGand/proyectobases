@@ -107,7 +107,9 @@ export default function Registrar() {
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
   const [preMovil, setPreMovil] = React.useState(0);
+  const [preHabitacion, setPreHabitacion] = React.useState(0);
   const [movil, setMovil] = React.useState(0);
+  const [habitacion, setHabitacion] = React.useState(0);
 
   const [estado, setEstado] = React.useState(0);
   const [municipio, setMunicipio] = React.useState(0);
@@ -237,6 +239,10 @@ export default function Registrar() {
     setMovil(event.target.value);
   };
 
+  const handleChangeHabitacion = (event) => {
+    setHabitacion(event.target.value);
+  };
+
   const enviarDatos = async () => {
     await axios({
       method: "post",
@@ -251,8 +257,10 @@ export default function Registrar() {
         segundo_apellido: segApellido,
         contrasena: contraseña,
         tipo_cedula: tipoCedula,
-        telefono: movil,
-        prefijo: preMovil,
+        telefono: habitacion,
+        prefijo: preHabitacion,
+        celular: movil,
+        prefijo_celular: preMovil,
         lugar: parroquiaSelec,
       },
     }).then((response) => {
@@ -293,7 +301,9 @@ export default function Registrar() {
       numCedula.length !== 0 &&
       primNombre.length !== 0 &&
       primApellido.length !== 0 &&
-      contraseña.length !== 0
+      contraseña.length !== 0 &&
+      movil.length !== 0 &&
+      habitacion.length !== 0
     ) {
       if (contraseña === contraseña2) {
         compararCorreo();
@@ -483,6 +493,25 @@ export default function Registrar() {
   }, [prefijoMov]);
 
   React.useEffect(() => {
+    switch (prefijoHab) {
+      case "":
+        setPreHabitacion("0241");
+        break;
+      case 1:
+        setPreHabitacion("0242");
+        break;
+      case 2:
+        setPreHabitacion("0243");
+        break;
+      case 3:
+        setPreHabitacion("0212");
+        break;
+      default:
+        break;
+    }
+  }, [prefijoHab]);
+
+  React.useEffect(() => {
     switch (tipo) {
       case "":
         setTipoPersona("NATURAL");
@@ -506,9 +535,10 @@ export default function Registrar() {
   console.log("rif: " + rif);
   console.log("contraseña: " + contraseña);
   console.log("parroquia fk: " + parroquiaSelec);
-  console.log(listaParroquias);
-  console.log("prefijo: " + preMovil);
+  console.log("prefijo telefono: " + preMovil);
   console.log("telefono: " + movil);
+  console.log("prefijo habitacion : " + preHabitacion);
+  console.log("habitacion: " + habitacion);
 
   if (tipo === "") {
     return (
@@ -601,7 +631,7 @@ export default function Registrar() {
               id="outlined-telefono-mov"
               variant="outlined"
               className={classes.campo}
-              label="Teléfono actual"
+              label="Teléfono celular"
               type="tel"
               onChange={handleChangeMovil}
             />
@@ -627,8 +657,9 @@ export default function Registrar() {
               id="outlined-telefono-hab"
               variant="outlined"
               className={classes.campo}
-              label="Teléfono actual"
+              label="Teléfono de habitación"
               type="tel"
+              onChange={handleChangeHabitacion}
             />
           </div>
         </div>
