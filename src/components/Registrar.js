@@ -113,11 +113,17 @@ export default function Registrar() {
   const history = useHistory();
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
+  const [prefijoHabPC, setPrefijoHabPC] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
+  const [prefijoMovPC, setPrefijoMovPC] = React.useState("");
   const [preMovil, setPreMovil] = React.useState(0);
+  const [preMovilPC, setPreMovilPC] = React.useState(0);
   const [preHabitacion, setPreHabitacion] = React.useState(0);
+  const [preHabitacionPC, setPreHabitacionPC] = React.useState(0);
   const [movil, setMovil] = React.useState(0);
+  const [movilPC, setMovilPC] = React.useState(0);
   const [habitacion, setHabitacion] = React.useState(0);
+  const [habitacionPC, setHabitacionPC] = React.useState(0);
 
   const [estado, setEstado] = React.useState(0);
   const [municipio, setMunicipio] = React.useState(0);
@@ -141,6 +147,7 @@ export default function Registrar() {
   const [listaParroquias, setListaParroquias] = React.useState([]);
   const [listaParroquiasF, setListaParroquiasF] = React.useState([]);
   const [parroquiaSelec, setParroquiaSelec] = React.useState("");
+  const [parroquiaFSelec, setParroquiaFSelec] = React.useState("");
 
   const [contraseña, setContraseña] = React.useState("");
   const [contraseña2, setContraseña2] = React.useState("");
@@ -163,14 +170,27 @@ export default function Registrar() {
   const [rif, setRif] = React.useState(0);
   const [correo, setCorreo] = React.useState("");
 
+  const [demCom, setDemCom] = React.useState("");
+  const [razonSocial, setRazonSocial] = React.useState("");
+  const [paginaWeb, setPaginaWeb] = React.useState("");
+  const [capitalDisponible, setCapitalDisponible] = React.useState("");
+
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
   };
 
+  const handleChangeHabPC = (event) => {
+    setPrefijoHabPC(event.target.value);
+  };
+
   const handleChangeMov = (event) => {
     setPrefijoMov(event.target.value);
+  };
+
+  const handleChangeMovPC = (event) => {
+    setPrefijoMovPC(event.target.value);
   };
 
   const handleChangeEstado = (event) => {
@@ -249,8 +269,31 @@ export default function Registrar() {
     setMovil(event.target.value);
   };
 
+  const handleChangeMovilPC = (event) => {
+    setMovilPC(event.target.value);
+  };
+
   const handleChangeHabitacion = (event) => {
     setHabitacion(event.target.value);
+  };
+  const handleChangeHabitacionPC = (event) => {
+    setHabitacionPC(event.target.value);
+  };
+
+  const handleChangeDemCom = (event) => {
+    setDemCom(event.target.value);
+  };
+
+  const handleChangeRazonSocial = (event) => {
+    setRazonSocial(event.target.value);
+  };
+
+  const handleChangePaginaWeb = (event) => {
+    setPaginaWeb(event.target.value);
+  };
+
+  const handleChangeCapitalDisponible = (event) => {
+    setCapitalDisponible(event.target.value);
   };
 
   const enviarDatos = async () => {
@@ -445,6 +488,14 @@ export default function Registrar() {
   }, [listaMunicipiosF, municipioF, municipioFSelec]);
 
   React.useEffect(() => {
+    if (!listaParroquiasF[parroquiaF]) {
+      fetchParroquiasF();
+    } else {
+      setParroquiaFSelec(listaParroquiasF[parroquiaF].lugar_id);
+    }
+  }, [listaParroquiasF, parroquiaF, parroquiaSelec]);
+
+  React.useEffect(() => {
     if (contraseña.length === 0 && contraseña2.length === 0) {
       setLabelContraseña2("Verificar contraseña");
     } else {
@@ -506,6 +557,25 @@ export default function Registrar() {
   }, [prefijoMov]);
 
   React.useEffect(() => {
+    switch (prefijoMovPC) {
+      case "":
+        setPreMovilPC("0414");
+        break;
+      case 1:
+        setPreMovilPC("0424");
+        break;
+      case 2:
+        setPreMovilPC("0412");
+        break;
+      case 3:
+        setPreMovilPC("0416");
+        break;
+      default:
+        break;
+    }
+  }, [prefijoMovPC]);
+
+  React.useEffect(() => {
     switch (prefijoHab) {
       case "":
         setPreHabitacion("0241");
@@ -525,6 +595,25 @@ export default function Registrar() {
   }, [prefijoHab]);
 
   React.useEffect(() => {
+    switch (prefijoHabPC) {
+      case "":
+        setPreHabitacionPC("0241");
+        break;
+      case 1:
+        setPreHabitacionPC("0242");
+        break;
+      case 2:
+        setPreHabitacionPC("0243");
+        break;
+      case 3:
+        setPreHabitacionPC("0212");
+        break;
+      default:
+        break;
+    }
+  }, [prefijoHabPC]);
+
+  React.useEffect(() => {
     switch (tipo) {
       case "":
         setTipoPersona("NATURAL");
@@ -538,16 +627,24 @@ export default function Registrar() {
   }, [tipo]);
 
   console.log("tipo persona: ", tipoPersona);
-  console.log("primer nombre: " + primNombre);
-  console.log("segundo nombre: " + segNombre);
-  console.log("primer apellido: " + primApellido);
-  console.log("segundo apellido: " + segApellido);
+  console.log("primer nombre contacto: " + primNombre);
+  console.log("segundo nombre contacto: " + segNombre);
+  console.log("primer apellido contacto: " + primApellido);
+  console.log("segundo apellido contacto: " + segApellido);
+  console.log("prefijo telefono contacto: " + preMovilPC);
+  console.log("telefono contacto: " + movilPC);
+  console.log("prefijo habitacion contacto: " + preHabitacionPC);
+  console.log("habitacion contacto: " + habitacionPC);
+  console.log("----------------------------------");
+  console.log("denominacion comercial: " + demCom);
+  console.log("razon social: " + razonSocial);
+  console.log("pagina web: " + paginaWeb);
+  console.log("capital disponible: " + capitalDisponible);
   console.log("correo: " + correo);
-  console.log("tipo cedula: " + tipoCedula);
-  console.log("cedula: " + numCedula);
   console.log("rif: " + rif);
   console.log("contraseña: " + contraseña);
   console.log("parroquia fk: " + parroquiaSelec);
+  console.log("parroquia F fk: " + parroquiaFSelec);
   console.log("prefijo telefono: " + preMovil);
   console.log("telefono: " + movil);
   console.log("prefijo habitacion : " + preHabitacion);
@@ -935,6 +1032,8 @@ export default function Registrar() {
             label="RIF"
             variant="outlined"
             className={classes.campo}
+            onChange={handleChangeRif}
+            error={rifExiste}
           />
         </div>
         <div style={{ display: "flex" }} class="m-4">
@@ -946,6 +1045,7 @@ export default function Registrar() {
             label="Denominación Comercial"
             variant="outlined"
             className={classes.campo}
+            onChange={handleChangeDemCom}
           />
         </div>
         <div style={{ display: "flex" }} class="m-4">
@@ -957,6 +1057,7 @@ export default function Registrar() {
             label="Razón Social"
             variant="outlined"
             className={classes.campo}
+            onChange={handleChangeRazonSocial}
           />
         </div>
         <div class="m-4">
@@ -986,6 +1087,7 @@ export default function Registrar() {
               className={classes.campo}
               label="Teléfono actual"
               type="tel"
+              onChange={handleChangeMovil}
             />
           </div>
           <Typography variant="subtitle1" className={classes.sub}>
@@ -1011,6 +1113,7 @@ export default function Registrar() {
               className={classes.campo}
               label="Teléfono actual"
               type="tel"
+              onChange={handleChangeHabitacion}
             />
           </div>
         </div>
@@ -1024,6 +1127,8 @@ export default function Registrar() {
             variant="outlined"
             type="email"
             className={classes.campo}
+            onChange={handleChangeCorreo}
+            error={correoExiste}
           />
         </div>
         <div style={{ display: "flex" }} class="m-4">
@@ -1036,6 +1141,7 @@ export default function Registrar() {
             variant="outlined"
             type="url"
             className={classes.campo}
+            onChange={handleChangePaginaWeb}
           />
         </div>
         <div style={{ display: "flex" }} class="m-4">
@@ -1049,6 +1155,7 @@ export default function Registrar() {
             type="number"
             InputProps={{ inputProps: { min: 0 } }}
             className={classes.campo}
+            onChange={handleChangeCapitalDisponible}
           />
         </div>
         <div class="m-4">
@@ -1064,6 +1171,7 @@ export default function Registrar() {
               label="Primer Nombre"
               variant="outlined"
               className={classes.campo}
+              onChange={handleChangePrimNombre}
             />
             <Typography variant="subtitle1" className="m-2">
               Segundo Nombre:
@@ -1073,6 +1181,7 @@ export default function Registrar() {
               label="Segundo Nombre"
               variant="outlined"
               className={classes.campo}
+              onChange={handleChangeSegNombre}
             />
           </div>
           <div style={{ display: "flex" }} class="m-4">
@@ -1084,6 +1193,7 @@ export default function Registrar() {
               label="Primer Apellido"
               variant="outlined"
               className={classes.campo}
+              onChange={handleChangePrimApellido}
             />
             <Typography variant="subtitle1" className="m-2">
               Segundo Apellido:
@@ -1093,6 +1203,7 @@ export default function Registrar() {
               label="Segundo Apellido"
               variant="outlined"
               className={classes.campo}
+              onChange={handleChangeSegApellido}
             />
           </div>
           <div class="m-4">
@@ -1104,8 +1215,8 @@ export default function Registrar() {
             </Typography>
             <div style={{ display: "flex" }}>
               <Select
-                value={prefijoMov}
-                onChange={handleChangeMov}
+                value={prefijoMovPC}
+                onChange={handleChangeMovPC}
                 displayEmpty
                 inputProps={{ "aria-label": "Without label" }}
                 className={classes.tlf}
@@ -1122,6 +1233,7 @@ export default function Registrar() {
                 className={classes.campo}
                 label="Teléfono actual"
                 type="tel"
+                onChange={handleChangeMovilPC}
               />
             </div>
             <Typography variant="subtitle2" className={classes.sub}>
@@ -1129,8 +1241,8 @@ export default function Registrar() {
             </Typography>
             <div style={{ display: "flex" }}>
               <Select
-                value={prefijoHab}
-                onChange={handleChangeHab}
+                value={prefijoHabPC}
+                onChange={handleChangeHabPC}
                 displayEmpty
                 inputProps={{ "aria-label": "Without label" }}
                 className={classes.tlf}
@@ -1147,6 +1259,7 @@ export default function Registrar() {
                 className={classes.campo}
                 label="Teléfono actual"
                 type="tel"
+                onChange={handleChangeHabitacionPC}
               />
             </div>
           </div>
