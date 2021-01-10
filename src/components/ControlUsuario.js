@@ -89,7 +89,7 @@ export default function ControlUsuario() {
         <Typography variant="h5">Responsabilidades</Typography>
       </Button>
       <Typography variant="h4" className="m-3">
-        <b>Control de Usaurio</b>
+        <b>Control de Usuario</b>
       </Typography>
       <Boton variant="contained" className={classes.boton} color="primary">
         Crear usuario

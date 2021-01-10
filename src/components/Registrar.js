@@ -324,6 +324,38 @@ export default function Registrar() {
     history.push("/");
   };
 
+  const enviarDatosJuridico = async () => {
+    setOpenBackdrop(true);
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/usuarioJuridico",
+      data: {
+        rif: rif,
+        correo: correo,
+        denominacion_comercial: demCom,
+        razon_social: razonSocial,
+        pagina_web: paginaWeb,
+        capital_disponible: capitalDisponible,
+        contrasena: contraseña,
+        telefono: habitacion,
+        prefijo_telefono: preHabitacion,
+        celular: movil,
+        prefijo_celular: preMovil,
+        lugar: parroquiaSelec,
+        persona_contacto_nombre: primNombre,
+        persona_contacto_apellido: primApellido,
+        persona_contacto_telefono: movilPC,
+        persona_contacto_celular: habitacionPC,
+        persona_contacto_prefijo_celular: preMovilPC,
+        persona_contacto_prefijo_telefono: preHabitacionPC,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    setOpenBackdrop(false);
+    history.push("/");
+  };
+
   const compararCorreo = async () => {
     await axios({
       method: "post",
@@ -366,6 +398,34 @@ export default function Registrar() {
         compararRif();
         if (correoRespuesta === 0 && rifRespuesta === 0) {
           enviarDatos();
+        }
+      }
+    } else {
+      console.log("faltan datos");
+    }
+  };
+
+  const validarJuridico = () => {
+    if (
+      rif.length !== 0 &&
+      demCom.length !== 0 &&
+      razonSocial.length !== 0 &&
+      movil.length !== 0 &&
+      habitacion.length !== 0 &&
+      correo.length !== 0 &&
+      paginaWeb.length !== 0 &&
+      capitalDisponible.length !== 0 &&
+      primNombre.length !== 0 &&
+      primApellido.length !== 0 &&
+      movilPC.length !== 0 &&
+      habitacionPC !== 0 &&
+      contraseña.length !== 0
+    ) {
+      if (contraseña === contraseña2) {
+        compararCorreo();
+        compararRif();
+        if (correoRespuesta === 0 && rifRespuesta === 0) {
+          enviarDatosJuridico();
         }
       }
     } else {
@@ -628,9 +688,7 @@ export default function Registrar() {
 
   console.log("tipo persona: ", tipoPersona);
   console.log("primer nombre contacto: " + primNombre);
-  console.log("segundo nombre contacto: " + segNombre);
   console.log("primer apellido contacto: " + primApellido);
-  console.log("segundo apellido contacto: " + segApellido);
   console.log("prefijo telefono contacto: " + preMovilPC);
   console.log("telefono contacto: " + movilPC);
   console.log("prefijo habitacion contacto: " + preHabitacionPC);
@@ -1173,16 +1231,6 @@ export default function Registrar() {
               className={classes.campo}
               onChange={handleChangePrimNombre}
             />
-            <Typography variant="subtitle1" className="m-2">
-              Segundo Nombre:
-            </Typography>
-            <TextField
-              id="outlined-segNombre"
-              label="Segundo Nombre"
-              variant="outlined"
-              className={classes.campo}
-              onChange={handleChangeSegNombre}
-            />
           </div>
           <div style={{ display: "flex" }} class="m-4">
             <Typography variant="subtitle1" className="m-2">
@@ -1194,16 +1242,6 @@ export default function Registrar() {
               variant="outlined"
               className={classes.campo}
               onChange={handleChangePrimApellido}
-            />
-            <Typography variant="subtitle1" className="m-2">
-              Segundo Apellido:
-            </Typography>
-            <TextField
-              id="outlined-segApellido"
-              label="Segundo Apellido"
-              variant="outlined"
-              className={classes.campo}
-              onChange={handleChangeSegApellido}
             />
           </div>
           <div class="m-4">
@@ -1480,9 +1518,17 @@ export default function Registrar() {
             error={noIguales}
           />
         </div>
-        <Boton variant="contained" className={classes.boton} color="primary">
+        <Boton
+          variant="contained"
+          className={classes.boton}
+          color="primary"
+          onClick={validarJuridico}
+        >
           Registrarse
         </Boton>
+        <Backdrop className={classes.backdrop} open={openBackdrop}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </React.Fragment>
     );
   }
