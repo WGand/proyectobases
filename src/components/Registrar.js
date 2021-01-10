@@ -10,6 +10,9 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,6 +45,10 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 550,
     marginTop: 50,
     width: 150,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -103,6 +110,7 @@ export default function Registrar() {
   });
 
   const classes = useStyles();
+  const history = useHistory();
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
@@ -154,6 +162,8 @@ export default function Registrar() {
   const [numCedula, setNumCedula] = React.useState(0);
   const [rif, setRif] = React.useState(0);
   const [correo, setCorreo] = React.useState("");
+
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -244,6 +254,7 @@ export default function Registrar() {
   };
 
   const enviarDatos = async () => {
+    setOpenBackdrop(true);
     await axios({
       method: "post",
       url: "https://proyectobases1.herokuapp.com/usuarioNatural",
@@ -266,6 +277,8 @@ export default function Registrar() {
     }).then((response) => {
       console.log(response);
     });
+    setOpenBackdrop(false);
+    history.push("/");
   };
 
   const compararCorreo = async () => {
@@ -883,6 +896,9 @@ export default function Registrar() {
         >
           Registrarse
         </Boton>
+        <Backdrop className={classes.backdrop} open={openBackdrop}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </React.Fragment>
     );
   } else {
