@@ -97,6 +97,10 @@ export default function PerfilDatos(props) {
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoMov, setPrefijoMov] = React.useState("");
+  const [preMovil, setPreMovil] = React.useState("");
+  const [preHabitacion, setPreHabitacion] = React.useState("");
+  const [movil, setMovil] = React.useState("");
+  const [habitacion, setHabitacion] = React.useState("");
 
   const [estado, setEstado] = React.useState(0);
   const [municipio, setMunicipio] = React.useState(0);
@@ -106,6 +110,7 @@ export default function PerfilDatos(props) {
   const [listaMunicipios, setListaMunicipios] = React.useState([]);
   const [municipioSelec, setMunicipioSelec] = React.useState("");
   const [listaParroquias, setListaParroquias] = React.useState([]);
+  const [parroquiaSelec, setParroquiaSelec] = React.useState("");
 
   const [ubicacion, setUbicacion] = React.useState([]);
   const [ubicacionEstado, setUbicacionEstado] = React.useState("");
@@ -119,6 +124,12 @@ export default function PerfilDatos(props) {
   const [labelCorreo, setLabelCorreo] = React.useState("");
   const [labelCelular, setLabelCelular] = React.useState("");
   const [labelTelefono, setLabelTelefono] = React.useState("");
+
+  const [primNombre, setPrimNombre] = React.useState("");
+  const [segNombre, setSegNombre] = React.useState("");
+  const [primApellido, setPrimApellido] = React.useState("");
+  const [segApellido, setSegApellido] = React.useState("");
+  const [correo, setCorreo] = React.useState("");
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -142,6 +153,34 @@ export default function PerfilDatos(props) {
 
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
+  };
+
+  const handleChangePrimerNombre = (event) => {
+    setPrimNombre(event.target.value);
+  };
+
+  const handleChangeSegundoNombre = (event) => {
+    setSegNombre(event.target.value);
+  };
+
+  const handleChangePrimerApellido = (event) => {
+    setPrimApellido(event.target.value);
+  };
+
+  const handleChangeSegundoApellido = (event) => {
+    setSegApellido(event.target.value);
+  };
+
+  const handleChangeCorreo = (event) => {
+    setCorreo(event.target.value);
+  };
+
+  const handleChangeMovil = (event) => {
+    setMovil(event.target.value);
+  };
+
+  const handleChangeHabitacion = (event) => {
+    setHabitacion(event.target.value);
   };
 
   const fetchEstados = async () => {
@@ -195,6 +234,14 @@ export default function PerfilDatos(props) {
     });
   };
 
+  const updateUsuario = async () => {
+    await axios({
+      method: "put",
+      url: "https://proyectobases1.herokuapp.com/usuarioNatural",
+      data: {},
+    });
+  };
+
   React.useEffect(() => {
     fetchEstados();
     ubicacionActual();
@@ -217,6 +264,14 @@ export default function PerfilDatos(props) {
       setMunicipioSelec(listaMunicipios[municipio].nombre);
     }
   }, [listaMunicipios, municipio, municipioSelec]);
+
+  React.useEffect(() => {
+    if (!listaParroquias[parroquia]) {
+      fetchParroquias();
+    } else {
+      setParroquiaSelec(listaParroquias[parroquia].lugar_id);
+    }
+  }, [listaParroquias, parroquia, parroquiaSelec]);
 
   React.useEffect(() => {
     setLabelPrimNombre(props.datos[0].primer_nombre);
@@ -270,7 +325,55 @@ export default function PerfilDatos(props) {
     }
   }, [ubicacion]);
 
+  React.useEffect(() => {
+    switch (prefijoMov) {
+      case "":
+        setPreMovil("0414");
+        break;
+      case 1:
+        setPreMovil("0424");
+        break;
+      case 2:
+        setPreMovil("0412");
+        break;
+      case 3:
+        setPreMovil("0416");
+        break;
+      default:
+        break;
+    }
+  }, [prefijoMov]);
+
+  React.useEffect(() => {
+    switch (prefijoHab) {
+      case "":
+        setPreHabitacion("0241");
+        break;
+      case 1:
+        setPreHabitacion("0242");
+        break;
+      case 2:
+        setPreHabitacion("0243");
+        break;
+      case 3:
+        setPreHabitacion("0212");
+        break;
+      default:
+        break;
+    }
+  }, [prefijoHab]);
+
   console.log(props.datos);
+  console.log("primer nombre: " + primNombre);
+  console.log("segundo nombre: " + segNombre);
+  console.log("primer apellido: " + primApellido);
+  console.log("segundo apellido: " + segApellido);
+  console.log("correo: " + correo);
+  console.log("fk lugar: " + parroquiaSelec);
+  console.log("prefijo movil: " + preMovil);
+  console.log("movil: " + movil);
+  console.log("prefijo habitacion: " + preHabitacion);
+  console.log("habitacion: " + habitacion);
 
   return (
     <React.Fragment>
@@ -286,6 +389,7 @@ export default function PerfilDatos(props) {
           label={labelPrimNombre}
           variant="outlined"
           className={classes.campo}
+          onChange={handleChangePrimerNombre}
         />
         <Typography variant="h6" className="m-2">
           Segundo Nombre:
@@ -295,6 +399,7 @@ export default function PerfilDatos(props) {
           label={labelSegNombre}
           variant="outlined"
           className={classes.campo}
+          onChange={handleChangeSegundoNombre}
         />
       </div>
       <div style={{ display: "flex" }} class="m-4">
@@ -306,6 +411,7 @@ export default function PerfilDatos(props) {
           label={labelPrimApellido}
           variant="outlined"
           className={classes.campo}
+          onChange={handleChangePrimerApellido}
         />
         <Typography variant="h6" className="m-2">
           Segundo Apellido:
@@ -315,6 +421,7 @@ export default function PerfilDatos(props) {
           label={labelSegApellido}
           variant="outlined"
           className={classes.campo}
+          onChange={handleChangeSegundoApellido}
         />
       </div>
       <div style={{ display: "flex" }} class="m-4">
@@ -355,6 +462,7 @@ export default function PerfilDatos(props) {
             className={classes.campo}
             label={labelCelular}
             type="tel"
+            onChange={handleChangeMovil}
           />
         </div>
         <Typography variant="subtitle1" className={classes.tlfSub}>
@@ -380,6 +488,7 @@ export default function PerfilDatos(props) {
             className={classes.campo}
             label={labelTelefono}
             type="tel"
+            onChange={handleChangeHabitacion}
           />
         </div>
       </div>
@@ -393,6 +502,7 @@ export default function PerfilDatos(props) {
           variant="outlined"
           type="email"
           className={classes.campo}
+          onChange={handleChangeCorreo}
         />
       </div>
       <div class="m-4">

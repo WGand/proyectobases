@@ -4,13 +4,8 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import SearchIcon from "@material-ui/icons/Search";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import TablaEmpleados from "./TablaEmpleados";
 
@@ -33,6 +28,10 @@ const useStyles = makeStyles((theme) => ({
   },
   boton: {
     marginLeft: 80,
+  },
+  botonCrear: {
+    height: 55,
+    margin: 30,
   },
 }));
 
@@ -90,6 +89,9 @@ export default function ControlEmpleado() {
       <Typography variant="h4" className="m-3">
         <b>Control de Empleado</b>
       </Typography>
+      <Boton variant="contained" className={classes.botonCrear} color="primary">
+        Crear empleado
+      </Boton>
       <Paper className={classes.paper} variant="outlined">
         <TablaEmpleados />
       </Paper>

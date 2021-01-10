@@ -91,9 +91,6 @@ export default function ControlUsuario() {
       <Typography variant="h4" className="m-3">
         <b>Control de Usuario</b>
       </Typography>
-      <Boton variant="contained" className={classes.boton} color="primary">
-        Crear usuario
-      </Boton>
       <Paper className={classes.paper} variant="outlined">
         <TablaUsuarios />
       </Paper>
