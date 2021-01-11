@@ -4,9 +4,6 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import IconButton from "@material-ui/core/IconButton";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import TablaEmpleados from "./TablaEmpleados";
 
 const useStyles = makeStyles((theme) => ({
@@ -73,9 +70,15 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ControlEmpleado() {
+export default function ControlEmpleado(props) {
   const history = useHistory();
   const classes = useStyles();
+
+  const [datosEmpleado, setDatosEmpleado] = React.useState({});
+
+  const getDatosEmpleado = (datosTabla) => {
+    setDatosEmpleado(datosTabla);
+  };
 
   const irPerfil = () => {
     history.push("/perfil");
@@ -83,6 +86,21 @@ export default function ControlEmpleado() {
 
   const irCrear = () => {
     history.push("/perfil/controlempleado/crear");
+  };
+
+  const irModificar = () => {
+    history.push("/perfil/controlempleado/modificar");
+  };
+
+  const conseguirDatos = () => {
+    props.enviarDatos(datosEmpleado);
+  };
+
+  const validarModificar = () => {
+    if (datosEmpleado) {
+      conseguirDatos();
+      irModificar();
+    }
   };
 
   return (
@@ -102,22 +120,14 @@ export default function ControlEmpleado() {
         Crear empleado
       </Boton>
       <Paper className={classes.paper} variant="outlined">
-        <TablaEmpleados />
+        <TablaEmpleados empleadoSelec={getDatosEmpleado} />
       </Paper>
-      <Paper
-        className={classes.paperSelec}
-        variant="outlined"
-        style={{ display: "flex" }}
+      <Boton
+        variant="contained"
+        className="m-4"
+        color="primary"
+        onClick={validarModificar}
       >
-        Cédula / Nombre / Apellido / Tienda / Cargos **EMPLEADO SELECCIONADO**
-        <IconButton className={classes.boton}>
-          <AddCircleIcon className={classes.plus} />
-        </IconButton>
-        <IconButton>
-          <RemoveCircleIcon color="error" />
-        </IconButton>
-      </Paper>
-      <Boton variant="contained" className="m-4" color="primary">
         Modificar Empleado
       </Boton>
     </React.Fragment>

@@ -968,7 +968,12 @@ export default function PerfilDatos(props) {
             className={classes.dirEsp}
           />
         </div>
-        <Boton variant="contained" color="primary" onClick={validar}>
+        <Boton
+          variant="contained"
+          color="primary"
+          onClick={validar}
+          className="m-4"
+        >
           Guardar cambios
         </Boton>
         <Backdrop className={classes.backdrop} open={openBackdrop}>
@@ -1294,7 +1299,12 @@ export default function PerfilDatos(props) {
             className={classes.dirEsp}
           />
         </div>
-        <Boton variant="contained" color="primary" onClick={validarJuridico}>
+        <Boton
+          variant="contained"
+          color="primary"
+          onClick={validarJuridico}
+          className="m-4"
+        >
           Guardar cambios
         </Boton>
         <Backdrop className={classes.backdrop} open={openBackdrop}>
@@ -1570,7 +1580,12 @@ export default function PerfilDatos(props) {
             className={classes.dirEsp}
           />
         </div>
-        <Boton variant="contained" color="primary" onClick={validarEmpleado}>
+        <Boton
+          variant="contained"
+          color="primary"
+          onClick={validarEmpleado}
+          className="m-4"
+        >
           Guardar cambios
         </Boton>
         <Backdrop className={classes.backdrop} open={openBackdrop}>

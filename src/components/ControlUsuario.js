@@ -81,9 +81,17 @@ export default function ControlUsuario() {
   const history = useHistory();
   const classes = useStyles();
 
+  const [empleado, setEmpleado] = React.useState({});
+
+  const getEmpleado = (datosTabla) => {
+    setEmpleado(datosTabla);
+  };
+
   const irPerfil = () => {
     history.push("/perfil");
   };
+
+  console.log(empleado);
 
   return (
     <React.Fragment>
@@ -109,7 +117,7 @@ export default function ControlUsuario() {
         <Typography variant="h5" className="m-4">
           Empleado
         </Typography>
-        <TablaEmpleados />
+        <TablaEmpleados empleadoSelec={getEmpleado} />
       </Paper>
       <Typography variant="h4" className="m-3">
         <b>Generar Carnet</b>

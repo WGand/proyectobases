@@ -20,12 +20,14 @@ import ProductoRegistrar from "./components/ProductoRegistrar";
 import ProductoModificar from "./components/ProductoModificar";
 import Registrar from "./components/Registrar";
 import CrearEmpleado from "./components/CrearEmpleado";
+import ModificarEmpleado from "./components/ModificarEmpleado";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
   const [datos, setDatos] = React.useState([]);
   const [tipoPersona, setTipoPersona] = React.useState("");
+  const [empleado, setEmpleado] = React.useState({});
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
@@ -33,6 +35,10 @@ function App() {
 
   const tipo = (tipoAppbar) => {
     setTipoPersona(tipoAppbar);
+  };
+
+  const datosEmpleado = (datosControlEmpleado) => {
+    setEmpleado(datosControlEmpleado);
   };
 
   return (
@@ -55,7 +61,7 @@ function App() {
           <Reportes />
         </Route>
         <Route exact path="/perfil/controlempleado">
-          <ControlEmpleado />
+          <ControlEmpleado enviarDatos={datosEmpleado} />
         </Route>
         <Route exact path="/perfil/controlusuario">
           <ControlUsuario />
@@ -89,6 +95,9 @@ function App() {
         </Route>
         <Route exact path="/perfil/controlempleado/crear">
           <CrearEmpleado />
+        </Route>
+        <Route exact path="/perfil/controlempleado/modificar">
+          <ModificarEmpleado datos={empleado} />
         </Route>
         <Route path="/perfil">
           <Perfil datos={datos} tipo={tipoPersona} />

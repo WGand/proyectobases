@@ -51,8 +51,6 @@ export default function TablaUsuarios() {
     }
   }, [usuarios]);
 
-  console.log(usuarios);
-
   return (
     <div style={{ height: 550, width: "100%" }}>
       <DataGrid
