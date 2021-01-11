@@ -81,6 +81,10 @@ export default function ControlEmpleado() {
     history.push("/perfil");
   };
 
+  const irCrear = () => {
+    history.push("/perfil/controlempleado/crear");
+  };
+
   return (
     <React.Fragment>
       <Button className="m-3" onClick={irPerfil}>
@@ -89,7 +93,12 @@ export default function ControlEmpleado() {
       <Typography variant="h4" className="m-3">
         <b>Control de Empleado</b>
       </Typography>
-      <Boton variant="contained" className={classes.botonCrear} color="primary">
+      <Boton
+        variant="contained"
+        className={classes.botonCrear}
+        color="primary"
+        onClick={irCrear}
+      >
         Crear empleado
       </Boton>
       <Paper className={classes.paper} variant="outlined">

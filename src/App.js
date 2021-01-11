@@ -19,6 +19,7 @@ import ControlProducto from "./components/ControlProducto";
 import ProductoRegistrar from "./components/ProductoRegistrar";
 import ProductoModificar from "./components/ProductoModificar";
 import Registrar from "./components/Registrar";
+import CrearEmpleado from "./components/CrearEmpleado";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -85,6 +86,9 @@ function App() {
         </Route>
         <Route exact path="/perfil/controlproducto/modificar">
           <ProductoModificar />
+        </Route>
+        <Route exact path="/perfil/controlempleado/crear">
+          <CrearEmpleado />
         </Route>
         <Route path="/perfil">
           <Perfil datos={datos} tipo={tipoPersona} />
