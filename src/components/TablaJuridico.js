@@ -5,37 +5,28 @@ import axios from "axios";
 const columns = [
   { field: "id", headerName: "RIF", width: 120 },
   {
-    field: "cedula_identidad",
-    headerName: "Cédula",
-    width: 150,
-    type: "number",
+    field: "denominacion_comercial",
+    headerName: "Denominación comercial",
+    width: 250,
   },
   {
-    field: "primer_nombre",
-    headerName: "Primer nombre",
-    width: 150,
-  },
-  {
-    field: "segundo_nombre",
-    headerName: "Segundo nombre",
-    width: 180,
-  },
-  {
-    field: "primer_apellido",
-    headerName: "Primer apellido",
-    width: 150,
-  },
-  {
-    field: "segundo_apellido",
-    headerName: "Segundo apellido",
+    field: "razon_social",
+    headerName: "Razón social",
     width: 180,
   },
   { field: "correo_electronico", headerName: "Correo electrónico", width: 250 },
+  { field: "pagina_web", headerName: "Página web", width: 250 },
+  {
+    field: "capital_disponible",
+    headerName: "Capital disponible",
+    width: 200,
+    type: "number",
+  },
 ];
 
 export default function TablaUsuarios() {
   const [usuarios, setUsuarios] = React.useState({});
-  const [empleado, setEmpleado] = React.useState([]);
+  const [juridico, setJuridico] = React.useState([]);
 
   const datos = async () => {
     await axios({
@@ -51,19 +42,21 @@ export default function TablaUsuarios() {
   }, []);
 
   React.useEffect(() => {
-    if (!usuarios["EMPLEADO"]) {
+    if (!usuarios["JURIDICO"]) {
       console.log("no existe");
       datos();
     } else {
       console.log("existe");
-      setEmpleado(usuarios["EMPLEADO"]);
+      setJuridico(usuarios["JURIDICO"]);
     }
   }, [usuarios]);
+
+  console.log(usuarios);
 
   return (
     <div style={{ height: 550, width: "100%" }}>
       <DataGrid
-        rows={empleado}
+        rows={juridico}
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount

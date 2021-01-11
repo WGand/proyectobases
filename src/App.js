@@ -24,14 +24,19 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
   const [datos, setDatos] = React.useState([]);
+  const [tipoPersona, setTipoPersona] = React.useState("");
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
   };
 
+  const tipo = (tipoAppbar) => {
+    setTipoPersona(tipoAppbar);
+  };
+
   return (
     <BrowserRouter>
-      <PrimarySearchAppBar conseguirDatos={datosUsuario} />
+      <PrimarySearchAppBar conseguirDatos={datosUsuario} conseguirTipo={tipo} />
       <Switch>
         <Route exact path={["/", "/proyectobases"]}>
           <Home />
@@ -82,7 +87,7 @@ function App() {
           <ProductoModificar />
         </Route>
         <Route path="/perfil">
-          <Perfil datos={datos} />
+          <Perfil datos={datos} tipo={tipoPersona} />
         </Route>
         <Route path="/registrar">
           <Registrar />

@@ -35,7 +35,7 @@ const columns = [
 
 export default function TablaUsuarios() {
   const [usuarios, setUsuarios] = React.useState({});
-  const [empleado, setEmpleado] = React.useState([]);
+  const [natural, setNatural] = React.useState([]);
 
   const datos = async () => {
     await axios({
@@ -51,19 +51,19 @@ export default function TablaUsuarios() {
   }, []);
 
   React.useEffect(() => {
-    if (!usuarios["EMPLEADO"]) {
+    if (!usuarios["NATURAL"]) {
       console.log("no existe");
       datos();
     } else {
       console.log("existe");
-      setEmpleado(usuarios["EMPLEADO"]);
+      setNatural(usuarios["NATURAL"]);
     }
   }, [usuarios]);
 
   return (
     <div style={{ height: 550, width: "100%" }}>
       <DataGrid
-        rows={empleado}
+        rows={natural}
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount

@@ -5,7 +5,9 @@ import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Paper from "@material-ui/core/Paper";
-import TablaUsuarios from "./TablaUsuarios";
+import TablaNatural from "./TablaNatural";
+import TablaJuridico from "./TablaJuridico";
+import TablaEmpleados from "./TablaEmpleados";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -17,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 30,
   },
   paper: {
-    width: 500,
+    width: 1300,
     margin: 30,
   },
   text: {
@@ -92,7 +94,22 @@ export default function ControlUsuario() {
         <b>Control de Usuario</b>
       </Typography>
       <Paper className={classes.paper} variant="outlined">
-        <TablaUsuarios />
+        <Typography variant="h5" className="m-4">
+          Natural
+        </Typography>
+        <TablaNatural />
+      </Paper>
+      <Paper className={classes.paper} variant="outlined">
+        <Typography variant="h5" className="m-4">
+          Jurídico
+        </Typography>
+        <TablaJuridico />
+      </Paper>
+      <Paper className={classes.paper} variant="outlined">
+        <Typography variant="h5" className="m-4">
+          Empleado
+        </Typography>
+        <TablaEmpleados />
       </Paper>
       <Typography variant="h4" className="m-3">
         <b>Generar Carnet</b>

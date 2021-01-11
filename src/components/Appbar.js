@@ -105,9 +105,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   dialog: {
-    marginLeft: 30,
-    marginRight: 40,
-    width: 250,
+    margin: "auto",
+    width: 1200,
   },
   boton: {
     margin: 20,
@@ -250,6 +249,10 @@ export default function PrimarySearchAppBar(props) {
     props.conseguirDatos(datos);
   };
 
+  const tipoApp = () => {
+    props.conseguirTipo(empleado);
+  };
+
   const compararDatos = async () => {
     setOpenBackdrop(true);
     await axios({
@@ -274,6 +277,7 @@ export default function PrimarySearchAppBar(props) {
         setError(true);
       } else {
         datosApp();
+        tipoApp();
         setError(false);
         handleClose();
       }
@@ -284,6 +288,9 @@ export default function PrimarySearchAppBar(props) {
   const mobileMenuId = "primary-search-account-menu-mobile";
 
   console.log(datos);
+  console.log(correo);
+  console.log(contraseña);
+  console.log(empleado);
 
   const renderMobileMenu = (
     <Menu
@@ -399,6 +406,7 @@ export default function PrimarySearchAppBar(props) {
               open={open}
               onClose={handleClose}
               aria-labelledby="form-dialog-title"
+              className={classes.dialog}
             >
               <DialogTitle id="form-dialog-title" align="center">
                 Iniciar Sesión
@@ -436,24 +444,31 @@ export default function PrimarySearchAppBar(props) {
                 </div>
                 <div style={{ display: "flex" }}>
                   <FormControl component="fieldset" className={classes.radio}>
-                    <FormLabel component="legend">¿Empleado?</FormLabel>
+                    <FormLabel component="legend">Tipo de usuario</FormLabel>
                     <RadioGroup
                       row
-                      aria-label="gender"
-                      name="gender1"
+                      aria-label="tipo"
+                      name="tipo1"
                       value={empleado}
                       onChange={handleChangeRadio}
                     >
-                      <FormControlLabel
-                        value="natural"
-                        control={<GreenRadio />}
-                        label="No"
-                      />
-                      <FormControlLabel
-                        value="empleado"
-                        control={<GreenRadio />}
-                        label="Si"
-                      />
+                      <div style={{ display: "flex" }}>
+                        <FormControlLabel
+                          value="natural"
+                          control={<GreenRadio />}
+                          label="Natural"
+                        />
+                        <FormControlLabel
+                          value="empleado"
+                          control={<GreenRadio />}
+                          label="Empleado"
+                        />
+                        <FormControlLabel
+                          value="juridico"
+                          control={<GreenRadio />}
+                          label="Jurídico"
+                        />
+                      </div>
                     </RadioGroup>
                   </FormControl>
                   <Boton

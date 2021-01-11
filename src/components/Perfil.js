@@ -88,7 +88,7 @@ export default function Perfil(props) {
           <Tab label="Responsabilidades" {...a11yProps(3)} />
         </Tabs>
         <TabPanel value={value} index={0}>
-          <PerfilDatos datos={props.datos} />
+          <PerfilDatos datos={props.datos} tipo={props.tipo} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <PerfilOrdenes />
