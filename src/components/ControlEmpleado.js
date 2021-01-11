@@ -11,7 +11,7 @@ import TablaEmpleados from "./TablaEmpleados";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    width: 650,
+    width: 1300,
     margin: 30,
     marginTop: 60,
   },

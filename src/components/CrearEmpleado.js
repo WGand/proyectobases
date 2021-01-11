@@ -4,7 +4,6 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
@@ -138,8 +137,10 @@ export default function CrearEmpleado() {
 
   const [horario, setHorario] = React.useState([]);
   const [dia, setDia] = React.useState("");
-  const [horaEntrada, setHoraEntrada] = React.useState("");
-  const [horaSalida, setHoraSalida] = React.useState("");
+  const [turno, setTurno] = React.useState("");
+  const [entrada, setEntrada] = React.useState("");
+  const [salida, setSalida] = React.useState("");
+  const [diaTrabajo, setDiaTrabajo] = React.useState("");
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -165,12 +166,8 @@ export default function CrearEmpleado() {
     setDia(event.target.value);
   };
 
-  const handleChangeHoraEntrada = (event) => {
-    setHoraEntrada(event.target.value);
-  };
-
-  const handleChangeHoraSalida = (event) => {
-    setHoraSalida(event.target.value);
+  const handleChangeTurno = (event) => {
+    setTurno(event.target.value);
   };
 
   const handleChangeCedula = (event) => {
@@ -223,6 +220,84 @@ export default function CrearEmpleado() {
 
   const irControlEmpleado = () => {
     history.push("/perfil/controlempleado");
+  };
+
+  const enviarDatos = async () => {
+    setOpenBackdrop(true);
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/empleado",
+      data: {
+        rif: rif,
+        correo: correo,
+        cedula: numCedula,
+        primer_nombre: primNombre,
+        segundo_nombre: segNombre,
+        primer_apellido: primApellido,
+        segundo_apellido: segApellido,
+        contrasena: contraseña,
+        telefono: habitacion,
+        prefijo: preHabitacion,
+        celular: movil,
+        prefijo_celular: preMovil,
+        lugar: parroquiaSelec,
+        hora_inicio: entrada,
+        hora_fin: salida,
+        dia: diaTrabajo,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    setOpenBackdrop(false);
+  };
+
+  const compararCorreo = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/correo",
+      data: {
+        correo_electronico: correo,
+        tipo: "EMPLEADO",
+      },
+    }).then((response) => {
+      setCorreoRespuesta(response.data);
+    });
+  };
+
+  const compararRif = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/rif",
+      data: {
+        rif: rif,
+        tipo: "EMPLEADO",
+      },
+    }).then((response) => {
+      setRifRespuesta(response.data);
+    });
+  };
+
+  const validar = () => {
+    if (
+      rif.length !== 0 &&
+      correo.length !== 0 &&
+      numCedula.length !== 0 &&
+      primNombre.length !== 0 &&
+      primApellido.length !== 0 &&
+      contraseña.length !== 0 &&
+      movil.length !== 0 &&
+      habitacion.length !== 0
+    ) {
+      if (contraseña === contraseña2) {
+        compararCorreo();
+        compararRif();
+        if (correoRespuesta === 0 && rifRespuesta === 0) {
+          enviarDatos();
+        }
+      }
+    } else {
+      console.log("faltan datos");
+    }
   };
 
   const fetchHorario = async () => {
@@ -390,11 +465,60 @@ export default function CrearEmpleado() {
     }
   }, [horario]);
 
+  React.useEffect(() => {
+    switch (dia) {
+      case "":
+        setDiaTrabajo("LUNES");
+        break;
+      case 1:
+        setDiaTrabajo("MARTES");
+        break;
+      case 2:
+        setDiaTrabajo("MIERCOLES");
+        break;
+      case 3:
+        setDiaTrabajo("JUEVES");
+        break;
+      case 4:
+        setDiaTrabajo("VIERNES");
+        break;
+      case 5:
+        setDiaTrabajo("SABADO");
+        break;
+      case 6:
+        setDiaTrabajo("DOMINGO");
+        break;
+
+      default:
+        break;
+    }
+  }, [dia]);
+
+  React.useEffect(() => {
+    switch (turno) {
+      case "":
+        setEntrada("09:00:00");
+        setSalida("13:00:00");
+        break;
+      case 1:
+        setEntrada("13:00:00");
+        setSalida("17:00:00");
+        break;
+      case 2:
+        setEntrada("17:00:00");
+        setSalida("21:00:00");
+        break;
+      default:
+        break;
+    }
+  }, [turno]);
+
   console.log("-------------------------");
   console.log("primer nombre: " + primNombre);
   console.log("segundo nombre: " + segNombre);
   console.log("primer apellido: " + primApellido);
   console.log("segundo apellido: " + segApellido);
+  console.log("contraseña: " + contraseña);
   console.log("tipo cedula: " + tipoCedula);
   console.log("cedula: " + numCedula);
   console.log("rif: " + rif);
@@ -404,7 +528,9 @@ export default function CrearEmpleado() {
   console.log("prefijo telefono: " + preHabitacion);
   console.log("telefono: " + habitacion);
   console.log("fk lugar: " + parroquiaSelec);
-  console.log(horario);
+  console.log("dia: " + diaTrabajo);
+  console.log("entrada: " + entrada);
+  console.log("salida: " + salida);
   console.log("--------------------------");
 
   return (
@@ -597,37 +723,20 @@ export default function CrearEmpleado() {
           </Select>
         </div>
         <Typography variant="subtitle1" className={classes.sub}>
-          Hora de entrada
+          Turno
         </Typography>
         <div style={{ display: "flex" }}>
           <Select
-            value={horaEntrada}
-            onChange={handleChangeHoraEntrada}
+            value={turno}
+            onChange={handleChangeTurno}
             displayEmpty
             inputProps={{ "aria-label": "Without label" }}
             className={classes.tlf}
             variant="outlined"
           >
-            <MenuItem value="">9:00</MenuItem>
-            <MenuItem value={1}>13:00</MenuItem>
-            <MenuItem value={2}>17:00</MenuItem>
-          </Select>
-        </div>
-        <Typography variant="subtitle1" className={classes.sub}>
-          Hora de salida
-        </Typography>
-        <div style={{ display: "flex" }}>
-          <Select
-            value={horaSalida}
-            onChange={handleChangeHoraSalida}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
-            className={classes.tlf}
-            variant="outlined"
-          >
-            <MenuItem value="">13:00</MenuItem>
-            <MenuItem value={1}>17:00</MenuItem>
-            <MenuItem value={2}>21:00</MenuItem>
+            <MenuItem value="">9:00 - 13:00</MenuItem>
+            <MenuItem value={1}>13:00 - 17:00</MenuItem>
+            <MenuItem value={2}>17:00 - 21:00</MenuItem>
           </Select>
         </div>
       </div>
@@ -715,8 +824,13 @@ export default function CrearEmpleado() {
           error={noIguales}
         />
       </div>
-      <Boton variant="contained" className={classes.boton} color="primary">
-        Crear usuario;
+      <Boton
+        variant="contained"
+        className={classes.boton}
+        color="primary"
+        onClick={validar}
+      >
+        Crear usuario
       </Boton>
       <Backdrop className={classes.backdrop} open={openBackdrop}>
         <CircularProgress color="inherit" />
