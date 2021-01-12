@@ -1,10 +1,11 @@
 import React from "react";
 import { DataGrid } from "@material-ui/data-grid";
+import axios from "axios";
 
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "producto", headerName: "Producto", width: 150 },
-  { field: "descripcion", headerName: "Descripcion", width: 250 },
+  { field: "nombre", headerName: "Nombre", width: 150 },
+  { field: "categoria", headerName: "Categoría", width: 150 },
   {
     field: "cantidad",
     headerName: "Cantidad",
@@ -15,53 +16,43 @@ const columns = [
     field: "precio",
     headerName: "Precio",
     type: "number",
-    width: 160,
+    width: 200,
   },
 ];
 
-const rows = [
-  {
-    id: 1,
-    producto: "Producto 1",
-    descripcion: "Descripción 1",
-    cantidad: 35,
-    precio: 100,
-  },
-  {
-    id: 2,
-    producto: "Producto 2",
-    descripcion: "Descripción 2",
-    cantidad: 42,
-    precio: 80,
-  },
-  {
-    id: 3,
-    producto: "Producto 3",
-    descripcion: "Descripción 3",
-    cantidad: 45,
-    precio: 60,
-  },
-  {
-    id: 4,
-    producto: "Producto 4",
-    descripcion: "Descripción 4",
-    cantidad: 16,
-    precio: 40,
-  },
-  {
-    id: 5,
-    producto: "Producto 5",
-    descripcion: "Descripción 5",
-    cantidad: 3,
-    precio: 20,
-  },
-];
+export default function TablaProductos(props) {
+  const [productos, setProductos] = React.useState([]);
 
-export default function TablaProductos() {
+  const datos = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/inventario",
+      data: {
+        tienda_id: props.tiendaId,
+      },
+    }).then((response) => {
+      setProductos(response.data);
+    });
+  };
+
+  React.useEffect(() => {
+    datos();
+  }, [props.tiendaId]);
+
+  React.useEffect(() => {
+    if (productos.length === 0) {
+      console.log("no existe");
+    } else {
+      console.log("existe");
+    }
+  }, [productos]);
+
+  console.log(productos);
+
   return (
     <div style={{ height: 500, width: "100%" }}>
       <DataGrid
-        rows={rows}
+        rows={productos}
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount

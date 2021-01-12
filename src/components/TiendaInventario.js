@@ -59,7 +59,6 @@ export default function TiendaInventario() {
       </Paper>
       <div style={{ display: "flex" }}>
         <Typography variant="h6" className="m-4">
-          {" "}
           Tienda seleccionada:
         </Typography>
         <TextField
@@ -70,7 +69,7 @@ export default function TiendaInventario() {
         />
       </div>
       <Paper className={classes.paperProd} variant="outlined">
-        <TablaProductos />
+        <TablaProductos tiendaId={datosTienda.tienda_id} />
       </Paper>
     </React.Fragment>
   );
