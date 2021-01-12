@@ -5,12 +5,21 @@ import { useHistory } from "react-router-dom";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   ubi: {
     marginLeft: 30,
     width: 250,
+  },
+  campo: {
+    width: 300,
+    maxWidth: 300,
+    marginLeft: 10,
+    marginRight: 30,
   },
 }));
 
@@ -64,6 +73,14 @@ export default function TiendaRegistrar() {
   const [listaMunicipios, setListaMunicipios] = React.useState([]);
   const [municipioSelec, setMunicipioSelec] = React.useState("");
   const [listaParroquias, setListaParroquias] = React.useState([]);
+  const [parroquiaSelec, setParroquiaSelec] = React.useState("");
+
+  const [nombreTienda, setNombreTienda] = React.useState("");
+  const [tiendaRespuesta, setTiendaRespuesta] = React.useState([]);
+  const [tiendaExiste, setTiendaExiste] = React.useState(false);
+  const [labelTienda, setLabelTienda] = React.useState("");
+
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const irControlTienda = () => {
     history.push("/perfil/controltienda");
@@ -79,6 +96,47 @@ export default function TiendaRegistrar() {
 
   const handleChangeParroquia = (event) => {
     setParroquia(event.target.value);
+  };
+
+  const handleChangeNombreTienda = (event) => {
+    setNombreTienda(event.target.value);
+  };
+
+  const validarNombreTienda = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/validarTienda",
+      data: {
+        nombre: nombreTienda,
+      },
+    }).then((response) => {
+      setTiendaRespuesta(response.data);
+      console.log(response);
+    });
+  };
+
+  const enviarDatos = async () => {
+    setOpenBackdrop(true);
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/tienda",
+      data: {
+        nombre: nombreTienda,
+        fk_lugar: parroquiaSelec,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    setOpenBackdrop(false);
+  };
+
+  const validar = () => {
+    if (nombreTienda.length !== 0) {
+      validarNombreTienda();
+      if (tiendaRespuesta.length === 0) {
+        enviarDatos();
+      }
+    }
   };
 
   const fetchEstados = async () => {
@@ -142,6 +200,28 @@ export default function TiendaRegistrar() {
     }
   }, [listaMunicipios, municipio, municipioSelec]);
 
+  React.useEffect(() => {
+    if (!listaParroquias[parroquia]) {
+      fetchParroquias();
+    } else {
+      setParroquiaSelec(listaParroquias[parroquia].lugar_id);
+    }
+  }, [listaParroquias, parroquia, parroquiaSelec]);
+
+  React.useEffect(() => {
+    if (tiendaRespuesta.length === 0) {
+      setTiendaExiste(false);
+      setLabelTienda("Nombre de la tienda");
+    } else {
+      setTiendaExiste(true);
+      setLabelTienda("Ya existe una tienda con este nombre");
+    }
+  }, [tiendaRespuesta]);
+
+  console.log("fk lugar: " + parroquiaSelec);
+  console.log("nombre: " + nombreTienda);
+  console.log(tiendaRespuesta);
+
   return (
     <React.Fragment>
       <Button className="m-3" onClick={irControlTienda}>
@@ -158,7 +238,6 @@ export default function TiendaRegistrar() {
           Estado:
         </Typography>
         <Select
-          /* Los datos de LUGAR se recibirán de la DB, por ahora hardcoded */
           value={estado}
           onChange={handleChangeEstado}
           displayEmpty
@@ -205,9 +284,30 @@ export default function TiendaRegistrar() {
           ))}
         </Select>
       </div>
-      <Boton variant="contained" className="m-4" color="primary">
+      <div style={{ display: "flex" }} class="m-4">
+        <Typography variant="h6" className="m-2">
+          Nombre:
+        </Typography>
+        <TextField
+          id="outlined-primNombre"
+          label={labelTienda}
+          variant="outlined"
+          className={classes.campo}
+          onChange={handleChangeNombreTienda}
+          error={tiendaExiste}
+        />
+      </div>
+      <Boton
+        variant="contained"
+        className="m-4"
+        color="primary"
+        onClick={validar}
+      >
         Registrar Tienda
       </Boton>
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </React.Fragment>
   );
 }

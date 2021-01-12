@@ -21,6 +21,7 @@ import ProductoModificar from "./components/ProductoModificar";
 import Registrar from "./components/Registrar";
 import CrearEmpleado from "./components/CrearEmpleado";
 import ModificarEmpleado from "./components/ModificarEmpleado";
+import ModificarTienda from "./components/ModificarTienda";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -28,6 +29,7 @@ function App() {
   const [datos, setDatos] = React.useState([]);
   const [tipoPersona, setTipoPersona] = React.useState("");
   const [empleado, setEmpleado] = React.useState({});
+  const [tienda, setTienda] = React.useState({});
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
@@ -39,6 +41,10 @@ function App() {
 
   const datosEmpleado = (datosControlEmpleado) => {
     setEmpleado(datosControlEmpleado);
+  };
+
+  const datosTienda = (datosTiendaModificar) => {
+    setTienda(datosTiendaModificar);
   };
 
   return (
@@ -79,7 +85,10 @@ function App() {
           <TiendaRegistrar />
         </Route>
         <Route exact path="/perfil/controltienda/modificar">
-          <TiendaModificar />
+          <TiendaModificar enviarDatos={datosTienda} />
+        </Route>
+        <Route exact path="/perfil/controltienda/modificar/tienda">
+          <ModificarTienda datos={tienda} />
         </Route>
         <Route exact path="/perfil/controltienda/inventario">
           <TiendaInventario />

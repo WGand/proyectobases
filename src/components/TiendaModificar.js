@@ -4,26 +4,25 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
 import TablaTiendas from "./TablaTiendas";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
-  search: {
-    width: 350,
-    margin: 30,
-  },
   paper: {
     width: 500,
     margin: 30,
     marginTop: 60,
   },
-  paperSelec: {
-    width: 800,
-    margin: 30,
-  },
-  boton: {
-    marginLeft: 300,
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -65,13 +64,64 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function TiendaModificar() {
+export default function TiendaModificar(props) {
   const history = useHistory();
   const classes = useStyles();
+
+  const [datosTienda, setDatosTienda] = React.useState({});
+
+  const [open, setOpen] = React.useState(false);
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
+
+  const handleClickOpen = () => {
+    if (datosTienda.tienda_id) {
+      setOpen(true);
+    }
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const eliminarTienda = async () => {
+    setOpenBackdrop(true);
+    await axios({
+      method: "delete",
+      url: "https://proyectobases1.herokuapp.com/tienda",
+      data: {
+        nombre: datosTienda.nombre,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    setOpen(false);
+    setOpenBackdrop(false);
+  };
+
+  const getDatosTabla = (datosTabla) => {
+    setDatosTienda(datosTabla);
+  };
+
+  const conseguirDatos = () => {
+    props.enviarDatos(datosTienda);
+  };
 
   const irControlTienda = () => {
     history.push("/perfil/controltienda");
   };
+
+  const irModificar = () => {
+    history.push("/perfil/controltienda/modificar/tienda");
+  };
+
+  const validarSelec = () => {
+    if (datosTienda.tienda_id) {
+      conseguirDatos();
+      irModificar();
+    }
+  };
+
+  console.log(datosTienda);
 
   return (
     <React.Fragment>
@@ -82,21 +132,49 @@ export default function TiendaModificar() {
         <b>Control de Tienda: Modificar o Eliminar</b>
       </Typography>
       <Paper className={classes.paper} variant="outlined">
-        <TablaTiendas />
+        <TablaTiendas tiendaSelec={getDatosTabla} />
       </Paper>
-      <Paper
-        className={classes.paperSelec}
-        variant="outlined"
-        style={{ display: "flex" }}
-      >
-        Tienda / Ubicación **TIENDA SELECCIONADA**
-        <IconButton className={classes.boton}>
-          <RemoveCircleIcon color="error" />
-        </IconButton>
-      </Paper>
-      <Boton variant="contained" className="m-4" color="primary">
-        Modificar Tienda
-      </Boton>
+      <div style={{ display: "flex" }}>
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={validarSelec}
+        >
+          Modificar Tienda
+        </Boton>
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={handleClickOpen}
+        >
+          Eliminar Tienda
+        </Boton>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+        >
+          <DialogTitle id="alert-dialog-title">Eliminar tienda</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              ¿Seguro que desea eliminar la tienda seleccionada?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={eliminarTienda}>
+              Si
+            </Button>
+            <Button onClick={handleClose} color="primary" autoFocus>
+              No
+            </Button>
+          </DialogActions>
+          <Backdrop className={classes.backdrop} open={openBackdrop}>
+            <CircularProgress color="inherit" />
+          </Backdrop>
+        </Dialog>
+      </div>
     </React.Fragment>
   );
 }

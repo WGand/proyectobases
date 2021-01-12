@@ -24,9 +24,10 @@ const columns = [
   },
 ];
 
-export default function TablaUsuarios() {
+export default function TablaUsuarios(props) {
   const [usuarios, setUsuarios] = React.useState({});
   const [juridico, setJuridico] = React.useState([]);
+  const [juridicoSelec, setJuridicoSelec] = React.useState({});
 
   const datos = async () => {
     await axios({
@@ -35,6 +36,14 @@ export default function TablaUsuarios() {
     }).then((response) => {
       setUsuarios(response.data);
     });
+  };
+
+  const conseguirDatos = () => {
+    props.juridicoSelec(juridicoSelec);
+  };
+
+  const juridicoSeleccionado = (event) => {
+    setJuridicoSelec(event.data);
   };
 
   React.useEffect(() => {
@@ -51,6 +60,10 @@ export default function TablaUsuarios() {
     }
   }, [usuarios]);
 
+  React.useEffect(() => {
+    conseguirDatos();
+  }, [juridicoSelec]);
+
   return (
     <div style={{ height: 550, width: "100%" }}>
       <DataGrid
@@ -58,6 +71,7 @@ export default function TablaUsuarios() {
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount
+        onRowSelected={juridicoSeleccionado}
       />
     </div>
   );

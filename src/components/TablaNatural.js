@@ -33,9 +33,10 @@ const columns = [
   { field: "correo_electronico", headerName: "Correo electrónico", width: 250 },
 ];
 
-export default function TablaUsuarios() {
+export default function TablaUsuarios(props) {
   const [usuarios, setUsuarios] = React.useState({});
   const [natural, setNatural] = React.useState([]);
+  const [naturalSelec, setNaturalSelec] = React.useState({});
 
   const datos = async () => {
     await axios({
@@ -44,6 +45,14 @@ export default function TablaUsuarios() {
     }).then((response) => {
       setUsuarios(response.data);
     });
+  };
+
+  const conseguirDatos = () => {
+    props.naturalSelec(naturalSelec);
+  };
+
+  const naturalSeleccionado = (event) => {
+    setNaturalSelec(event.data);
   };
 
   React.useEffect(() => {
@@ -60,6 +69,10 @@ export default function TablaUsuarios() {
     }
   }, [usuarios]);
 
+  React.useEffect(() => {
+    conseguirDatos();
+  }, [naturalSelec]);
+
   return (
     <div style={{ height: 550, width: "100%" }}>
       <DataGrid
@@ -67,6 +80,7 @@ export default function TablaUsuarios() {
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount
+        onRowSelected={naturalSeleccionado}
       />
     </div>
   );
