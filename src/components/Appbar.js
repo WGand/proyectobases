@@ -28,6 +28,8 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -103,9 +105,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
   },
   dialog: {
-    marginLeft: 30,
-    marginRight: 40,
-    width: 250,
+    margin: "auto",
+    width: 1200,
   },
   boton: {
     margin: 20,
@@ -115,6 +116,10 @@ const useStyles = makeStyles((theme) => ({
   radio: {
     marginTop: 20,
     marginLeft: 50,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -166,7 +171,7 @@ const GreenRadio = withStyles({
   checked: {},
 })((props) => <Radio color="default" {...props} />);
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -177,6 +182,7 @@ export default function PrimarySearchAppBar() {
   const [contraseña, setContraseña] = React.useState("");
   const [datos, setDatos] = React.useState([]);
   const [error, setError] = React.useState(false);
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const history = useHistory();
 
@@ -231,7 +237,24 @@ export default function PrimarySearchAppBar() {
     setOpen(false);
   };
 
+  const manejarInicio = () => {
+    if (datos.length === 0) {
+      handleClickOpen();
+    } else {
+      irPerfil();
+    }
+  };
+
+  const datosApp = () => {
+    props.conseguirDatos(datos);
+  };
+
+  const tipoApp = () => {
+    props.conseguirTipo(empleado);
+  };
+
   const compararDatos = async () => {
+    setOpenBackdrop(true);
     await axios({
       method: "post",
       url: "https://proyectobases1.herokuapp.com/login",
@@ -243,6 +266,7 @@ export default function PrimarySearchAppBar() {
     }).then((response) => {
       setDatos(response.data);
     });
+    setOpenBackdrop(false);
   };
 
   React.useEffect(() => {
@@ -252,13 +276,21 @@ export default function PrimarySearchAppBar() {
       if (datos.length === 0) {
         setError(true);
       } else {
+        datosApp();
+        tipoApp();
         setError(false);
+        handleClose();
       }
     }
   }, [datos]);
 
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
+
+  console.log(datos);
+  console.log(correo);
+  console.log(contraseña);
+  console.log(empleado);
 
   const renderMobileMenu = (
     <Menu
@@ -278,7 +310,7 @@ export default function PrimarySearchAppBar() {
         </IconButton>
         <Typography>Notificaciones</Typography>
       </MenuItem>
-      <MenuItem onClick={handleClickOpen}>
+      <MenuItem onClick={manejarInicio}>
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -322,6 +354,7 @@ export default function PrimarySearchAppBar() {
             displayEmpty
             className={classes.selectSearch}
             inputProps={{ "aria-label": "Without label" }}
+            variant="outlined"
           >
             <MenuItem value="">
               <em>Categorías</em>
@@ -365,7 +398,7 @@ export default function PrimarySearchAppBar() {
               aria-controls={menuId}
               aria-haspopup="true"
               color="inherit"
-              onClick={handleClickOpen}
+              onClick={manejarInicio}
             >
               <AccountCircleIcon fontSize="large" />
             </IconButton>
@@ -373,6 +406,7 @@ export default function PrimarySearchAppBar() {
               open={open}
               onClose={handleClose}
               aria-labelledby="form-dialog-title"
+              className={classes.dialog}
             >
               <DialogTitle id="form-dialog-title" align="center">
                 Iniciar Sesión
@@ -410,24 +444,31 @@ export default function PrimarySearchAppBar() {
                 </div>
                 <div style={{ display: "flex" }}>
                   <FormControl component="fieldset" className={classes.radio}>
-                    <FormLabel component="legend">¿Empleado?</FormLabel>
+                    <FormLabel component="legend">Tipo de usuario</FormLabel>
                     <RadioGroup
                       row
-                      aria-label="gender"
-                      name="gender1"
+                      aria-label="tipo"
+                      name="tipo1"
                       value={empleado}
                       onChange={handleChangeRadio}
                     >
-                      <FormControlLabel
-                        value="natural"
-                        control={<GreenRadio />}
-                        label="No"
-                      />
-                      <FormControlLabel
-                        value="empleado"
-                        control={<GreenRadio />}
-                        label="Si"
-                      />
+                      <div style={{ display: "flex" }}>
+                        <FormControlLabel
+                          value="natural"
+                          control={<GreenRadio />}
+                          label="Natural"
+                        />
+                        <FormControlLabel
+                          value="empleado"
+                          control={<GreenRadio />}
+                          label="Empleado"
+                        />
+                        <FormControlLabel
+                          value="juridico"
+                          control={<GreenRadio />}
+                          label="Jurídico"
+                        />
+                      </div>
                     </RadioGroup>
                   </FormControl>
                   <Boton
@@ -448,6 +489,9 @@ export default function PrimarySearchAppBar() {
                   ¿Olvidó su Contraseña?
                 </Button>
               </DialogActions>
+              <Backdrop className={classes.backdrop} open={openBackdrop}>
+                <CircularProgress color="inherit" />
+              </Backdrop>
             </Dialog>
             <IconButton color="inherit" onClick={irCarrito}>
               <ShoppingCart fontSize="large" />

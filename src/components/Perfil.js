@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Perfil() {
+export default function Perfil(props) {
   document.title = "Perfil";
 
   const classes = useStyles();
@@ -88,7 +88,7 @@ export default function Perfil() {
           <Tab label="Responsabilidades" {...a11yProps(3)} />
         </Tabs>
         <TabPanel value={value} index={0}>
-          <PerfilDatos />
+          <PerfilDatos datos={props.datos} tipo={props.tipo} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <PerfilOrdenes />

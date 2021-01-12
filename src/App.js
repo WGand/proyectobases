@@ -19,13 +19,37 @@ import ControlProducto from "./components/ControlProducto";
 import ProductoRegistrar from "./components/ProductoRegistrar";
 import ProductoModificar from "./components/ProductoModificar";
 import Registrar from "./components/Registrar";
+import CrearEmpleado from "./components/CrearEmpleado";
+import ModificarEmpleado from "./components/ModificarEmpleado";
+import ModificarTienda from "./components/ModificarTienda";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 function App() {
+  const [datos, setDatos] = React.useState([]);
+  const [tipoPersona, setTipoPersona] = React.useState("");
+  const [empleado, setEmpleado] = React.useState({});
+  const [tienda, setTienda] = React.useState({});
+
+  const datosUsuario = (datosAppbar) => {
+    setDatos(datosAppbar);
+  };
+
+  const tipo = (tipoAppbar) => {
+    setTipoPersona(tipoAppbar);
+  };
+
+  const datosEmpleado = (datosControlEmpleado) => {
+    setEmpleado(datosControlEmpleado);
+  };
+
+  const datosTienda = (datosTiendaModificar) => {
+    setTienda(datosTiendaModificar);
+  };
+
   return (
     <BrowserRouter>
-      <PrimarySearchAppBar />
+      <PrimarySearchAppBar conseguirDatos={datosUsuario} conseguirTipo={tipo} />
       <Switch>
         <Route exact path={["/", "/proyectobases"]}>
           <Home />
@@ -43,7 +67,7 @@ function App() {
           <Reportes />
         </Route>
         <Route exact path="/perfil/controlempleado">
-          <ControlEmpleado />
+          <ControlEmpleado enviarDatos={datosEmpleado} />
         </Route>
         <Route exact path="/perfil/controlusuario">
           <ControlUsuario />
@@ -61,7 +85,10 @@ function App() {
           <TiendaRegistrar />
         </Route>
         <Route exact path="/perfil/controltienda/modificar">
-          <TiendaModificar />
+          <TiendaModificar enviarDatos={datosTienda} />
+        </Route>
+        <Route exact path="/perfil/controltienda/modificar/tienda">
+          <ModificarTienda datos={tienda} />
         </Route>
         <Route exact path="/perfil/controltienda/inventario">
           <TiendaInventario />
@@ -75,8 +102,14 @@ function App() {
         <Route exact path="/perfil/controlproducto/modificar">
           <ProductoModificar />
         </Route>
+        <Route exact path="/perfil/controlempleado/crear">
+          <CrearEmpleado />
+        </Route>
+        <Route exact path="/perfil/controlempleado/modificar">
+          <ModificarEmpleado datos={empleado} />
+        </Route>
         <Route path="/perfil">
-          <Perfil />
+          <Perfil datos={datos} tipo={tipoPersona} />
         </Route>
         <Route path="/registrar">
           <Registrar />

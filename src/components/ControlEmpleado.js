@@ -4,19 +4,12 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import SearchIcon from "@material-ui/icons/Search";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import { DropzoneDialog } from "material-ui-dropzone";
 import TablaEmpleados from "./TablaEmpleados";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
-    width: 650,
+    width: 1300,
     margin: 30,
     marginTop: 60,
   },
@@ -33,6 +26,10 @@ const useStyles = makeStyles((theme) => ({
   },
   boton: {
     marginLeft: 80,
+  },
+  botonCrear: {
+    height: 55,
+    margin: 30,
   },
 }));
 
@@ -74,13 +71,50 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ControlEmpleado() {
+export default function ControlEmpleado(props) {
   const history = useHistory();
   const classes = useStyles();
+
+  const [datosEmpleado, setDatosEmpleado] = React.useState({});
+  const [open, setOpen] = React.useState(false);
+  const [archivo, setArchivo] = React.useState([]);
+
+  const handleClickopen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const getDatosEmpleado = (datosTabla) => {
+    setDatosEmpleado(datosTabla);
+  };
 
   const irPerfil = () => {
     history.push("/perfil");
   };
+
+  const irCrear = () => {
+    history.push("/perfil/controlempleado/crear");
+  };
+
+  const irModificar = () => {
+    history.push("/perfil/controlempleado/modificar");
+  };
+
+  const conseguirDatos = () => {
+    props.enviarDatos(datosEmpleado);
+  };
+
+  const validarModificar = () => {
+    if (datosEmpleado) {
+      conseguirDatos();
+      irModificar();
+    }
+  };
+
+  console.log(archivo);
 
   return (
     <React.Fragment>
@@ -90,25 +124,51 @@ export default function ControlEmpleado() {
       <Typography variant="h4" className="m-3">
         <b>Control de Empleado</b>
       </Typography>
-      <Paper className={classes.paper} variant="outlined">
-        <TablaEmpleados />
-      </Paper>
-      <Paper
-        className={classes.paperSelec}
-        variant="outlined"
-        style={{ display: "flex" }}
+      <Boton
+        variant="contained"
+        className={classes.botonCrear}
+        color="primary"
+        onClick={irCrear}
       >
-        Cédula / Nombre / Apellido / Tienda / Cargos **EMPLEADO SELECCIONADO**
-        <IconButton className={classes.boton}>
-          <AddCircleIcon className={classes.plus} />
-        </IconButton>
-        <IconButton>
-          <RemoveCircleIcon color="error" />
-        </IconButton>
-      </Paper>
-      <Boton variant="contained" className="m-4" color="primary">
-        Modificar Empleado
+        Crear empleado
       </Boton>
+      <Paper className={classes.paper} variant="outlined">
+        <TablaEmpleados empleadoSelec={getDatosEmpleado} />
+      </Paper>
+      <div style={{ display: "flex" }}>
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={validarModificar}
+        >
+          Modificar Empleado
+        </Boton>
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={handleClickopen}
+        >
+          Subir horarios
+        </Boton>
+      </div>
+      <DropzoneDialog
+        dropzoneText="Arrastre archivo aquí o haga click"
+        dialogTitle="Subir horarios"
+        acceptedFiles={[".xlsx"]}
+        cancelButtonText={"Cancelar"}
+        submitButtonText={"Subir"}
+        maxFileSize={5000000}
+        open={open}
+        onClose={handleClose}
+        onSave={(files) => {
+          setArchivo(files);
+          setOpen(false);
+        }}
+        showPreviews={true}
+        showFileNamesInPreview={true}
+      />
     </React.Fragment>
   );
 }

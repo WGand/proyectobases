@@ -5,38 +5,29 @@ import axios from "axios";
 const columns = [
   { field: "id", headerName: "RIF", width: 120 },
   {
-    field: "cedula_identidad",
-    headerName: "Cédula",
-    width: 150,
-    type: "number",
+    field: "denominacion_comercial",
+    headerName: "Denominación comercial",
+    width: 250,
   },
   {
-    field: "primer_nombre",
-    headerName: "Primer nombre",
-    width: 150,
-  },
-  {
-    field: "segundo_nombre",
-    headerName: "Segundo nombre",
-    width: 180,
-  },
-  {
-    field: "primer_apellido",
-    headerName: "Primer apellido",
-    width: 150,
-  },
-  {
-    field: "segundo_apellido",
-    headerName: "Segundo apellido",
+    field: "razon_social",
+    headerName: "Razón social",
     width: 180,
   },
   { field: "correo_electronico", headerName: "Correo electrónico", width: 250 },
+  { field: "pagina_web", headerName: "Página web", width: 250 },
+  {
+    field: "capital_disponible",
+    headerName: "Capital disponible",
+    width: 200,
+    type: "number",
+  },
 ];
 
 export default function TablaUsuarios(props) {
   const [usuarios, setUsuarios] = React.useState({});
-  const [empleado, setEmpleado] = React.useState([]);
-  const [empleadoSelec, setEmpleadoSelec] = React.useState({});
+  const [juridico, setJuridico] = React.useState([]);
+  const [juridicoSelec, setJuridicoSelec] = React.useState({});
 
   const datos = async () => {
     await axios({
@@ -48,11 +39,11 @@ export default function TablaUsuarios(props) {
   };
 
   const conseguirDatos = () => {
-    props.empleadoSelec(empleadoSelec);
+    props.juridicoSelec(juridicoSelec);
   };
 
-  const empleadoSeleccionado = (event) => {
-    setEmpleadoSelec(event.data);
+  const juridicoSeleccionado = (event) => {
+    setJuridicoSelec(event.data);
   };
 
   React.useEffect(() => {
@@ -60,27 +51,27 @@ export default function TablaUsuarios(props) {
   }, []);
 
   React.useEffect(() => {
-    if (!usuarios["EMPLEADO"]) {
+    if (!usuarios["JURIDICO"]) {
       console.log("no existe");
       datos();
     } else {
       console.log("existe");
-      setEmpleado(usuarios["EMPLEADO"]);
+      setJuridico(usuarios["JURIDICO"]);
     }
   }, [usuarios]);
 
   React.useEffect(() => {
     conseguirDatos();
-  }, [empleadoSelec]);
+  }, [juridicoSelec]);
 
   return (
     <div style={{ height: 550, width: "100%" }}>
       <DataGrid
-        rows={empleado}
+        rows={juridico}
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount
-        onRowSelected={empleadoSeleccionado}
+        onRowSelected={juridicoSeleccionado}
       />
     </div>
   );

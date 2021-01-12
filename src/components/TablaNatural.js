@@ -35,8 +35,8 @@ const columns = [
 
 export default function TablaUsuarios(props) {
   const [usuarios, setUsuarios] = React.useState({});
-  const [empleado, setEmpleado] = React.useState([]);
-  const [empleadoSelec, setEmpleadoSelec] = React.useState({});
+  const [natural, setNatural] = React.useState([]);
+  const [naturalSelec, setNaturalSelec] = React.useState({});
 
   const datos = async () => {
     await axios({
@@ -48,11 +48,11 @@ export default function TablaUsuarios(props) {
   };
 
   const conseguirDatos = () => {
-    props.empleadoSelec(empleadoSelec);
+    props.naturalSelec(naturalSelec);
   };
 
-  const empleadoSeleccionado = (event) => {
-    setEmpleadoSelec(event.data);
+  const naturalSeleccionado = (event) => {
+    setNaturalSelec(event.data);
   };
 
   React.useEffect(() => {
@@ -60,27 +60,27 @@ export default function TablaUsuarios(props) {
   }, []);
 
   React.useEffect(() => {
-    if (!usuarios["EMPLEADO"]) {
+    if (!usuarios["NATURAL"]) {
       console.log("no existe");
       datos();
     } else {
       console.log("existe");
-      setEmpleado(usuarios["EMPLEADO"]);
+      setNatural(usuarios["NATURAL"]);
     }
   }, [usuarios]);
 
   React.useEffect(() => {
     conseguirDatos();
-  }, [empleadoSelec]);
+  }, [naturalSelec]);
 
   return (
     <div style={{ height: 550, width: "100%" }}>
       <DataGrid
-        rows={empleado}
+        rows={natural}
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount
-        onRowSelected={empleadoSeleccionado}
+        onRowSelected={naturalSeleccionado}
       />
     </div>
   );

@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 30,
   },
   paper: {
-    width: 550,
+    width: 500,
     margin: 30,
     marginTop: 60,
   },
@@ -34,9 +34,17 @@ export default function TiendaInventario() {
   const history = useHistory();
   const classes = useStyles();
 
+  const [datosTienda, setDatosTienda] = React.useState({});
+
+  const getDatosTabla = (datosTabla) => {
+    setDatosTienda(datosTabla);
+  };
+
   const irControlTienda = () => {
     history.push("/perfil/controltienda");
   };
+
+  console.log(datosTienda);
 
   return (
     <React.Fragment>
@@ -47,17 +55,21 @@ export default function TiendaInventario() {
         <b>Control de Tienda: Inventario</b>
       </Typography>
       <Paper className={classes.paper} variant="outlined">
-        <TablaTiendas />
+        <TablaTiendas tiendaSelec={getDatosTabla} />
       </Paper>
       <div style={{ display: "flex" }}>
         <Typography variant="h6" className="m-4">
-          {" "}
           Tienda seleccionada:
         </Typography>
-        <TextField variant="outlined" label="Tienda" className="m-3" disabled />
+        <TextField
+          variant="outlined"
+          label={datosTienda.nombre}
+          className="m-3"
+          disabled
+        />
       </div>
       <Paper className={classes.paperProd} variant="outlined">
-        <TablaProductos />
+        <TablaProductos tiendaId={datosTienda.tienda_id} />
       </Paper>
     </React.Fragment>
   );
