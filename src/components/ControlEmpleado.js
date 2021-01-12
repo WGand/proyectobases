@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { DropzoneDialog } from "material-ui-dropzone";
 import TablaEmpleados from "./TablaEmpleados";
 
 const useStyles = makeStyles((theme) => ({
@@ -75,6 +76,16 @@ export default function ControlEmpleado(props) {
   const classes = useStyles();
 
   const [datosEmpleado, setDatosEmpleado] = React.useState({});
+  const [open, setOpen] = React.useState(false);
+  const [archivo, setArchivo] = React.useState([]);
+
+  const handleClickopen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const getDatosEmpleado = (datosTabla) => {
     setDatosEmpleado(datosTabla);
@@ -103,6 +114,8 @@ export default function ControlEmpleado(props) {
     }
   };
 
+  console.log(archivo);
+
   return (
     <React.Fragment>
       <Button className="m-3" onClick={irPerfil}>
@@ -122,14 +135,40 @@ export default function ControlEmpleado(props) {
       <Paper className={classes.paper} variant="outlined">
         <TablaEmpleados empleadoSelec={getDatosEmpleado} />
       </Paper>
-      <Boton
-        variant="contained"
-        className="m-4"
-        color="primary"
-        onClick={validarModificar}
-      >
-        Modificar Empleado
-      </Boton>
+      <div style={{ display: "flex" }}>
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={validarModificar}
+        >
+          Modificar Empleado
+        </Boton>
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={handleClickopen}
+        >
+          Subir horarios
+        </Boton>
+      </div>
+      <DropzoneDialog
+        dropzoneText="Arrastre archivo aquí o haga click"
+        dialogTitle="Subir horarios"
+        acceptedFiles={[".xlsx"]}
+        cancelButtonText={"Cancelar"}
+        submitButtonText={"Subir"}
+        maxFileSize={5000000}
+        open={open}
+        onClose={handleClose}
+        onSave={(files) => {
+          setArchivo(files);
+          setOpen(false);
+        }}
+        showPreviews={true}
+        showFileNamesInPreview={true}
+      />
     </React.Fragment>
   );
 }
