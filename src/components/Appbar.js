@@ -30,6 +30,7 @@ import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -241,8 +242,16 @@ export default function PrimarySearchAppBar(props) {
     if (datos.length === 0) {
       handleClickOpen();
     } else {
+      datosApp();
+      tipoApp();
       irPerfil();
     }
+  };
+
+  const cerrarSesion = () => {
+    setDatos([]);
+    localStorage.removeItem("datos");
+    irHome();
   };
 
   const datosApp = () => {
@@ -270,6 +279,17 @@ export default function PrimarySearchAppBar(props) {
   };
 
   React.useEffect(() => {
+    if (!datos) {
+      setDatos([]);
+    } else {
+      setDatos(JSON.parse(localStorage.getItem("datos")));
+      datosApp();
+      tipoApp();
+      console.log("paso datos");
+    }
+  }, []);
+
+  React.useEffect(() => {
     if (correo.length === 0 && contraseña.length === 0) {
       setError(false);
     } else {
@@ -280,6 +300,7 @@ export default function PrimarySearchAppBar(props) {
         tipoApp();
         setError(false);
         handleClose();
+        localStorage.setItem("datos", JSON.stringify(datos));
       }
     }
   }, [datos]);
@@ -288,11 +309,36 @@ export default function PrimarySearchAppBar(props) {
   const mobileMenuId = "primary-search-account-menu-mobile";
 
   console.log(datos);
+  console.log(JSON.parse(localStorage.getItem("datos")));
   console.log(correo);
   console.log(contraseña);
   console.log(empleado);
 
   const renderMobileMenu = (
+    <Menu
+      anchorEl={mobileMoreAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={mobileMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isMobileMenuOpen}
+      onClose={handleMobileMenuClose}
+    >
+      <MenuItem onClick={manejarInicio}>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AccountCircleIcon fontSize="large" />
+        </IconButton>
+        <Typography>Iniciar sesión</Typography>
+      </MenuItem>
+    </Menu>
+  );
+
+  const renderMobileMenuLogged = (
     <Menu
       anchorEl={mobileMoreAnchorEl}
       anchorOrigin={{ vertical: "top", horizontal: "right" }}
@@ -327,190 +373,285 @@ export default function PrimarySearchAppBar(props) {
         </IconButton>
         <Typography>Carrito</Typography>
       </MenuItem>
+      <MenuItem onClick={cerrarSesion}>
+        <IconButton color="inherit">
+          <ExitToAppIcon fontSize="large" />
+        </IconButton>
+        <Typography>Cerrar sesión</Typography>
+      </MenuItem>
     </Menu>
   );
 
-  return (
-    <div className={classes.grow}>
-      <AppBar position="static" style={{ background: "#00AAE3" }}>
-        <Toolbar>
-          <IconButton
-            onClick={irHome}
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <img
-              src={process.env.PUBLIC_URL + "/ucabmart_logo.png"}
-              width="70"
-              height="70"
-              alt=""
-            />
-          </IconButton>
-          <Select
-            value={categoria}
-            onChange={handleChange}
-            displayEmpty
-            className={classes.selectSearch}
-            inputProps={{ "aria-label": "Without label" }}
-            variant="outlined"
-          >
-            <MenuItem value="">
-              <em>Categorías</em>
-            </MenuItem>
-            <MenuItem value={1}>Frutas y Vegetales</MenuItem>
-            <MenuItem value={2}>Víveres</MenuItem>
-            <MenuItem value={3}>Reffrigerados y Congelados</MenuItem>
-            <MenuItem value={4}>Cuidado Personal y Salud</MenuItem>
-            <MenuItem value={5}>Limpieza</MenuItem>
-            <MenuItem value={6}>Hogar y Temporada</MenuItem>
-            <MenuItem value={7}>Mascotas</MenuItem>
-            <MenuItem value={8}>Licores</MenuItem>
-            <MenuItem value={9}>Vehículos</MenuItem>
-            <MenuItem value={10}>Oficina y Tecnología</MenuItem>
-          </Select>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+  if (datos.length === 0) {
+    return (
+      <div className={classes.grow}>
+        <AppBar position="static" style={{ background: "#00AAE3" }}>
+          <Toolbar>
+            <IconButton
+              onClick={irHome}
+              edge="start"
+              className={classes.menuButton}
+              color="inherit"
+              aria-label="open drawer"
+            >
+              <img
+                src={process.env.PUBLIC_URL + "/ucabmart_logo.png"}
+                width="70"
+                height="70"
+                alt=""
+              />
+            </IconButton>
+            <Select
+              value={categoria}
+              onChange={handleChange}
+              displayEmpty
+              className={classes.selectSearch}
+              inputProps={{ "aria-label": "Without label" }}
+              variant="outlined"
+            >
+              <MenuItem value="">
+                <em>Categorías</em>
+              </MenuItem>
+              <MenuItem value={1}>Frutas y Vegetales</MenuItem>
+              <MenuItem value={2}>Víveres</MenuItem>
+              <MenuItem value={3}>Reffrigerados y Congelados</MenuItem>
+              <MenuItem value={4}>Cuidado Personal y Salud</MenuItem>
+              <MenuItem value={5}>Limpieza</MenuItem>
+              <MenuItem value={6}>Hogar y Temporada</MenuItem>
+              <MenuItem value={7}>Mascotas</MenuItem>
+              <MenuItem value={8}>Licores</MenuItem>
+              <MenuItem value={9}>Vehículos</MenuItem>
+              <MenuItem value={10}>Oficina y Tecnología</MenuItem>
+            </Select>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Buscar..."
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ "aria-label": "search" }}
+                type="search"
+              />
             </div>
-            <InputBase
-              placeholder="Buscar..."
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-              type="search"
-            />
-          </div>
-          <div className={classes.grow} />
-          <div className={classes.sectionDesktop}>
-            <IconButton color="inherit">
-              <Badge badgeContent={1} color="secondary">
-                <NotificationsIcon fontSize="large" />
-              </Badge>
-            </IconButton>
-
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              color="inherit"
-              onClick={manejarInicio}
-            >
-              <AccountCircleIcon fontSize="large" />
-            </IconButton>
-            <Dialog //********INICIO DE SESION, FUNCIONA PERO SE DEBE SABER SI HAY SESION INICIADA O NO  */
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="form-dialog-title"
-              className={classes.dialog}
-            >
-              <DialogTitle id="form-dialog-title" align="center">
-                Iniciar Sesión
-              </DialogTitle>
-              <DialogContent>
-                <div style={{ display: "flex" }}>
-                  <PersonIcon fontSize="large" className="m-2" />
-                  <TextField
-                    className={classes.dialog}
-                    margin="dense"
-                    fullWidth
-                    autoFocus
-                    id="name"
-                    label="Correo Electrónico"
-                    type="email"
-                    variant="outlined"
-                    onChange={handleChangeCorreo}
-                    error={error}
-                  />
-                </div>
-                <div style={{ display: "flex" }}>
-                  <LockIcon fontSize="large" className="m-2" />
-                  <TextField
-                    className={classes.dialog}
-                    margin="dense"
-                    fullWidth
-                    autoFocus
-                    id="name"
-                    label="Constraseña"
-                    type="password"
-                    variant="outlined"
-                    onChange={handleChangeContraseña}
-                    error={error}
-                  />
-                </div>
-                <div style={{ display: "flex" }}>
-                  <FormControl component="fieldset" className={classes.radio}>
-                    <FormLabel component="legend">Tipo de usuario</FormLabel>
-                    <RadioGroup
-                      row
-                      aria-label="tipo"
-                      name="tipo1"
-                      value={empleado}
-                      onChange={handleChangeRadio}
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                color="inherit"
+                onClick={manejarInicio}
+              >
+                <AccountCircleIcon fontSize="large" />
+              </IconButton>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="form-dialog-title"
+                className={classes.dialog}
+              >
+                <DialogTitle id="form-dialog-title" align="center">
+                  Iniciar Sesión
+                </DialogTitle>
+                <DialogContent>
+                  <div style={{ display: "flex" }}>
+                    <PersonIcon fontSize="large" className="m-2" />
+                    <TextField
+                      className={classes.dialog}
+                      margin="dense"
+                      fullWidth
+                      autoFocus
+                      id="name"
+                      label="Correo Electrónico"
+                      type="email"
+                      variant="outlined"
+                      onChange={handleChangeCorreo}
+                      error={error}
+                    />
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <LockIcon fontSize="large" className="m-2" />
+                    <TextField
+                      className={classes.dialog}
+                      margin="dense"
+                      fullWidth
+                      autoFocus
+                      id="name"
+                      label="Constraseña"
+                      type="password"
+                      variant="outlined"
+                      onChange={handleChangeContraseña}
+                      error={error}
+                    />
+                  </div>
+                  <div style={{ display: "flex" }}>
+                    <FormControl component="fieldset" className={classes.radio}>
+                      <FormLabel component="legend">Tipo de usuario</FormLabel>
+                      <RadioGroup
+                        row
+                        aria-label="tipo"
+                        name="tipo1"
+                        value={empleado}
+                        onChange={handleChangeRadio}
+                      >
+                        <div style={{ display: "flex" }}>
+                          <FormControlLabel
+                            value="natural"
+                            control={<GreenRadio />}
+                            label="Natural"
+                          />
+                          <FormControlLabel
+                            value="empleado"
+                            control={<GreenRadio />}
+                            label="Empleado"
+                          />
+                          <FormControlLabel
+                            value="juridico"
+                            control={<GreenRadio />}
+                            label="Jurídico"
+                          />
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                    <Boton
+                      variant="contained"
+                      className={classes.boton}
+                      color="primary"
+                      onClick={compararDatos}
                     >
-                      <div style={{ display: "flex" }}>
-                        <FormControlLabel
-                          value="natural"
-                          control={<GreenRadio />}
-                          label="Natural"
-                        />
-                        <FormControlLabel
-                          value="empleado"
-                          control={<GreenRadio />}
-                          label="Empleado"
-                        />
-                        <FormControlLabel
-                          value="juridico"
-                          control={<GreenRadio />}
-                          label="Jurídico"
-                        />
-                      </div>
-                    </RadioGroup>
-                  </FormControl>
-                  <Boton
-                    variant="contained"
-                    className={classes.boton}
-                    color="primary"
-                    onClick={compararDatos}
-                  >
-                    Iniciar Sesión
-                  </Boton>
-                </div>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={irRegistrar} color="primary" className="m-3">
-                  Registrarse
-                </Button>
-                <Button onClick={handleClose} color="primary" className="m-3">
-                  ¿Olvidó su Contraseña?
-                </Button>
-              </DialogActions>
-              <Backdrop className={classes.backdrop} open={openBackdrop}>
-                <CircularProgress color="inherit" />
-              </Backdrop>
-            </Dialog>
-            <IconButton color="inherit" onClick={irCarrito}>
-              <ShoppingCart fontSize="large" />
-            </IconButton>
-          </div>
-          <div className={classes.sectionMobile}>
+                      Iniciar Sesión
+                    </Boton>
+                  </div>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={irRegistrar} color="primary" className="m-3">
+                    Registrarse
+                  </Button>
+                  <Button onClick={handleClose} color="primary" className="m-3">
+                    ¿Olvidó su Contraseña?
+                  </Button>
+                </DialogActions>
+                <Backdrop className={classes.backdrop} open={openBackdrop}>
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              </Dialog>
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {renderMobileMenu}
+      </div>
+    );
+  } else {
+    return (
+      <div className={classes.grow}>
+        <AppBar position="static" style={{ background: "#00AAE3" }}>
+          <Toolbar>
             <IconButton
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
+              onClick={irHome}
+              edge="start"
+              className={classes.menuButton}
               color="inherit"
+              aria-label="open drawer"
             >
-              <MoreIcon />
+              <img
+                src={process.env.PUBLIC_URL + "/ucabmart_logo.png"}
+                width="70"
+                height="70"
+                alt=""
+              />
             </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
-      {renderMobileMenu}
-    </div>
-  );
+            <Select
+              value={categoria}
+              onChange={handleChange}
+              displayEmpty
+              className={classes.selectSearch}
+              inputProps={{ "aria-label": "Without label" }}
+              variant="outlined"
+            >
+              <MenuItem value="">
+                <em>Categorías</em>
+              </MenuItem>
+              <MenuItem value={1}>Frutas y Vegetales</MenuItem>
+              <MenuItem value={2}>Víveres</MenuItem>
+              <MenuItem value={3}>Reffrigerados y Congelados</MenuItem>
+              <MenuItem value={4}>Cuidado Personal y Salud</MenuItem>
+              <MenuItem value={5}>Limpieza</MenuItem>
+              <MenuItem value={6}>Hogar y Temporada</MenuItem>
+              <MenuItem value={7}>Mascotas</MenuItem>
+              <MenuItem value={8}>Licores</MenuItem>
+              <MenuItem value={9}>Vehículos</MenuItem>
+              <MenuItem value={10}>Oficina y Tecnología</MenuItem>
+            </Select>
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Buscar..."
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput,
+                }}
+                inputProps={{ "aria-label": "search" }}
+                type="search"
+              />
+            </div>
+            <div className={classes.grow} />
+            <div className={classes.sectionDesktop}>
+              <IconButton color="inherit">
+                <Badge badgeContent={1} color="secondary">
+                  <NotificationsIcon fontSize="large" />
+                </Badge>
+              </IconButton>
+
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                color="inherit"
+                onClick={manejarInicio}
+              >
+                <AccountCircleIcon fontSize="large" />
+              </IconButton>
+              <IconButton color="inherit" onClick={irCarrito}>
+                <ShoppingCart fontSize="large" />
+              </IconButton>
+              <IconButton color="inherit" onClick={cerrarSesion}>
+                <ExitToAppIcon fontSize="large" />
+              </IconButton>
+            </div>
+            <div className={classes.sectionMobile}>
+              <IconButton
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </div>
+          </Toolbar>
+        </AppBar>
+        {renderMobileMenuLogged}
+      </div>
+    );
+  }
 }
