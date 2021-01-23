@@ -300,7 +300,7 @@ export default function Registrar() {
     setOpenBackdrop(true);
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/usuarioNatural",
+      url: "https://proyectobasesnode.azurewebsites.net/usuarioNatural",
       data: {
         rif: rif,
         correo: correo,
@@ -328,7 +328,7 @@ export default function Registrar() {
     setOpenBackdrop(true);
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/usuarioJuridico",
+      url: "https://proyectobasesnode.azurewebsites.net/usuarioJuridico",
       data: {
         rif: rif,
         correo: correo,
@@ -359,7 +359,7 @@ export default function Registrar() {
   const compararCorreo = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/correo",
+      url: "https://proyectobasesnode.azurewebsites.net/correo",
       data: {
         correo_electronico: correo,
         tipo: tipoPersona,
@@ -372,7 +372,7 @@ export default function Registrar() {
   const compararRif = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/rif",
+      url: "https://proyectobasesnode.azurewebsites.net/rif",
       data: {
         rif: rif,
         tipo: tipoPersona,
@@ -436,7 +436,7 @@ export default function Registrar() {
   const fetchEstados = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "ESTADO",
       },
@@ -448,7 +448,7 @@ export default function Registrar() {
   const fetchMunicipios = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "MUNICIPIO",
         lugar: estadoSelec,
@@ -461,7 +461,7 @@ export default function Registrar() {
   const fetchParroquias = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "PARROQUIA",
         lugar: municipioSelec,
@@ -475,7 +475,7 @@ export default function Registrar() {
   const fetchMunicipiosF = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "MUNICIPIO",
         lugar: estadoFSelec,
@@ -488,7 +488,7 @@ export default function Registrar() {
   const fetchParroquiasF = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "PARROQUIA",
         lugar: municipioFSelec,

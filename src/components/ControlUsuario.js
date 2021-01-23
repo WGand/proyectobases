@@ -157,7 +157,7 @@ export default function ControlUsuario() {
     setOpenBackdrop(true);
     await axios({
       method: "delete",
-      url: "https://proyectobases1.herokuapp.com/empleado",
+      url: "https://proyectobasesnode.azurewebsites.net/empleado",
       data: {
         rif: empleado.rif,
       },
@@ -172,7 +172,7 @@ export default function ControlUsuario() {
     setOpenBackdrop(true);
     await axios({
       method: "delete",
-      url: "https://proyectobases1.herokuapp.com/usuarioJuridico",
+      url: "https://proyectobasesnode.azurewebsites.net/usuarioJuridico",
       data: {
         rif: juridico.rif,
       },
@@ -187,7 +187,7 @@ export default function ControlUsuario() {
     setOpenBackdrop(true);
     await axios({
       method: "delete",
-      url: "https://proyectobases1.herokuapp.com/usuarioNatural",
+      url: "https://proyectobasesnode.azurewebsites.net/usuarioNatural",
       data: {
         rif: natural.rif,
       },

@@ -226,7 +226,7 @@ export default function CrearEmpleado() {
     setOpenBackdrop(true);
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/empleado",
+      url: "https://proyectobasesnode.azurewebsites.net/empleado",
       data: {
         rif: rif,
         correo: correo,
@@ -254,7 +254,7 @@ export default function CrearEmpleado() {
   const compararCorreo = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/correo",
+      url: "https://proyectobasesnode.azurewebsites.net/correo",
       data: {
         correo_electronico: correo,
         tipo: "EMPLEADO",
@@ -267,7 +267,7 @@ export default function CrearEmpleado() {
   const compararRif = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/rif",
+      url: "https://proyectobasesnode.azurewebsites.net/rif",
       data: {
         rif: rif,
         tipo: "EMPLEADO",
@@ -303,7 +303,7 @@ export default function CrearEmpleado() {
   const fetchHorario = async () => {
     await axios({
       method: "get",
-      url: "https://proyectobases1.herokuapp.com/horario",
+      url: "https://proyectobasesnode.azurewebsites.net/horario",
     }).then((response) => {
       setHorario(response.data);
     });
@@ -312,7 +312,7 @@ export default function CrearEmpleado() {
   const fetchEstados = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "ESTADO",
       },
@@ -324,7 +324,7 @@ export default function CrearEmpleado() {
   const fetchMunicipios = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "MUNICIPIO",
         lugar: estadoSelec,
@@ -337,7 +337,7 @@ export default function CrearEmpleado() {
   const fetchParroquias = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "PARROQUIA",
         lugar: municipioSelec,

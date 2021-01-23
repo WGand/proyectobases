@@ -207,7 +207,7 @@ export default function PerfilDatos(props) {
   const fetchEstados = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "ESTADO",
       },
@@ -219,7 +219,7 @@ export default function PerfilDatos(props) {
   const fetchMunicipios = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "MUNICIPIO",
         lugar: estadoSelec,
@@ -232,7 +232,7 @@ export default function PerfilDatos(props) {
   const fetchParroquias = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/especificolugar",
+      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
       data: {
         tipo_lugar: "PARROQUIA",
         lugar: municipioSelec,
@@ -246,7 +246,7 @@ export default function PerfilDatos(props) {
   const ubicacionActual = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/lugarparroquia",
+      url: "https://proyectobasesnode.azurewebsites.net/lugarparroquia",
       data: {
         parroquia: datosEmpleado[0].fk_lugar,
       },
@@ -259,7 +259,7 @@ export default function PerfilDatos(props) {
     setOpenBackdrop(true);
     await axios({
       method: "put",
-      url: "https://proyectobases1.herokuapp.com/empleado",
+      url: "https://proyectobasesnode.azurewebsites.net/empleado",
       data: {
         rif: datosEmpleado[0].rif,
         correo: correo,
@@ -287,7 +287,7 @@ export default function PerfilDatos(props) {
   const conseguirDatosEmpleado = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/login",
+      url: "https://proyectobasesnode.azurewebsites.net/login",
       data: {
         correo: props.datos.correo_electronico,
         contrasena: props.datos.contrasena,
@@ -301,7 +301,7 @@ export default function PerfilDatos(props) {
   const compararCorreoEmpleado = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/correo",
+      url: "https://proyectobasesnode.azurewebsites.net/correo",
       data: {
         correo_electronico: correo,
         tipo: "EMPLEADO",
