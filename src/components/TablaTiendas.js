@@ -10,6 +10,7 @@ const columns = [
 export default function TablaTiendas(props) {
   const [tiendas, setTiendas] = React.useState([]);
   const [tiendaSelec, setTiendaSelec] = React.useState({});
+  const [cargando, setCargando] = React.useState(false);
 
   const datos = async () => {
     await axios({
@@ -35,9 +36,11 @@ export default function TablaTiendas(props) {
   React.useEffect(() => {
     if (tiendas.length === 0) {
       console.log("no existe");
+      setCargando(true);
       datos();
     } else {
       console.log("existe");
+      setCargando(false);
     }
   }, [tiendas]);
 
@@ -53,6 +56,7 @@ export default function TablaTiendas(props) {
         pageSize={8}
         hideFooterSelectedRowCount
         onRowSelected={tiendaSeleccionada}
+        loading={cargando}
       />
     </div>
   );

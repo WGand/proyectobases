@@ -37,6 +37,7 @@ export default function TablaUsuarios(props) {
   const [usuarios, setUsuarios] = React.useState({});
   const [natural, setNatural] = React.useState([]);
   const [naturalSelec, setNaturalSelec] = React.useState({});
+  const [cargando, setCargando] = React.useState(false);
 
   const datos = async () => {
     await axios({
@@ -62,10 +63,12 @@ export default function TablaUsuarios(props) {
   React.useEffect(() => {
     if (!usuarios["NATURAL"]) {
       console.log("no existe");
+      setCargando(true);
       datos();
     } else {
       console.log("existe");
       setNatural(usuarios["NATURAL"]);
+      setCargando(false);
     }
   }, [usuarios]);
 
@@ -81,6 +84,7 @@ export default function TablaUsuarios(props) {
         pageSize={8}
         hideFooterSelectedRowCount
         onRowSelected={naturalSeleccionado}
+        loading={cargando}
       />
     </div>
   );
