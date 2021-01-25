@@ -22,6 +22,7 @@ const columns = [
 
 export default function TablaProductos(props) {
   const [productos, setProductos] = React.useState([]);
+  const [cargando, setCargando] = React.useState(false);
 
   const datos = async () => {
     await axios({
@@ -42,8 +43,10 @@ export default function TablaProductos(props) {
   React.useEffect(() => {
     if (productos.length === 0) {
       console.log("no existe");
+      setCargando(true);
     } else {
       console.log("existe");
+      setCargando(false);
     }
   }, [productos]);
 
@@ -56,6 +59,7 @@ export default function TablaProductos(props) {
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount
+        loading={cargando}
       />
     </div>
   );

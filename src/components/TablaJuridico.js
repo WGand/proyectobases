@@ -28,6 +28,7 @@ export default function TablaUsuarios(props) {
   const [usuarios, setUsuarios] = React.useState({});
   const [juridico, setJuridico] = React.useState([]);
   const [juridicoSelec, setJuridicoSelec] = React.useState({});
+  const [cargando, setCargando] = React.useState(false);
 
   const datos = async () => {
     await axios({
@@ -53,10 +54,12 @@ export default function TablaUsuarios(props) {
   React.useEffect(() => {
     if (!usuarios["JURIDICO"]) {
       console.log("no existe");
+      setCargando(true);
       datos();
     } else {
       console.log("existe");
       setJuridico(usuarios["JURIDICO"]);
+      setCargando(false);
     }
   }, [usuarios]);
 
@@ -72,6 +75,7 @@ export default function TablaUsuarios(props) {
         pageSize={8}
         hideFooterSelectedRowCount
         onRowSelected={juridicoSeleccionado}
+        loading={cargando}
       />
     </div>
   );
