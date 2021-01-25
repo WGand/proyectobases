@@ -20,6 +20,7 @@ import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PersonIcon from "@material-ui/icons/Person";
 import LockIcon from "@material-ui/icons/Lock";
@@ -251,6 +252,7 @@ export default function PrimarySearchAppBar(props) {
   const cerrarSesion = () => {
     setDatos([]);
     localStorage.removeItem("datos");
+    setOpen(false);
     irHome();
   };
 
@@ -279,8 +281,9 @@ export default function PrimarySearchAppBar(props) {
   };
 
   React.useEffect(() => {
-    if (!datos) {
+    if (!datos || JSON.parse(localStorage.getItem("datos")) === null) {
       setDatos([]);
+      localStorage.setItem("datos", JSON.stringify([]));
     } else {
       setDatos(JSON.parse(localStorage.getItem("datos")));
       datosApp();
@@ -373,7 +376,7 @@ export default function PrimarySearchAppBar(props) {
         </IconButton>
         <Typography>Carrito</Typography>
       </MenuItem>
-      <MenuItem onClick={cerrarSesion}>
+      <MenuItem onClick={handleClickOpen}>
         <IconButton color="inherit">
           <ExitToAppIcon fontSize="large" />
         </IconButton>
@@ -633,9 +636,32 @@ export default function PrimarySearchAppBar(props) {
               <IconButton color="inherit" onClick={irCarrito}>
                 <ShoppingCart fontSize="large" />
               </IconButton>
-              <IconButton color="inherit" onClick={cerrarSesion}>
+              <IconButton color="inherit" onClick={handleClickOpen}>
                 <ExitToAppIcon fontSize="large" />
               </IconButton>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+              >
+                <DialogTitle id="alert-dialog-title">Cerrar sesión</DialogTitle>
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    ¿Seguro que desea cerrar sesión?
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={cerrarSesion} color="primary">
+                    Si
+                  </Button>
+                  <Button onClick={handleClose} color="primary" autoFocus>
+                    No
+                  </Button>
+                </DialogActions>
+                <Backdrop className={classes.backdrop} open={openBackdrop}>
+                  <CircularProgress color="inherit" />
+                </Backdrop>
+              </Dialog>
             </div>
             <div className={classes.sectionMobile}>
               <IconButton
