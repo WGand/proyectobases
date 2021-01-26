@@ -316,7 +316,6 @@ export default function PrimarySearchAppBar(props) {
 
   console.log(datos);
   console.log(JSON.parse(localStorage.getItem("datos")));
-  console.log("tipo: " + localStorage.getItem("tipo"));
   console.log(correo);
   console.log(contraseña);
   console.log(empleado);

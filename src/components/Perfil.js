@@ -67,41 +67,78 @@ export default function Perfil(props) {
     }
   };
 
-  console.log("tipo:" + props.tipo);
+  console.log("tipo: " + props.tipo);
 
-  return (
-    <React.Fragment>
-      <Typography variant="h3" className="m-4">
-        <b>Cuenta</b>
-      </Typography>
-      <div className={classes.root}>
-        <Tabs
-          orientation="vertical"
-          variant="scrollable"
-          value={value}
-          onChange={handleChange}
-          aria-label="Vertical tabs example"
-          className={classes.tabs}
-          TabIndicatorProps={{ style: { background: "#00AAE3" } }}
-        >
-          <Tab label="Datos" {...a11yProps(0)} />
-          <Tab label="Órdenes" {...a11yProps(1)} />
-          <Tab label="Contraseña" {...a11yProps(2)} />
-          <Tab label="Responsabilidades" {...a11yProps(3)} />
-        </Tabs>
-        <TabPanel value={value} index={0}>
-          <PerfilDatos datos={props.datos} tipo={props.tipo} />
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          <PerfilOrdenes />
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          Item Three
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          <Responsabilidades />
-        </TabPanel>
-      </div>
-    </React.Fragment>
-  );
+  if (props.tipo === "empleado") {
+    return (
+      <React.Fragment>
+        <Typography variant="h3" className="m-4">
+          <b>Cuenta</b>
+        </Typography>
+        <div className={classes.root}>
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            aria-label="Vertical tabs example"
+            className={classes.tabs}
+            TabIndicatorProps={{ style: { background: "#00AAE3" } }}
+          >
+            <Tab label="Datos" {...a11yProps(0)} />
+            <Tab label="Órdenes" {...a11yProps(1)} />
+            <Tab label="Contraseña" {...a11yProps(2)} />
+            <Tab label="Responsabilidades" {...a11yProps(3)} />
+          </Tabs>
+          <TabPanel value={value} index={0}>
+            <PerfilDatos datos={props.datos} tipo={props.tipo} />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <PerfilOrdenes />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            Item Three
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <Responsabilidades />
+          </TabPanel>
+        </div>
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <Typography variant="h3" className="m-4">
+          <b>Cuenta</b>
+        </Typography>
+        <div className={classes.root}>
+          <Tabs
+            orientation="vertical"
+            variant="scrollable"
+            value={value}
+            onChange={handleChange}
+            aria-label="Vertical tabs example"
+            className={classes.tabs}
+            TabIndicatorProps={{ style: { background: "#00AAE3" } }}
+          >
+            <Tab label="Datos" {...a11yProps(0)} />
+            <Tab label="Órdenes" {...a11yProps(1)} />
+            <Tab label="Contraseña" {...a11yProps(2)} />
+          </Tabs>
+          <TabPanel value={value} index={0}>
+            <PerfilDatos datos={props.datos} tipo={props.tipo} />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <PerfilOrdenes />
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            Item Three
+          </TabPanel>
+          <TabPanel value={value} index={3}>
+            <Responsabilidades />
+          </TabPanel>
+        </div>
+      </React.Fragment>
+    );
+  }
 }
