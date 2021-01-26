@@ -284,7 +284,7 @@ export default function PrimarySearchAppBar(props) {
     if (!datos || JSON.parse(localStorage.getItem("datos")) === null) {
       setDatos([]);
       localStorage.setItem("datos", JSON.stringify([]));
-      localStorage.setItem("datos", "natural");
+      localStorage.setItem("tipo", "natural");
     } else {
       setDatos(JSON.parse(localStorage.getItem("datos")));
       setEmpleado(localStorage.getItem("tipo"));
