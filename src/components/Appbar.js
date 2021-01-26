@@ -284,8 +284,10 @@ export default function PrimarySearchAppBar(props) {
     if (!datos || JSON.parse(localStorage.getItem("datos")) === null) {
       setDatos([]);
       localStorage.setItem("datos", JSON.stringify([]));
+      localStorage.setItem("datos", "natural");
     } else {
       setDatos(JSON.parse(localStorage.getItem("datos")));
+      setEmpleado(localStorage.getItem("tipo"));
       datosApp();
       tipoApp();
       console.log("paso datos");
@@ -304,6 +306,7 @@ export default function PrimarySearchAppBar(props) {
         setError(false);
         handleClose();
         localStorage.setItem("datos", JSON.stringify(datos));
+        localStorage.setItem("tipo", empleado);
       }
     }
   }, [datos]);
@@ -313,6 +316,7 @@ export default function PrimarySearchAppBar(props) {
 
   console.log(datos);
   console.log(JSON.parse(localStorage.getItem("datos")));
+  console.log("tipo: " + localStorage.getItem("tipo"));
   console.log(correo);
   console.log(contraseña);
   console.log(empleado);

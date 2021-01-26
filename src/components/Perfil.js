@@ -67,6 +67,8 @@ export default function Perfil(props) {
     }
   };
 
+  console.log("tipo:" + props.tipo);
+
   return (
     <React.Fragment>
       <Typography variant="h3" className="m-4">
