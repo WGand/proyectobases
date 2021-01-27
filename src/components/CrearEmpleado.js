@@ -9,8 +9,10 @@ import ListItem from "@material-ui/core/ListItem";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
+import Paper from "@material-ui/core/Paper";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import TablaHorario from "./TablaHorario";
 
 const useStyles = makeStyles((theme) => ({
   campo: {
@@ -46,6 +48,11 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
+  },
+  paper: {
+    width: 550,
+    margin: 30,
+    marginTop: 60,
   },
 }));
 
@@ -136,8 +143,6 @@ export default function CrearEmpleado() {
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const [horario, setHorario] = React.useState([]);
-  const [dia, setDia] = React.useState("");
-  const [turno, setTurno] = React.useState("");
   const [entrada, setEntrada] = React.useState("");
   const [salida, setSalida] = React.useState("");
   const [diaTrabajo, setDiaTrabajo] = React.useState("");
@@ -160,14 +165,6 @@ export default function CrearEmpleado() {
 
   const handleChangeParroquia = (event) => {
     setParroquia(event.target.value);
-  };
-
-  const handleChangeDia = (event) => {
-    setDia(event.target.value);
-  };
-
-  const handleChangeTurno = (event) => {
-    setTurno(event.target.value);
   };
 
   const handleChangeCedula = (event) => {
@@ -465,54 +462,6 @@ export default function CrearEmpleado() {
     }
   }, [horario]);
 
-  React.useEffect(() => {
-    switch (dia) {
-      case "":
-        setDiaTrabajo("LUNES");
-        break;
-      case 1:
-        setDiaTrabajo("MARTES");
-        break;
-      case 2:
-        setDiaTrabajo("MIERCOLES");
-        break;
-      case 3:
-        setDiaTrabajo("JUEVES");
-        break;
-      case 4:
-        setDiaTrabajo("VIERNES");
-        break;
-      case 5:
-        setDiaTrabajo("SABADO");
-        break;
-      case 6:
-        setDiaTrabajo("DOMINGO");
-        break;
-
-      default:
-        break;
-    }
-  }, [dia]);
-
-  React.useEffect(() => {
-    switch (turno) {
-      case "":
-        setEntrada("09:00:00");
-        setSalida("13:00:00");
-        break;
-      case 1:
-        setEntrada("13:00:00");
-        setSalida("17:00:00");
-        break;
-      case 2:
-        setEntrada("17:00:00");
-        setSalida("21:00:00");
-        break;
-      default:
-        break;
-    }
-  }, [turno]);
-
   console.log("-------------------------");
   console.log("primer nombre: " + primNombre);
   console.log("segundo nombre: " + segNombre);
@@ -701,44 +650,12 @@ export default function CrearEmpleado() {
         <Typography variant="h6" className="m-2">
           Horario
         </Typography>
-        <Typography variant="subtitle1" className={classes.sub}>
-          Día
-        </Typography>
-        <div style={{ display: "flex" }}>
-          <Select
-            value={dia}
-            onChange={handleChangeDia}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
-            className={classes.tlf}
-            variant="outlined"
-          >
-            <MenuItem value="">Lunes</MenuItem>
-            <MenuItem value={1}>Martes</MenuItem>
-            <MenuItem value={2}>Miércoles</MenuItem>
-            <MenuItem value={3}>Jueves</MenuItem>
-            <MenuItem value={4}>Viernes</MenuItem>
-            <MenuItem value={5}>Sábado</MenuItem>
-            <MenuItem value={6}>Domingo</MenuItem>
-          </Select>
-        </div>
-        <Typography variant="subtitle1" className={classes.sub}>
-          Turno
-        </Typography>
-        <div style={{ display: "flex" }}>
-          <Select
-            value={turno}
-            onChange={handleChangeTurno}
-            displayEmpty
-            inputProps={{ "aria-label": "Without label" }}
-            className={classes.tlf}
-            variant="outlined"
-          >
-            <MenuItem value="">9:00 - 13:00</MenuItem>
-            <MenuItem value={1}>13:00 - 17:00</MenuItem>
-            <MenuItem value={2}>17:00 - 21:00</MenuItem>
-          </Select>
-        </div>
+        <Paper className={classes.paper} variant="outlined">
+          <Typography variant="subtitle1" className="m-2">
+            Seleccione turnos de empleado
+          </Typography>
+          <TablaHorario />
+        </Paper>
       </div>
       <div class="m-4">
         <Typography variant="h6" className="m-2">
