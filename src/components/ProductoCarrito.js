@@ -13,13 +13,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ProductoCarrito() {
+export default function ProductoCarrito(props) {
   const [cantidad, setCantidad] = React.useState("");
   const classes = useStyles();
 
   const handleChange = (event) => {
     setCantidad(event.target.value);
   };
+
+  const deleteSignal = () => {
+    props.borrar(props.nombre);
+  };
+
   return (
     <ListItem divider>
       <img
@@ -27,7 +32,7 @@ export default function ProductoCarrito() {
         class="tamañoCarrito"
         alt=""
       />
-      <ListItemText primary="Producto" secondary="100$" />
+      <ListItemText primary={props.nombre} secondary={props.precio} />
       <Select
         variant="outlined"
         value={cantidad}
@@ -46,7 +51,7 @@ export default function ProductoCarrito() {
         <MenuItem value={8}>9</MenuItem>
         <MenuItem value={9}>10</MenuItem>
       </Select>
-      <IconButton className={classes.trash}>
+      <IconButton className={classes.trash} onClick={deleteSignal}>
         <DeleteIcon />
       </IconButton>
     </ListItem>

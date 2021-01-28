@@ -90,10 +90,13 @@ export default function ListaDestacados(props) {
   const [lista, setLista] = React.useState([]);
   const [productoSelec, setProductoSelec] = React.useState({});
 
+  const [datos, setDatos] = React.useState([]);
+
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
 
   const handleClick = (event) => {
     let aux = lista.filter(
@@ -109,6 +112,7 @@ export default function ListaDestacados(props) {
   };
 
   const handleClickSnackbar = () => {
+    productoHome();
     setOpenSnackbar(true);
   };
 
@@ -120,13 +124,32 @@ export default function ListaDestacados(props) {
     setOpenSnackbar(false);
   };
 
+  const productoHome = () => {
+    let aux = JSON.parse(localStorage.getItem("carrito"));
+    aux.push(productoSelec[0]);
+    localStorage.setItem("carrito", JSON.stringify(aux));
+  };
+
   React.useEffect(() => {
     setLista(props.productos);
   });
 
+  React.useEffect(() => {
+    setDatos(props.datos);
+  });
+
+  React.useEffect(() => {
+    if (datos.length !== 0) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [datos]);
+
   // console.log("lista: ");
   // console.log(lista);
-  console.log(productoSelec);
+  //console.log(productoSelec);
+  //console.log(datos);
 
   if (productoSelec[0]) {
     return (
@@ -201,6 +224,7 @@ export default function ListaDestacados(props) {
                 className={classes.boton}
                 color="primary"
                 onClick={handleClickSnackbar}
+                disabled={disabled}
               >
                 Agregar a Carrito
               </Boton>

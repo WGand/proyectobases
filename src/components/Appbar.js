@@ -403,18 +403,22 @@ export default function PrimarySearchAppBar(props) {
     productosApp();
   }, [productosFiltro]);
 
+  React.useEffect(() => {
+    datosApp();
+  }, [datos]);
+
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
 
-  console.log(datos);
-  console.log(JSON.parse(localStorage.getItem("datos")));
-  console.log(correo);
-  console.log(contraseña);
-  console.log(empleado);
-  console.log("--------------");
-  console.log(filtroCategoria);
-  console.log(productosFiltro);
-  console.log("busqueda: " + busqueda);
+  // console.log(datos);
+  // console.log(JSON.parse(localStorage.getItem("datos")));
+  // console.log(correo);
+  // console.log(contraseña);
+  // console.log(empleado);
+  // console.log("--------------");
+  // console.log(filtroCategoria);
+  // console.log(productosFiltro);
+  // console.log("busqueda: " + busqueda);
 
   const renderMobileMenu = (
     <Menu

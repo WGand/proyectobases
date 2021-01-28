@@ -61,7 +61,7 @@ function App() {
       />
       <Switch>
         <Route exact path={["/", "/proyectobases"]}>
-          <Home productos={productos} />
+          <Home productos={productos} datos={datos} />
         </Route>
         <Route path="/carrito">
           <Carrito />

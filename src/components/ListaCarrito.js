@@ -53,15 +53,50 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ListaCarrito() {
+export default function ListaCarrito(props) {
   const classes = useStyles();
+
+  const [listaProductos, setListaProductos] = React.useState([]);
+  const [eliminarProducto, setEliminarProducto] = React.useState("");
+
+  const borrarProducto = (producto) => {
+    setEliminarProducto(producto);
+  };
+
+  React.useEffect(() => {
+    if (JSON.parse(localStorage.getItem("carrito"))) {
+      setListaProductos(JSON.parse(localStorage.getItem("carrito")));
+    } else {
+      localStorage.setItem("carrito", JSON.stringify([]));
+    }
+  }, []);
+
+  React.useEffect(() => {
+    localStorage.setItem("carrito", JSON.stringify(listaProductos));
+  }, [listaProductos]);
+
+  React.useEffect(() => {
+    if (eliminarProducto !== "") {
+      let aux = listaProductos.filter(
+        (producto) => producto.nombre !== eliminarProducto
+      );
+      setListaProductos(aux);
+    }
+  }, [eliminarProducto]);
+
+  // console.log(listaProductos);
+  // console.log("producto a eliminar: " + eliminarProducto);
 
   return (
     <div className={classes.root}>
       <List>
-        <ProductoCarrito />
-        <ProductoCarrito />
-        <ProductoCarrito />
+        {listaProductos.map((producto, value) => (
+          <ProductoCarrito
+            nombre={producto.nombre}
+            precio={producto.precio}
+            borrar={borrarProducto}
+          />
+        ))}
       </List>
       <Typography variant="h4" align="right" className="m-4">
         Total
