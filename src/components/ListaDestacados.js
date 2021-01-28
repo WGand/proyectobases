@@ -111,83 +111,116 @@ export default function ListaDestacados(props) {
   // console.log(lista);
   console.log(productoSelec);
 
-  return (
-    <React.Fragment>
-      <Typography variant="h3" className="m-5">
-        <b>Destacados</b>
-      </Typography>
-      <Grid container className={classes.root} spacing={5}>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={spacing}>
-            {lista.map((producto, value) => (
-              <Grid key={value} item>
-                <Button
-                  variant="outlined"
-                  onClick={handleClick}
-                  className={classes.grid}
-                  id={value}
-                >
-                  <img
-                    src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-                    class="tamañoLista"
-                    alt=""
-                  />
-                  {producto.nombre}
-                </Button>
-              </Grid>
-            ))}
+  if (productoSelec[0]) {
+    return (
+      <React.Fragment>
+        <Typography variant="h3" className="m-5">
+          <b>Destacados</b>
+        </Typography>
+        <Grid container className={classes.root} spacing={5}>
+          <Grid item xs={12}>
+            <Grid container justify="center" spacing={spacing}>
+              {lista.map((producto, value) => (
+                <Grid key={value} item>
+                  <Button
+                    variant="outlined"
+                    onClick={handleClick}
+                    className={classes.grid}
+                    id={value}
+                  >
+                    <img
+                      src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+                      class="tamañoLista"
+                      alt=""
+                    />
+                    {producto.nombre}
+                  </Button>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <Card className={classes.rootCard}>
-          <CardMedia
-            className={classes.media}
-            image="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-            title="Imagen"
-          />
-          <CardContent>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="h2"
-              className="m-2"
-            >
-              {productoSelec[0].nombre}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              component="p"
-              className="m-2"
-            >
-              {productoSelec[0].precio}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Boton
-              variant="contained"
-              className={classes.boton}
-              color="primary"
-            >
-              Agregar a Carrito
-            </Boton>
-          </CardActions>
-        </Card>
-      </Popover>
-    </React.Fragment>
-  );
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <Card className={classes.rootCard}>
+            <CardMedia
+              className={classes.media}
+              image="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+              title="Imagen"
+            />
+            <CardContent>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="h2"
+                className="m-2"
+              >
+                {productoSelec[0].nombre}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="p"
+                className="m-2"
+              >
+                {productoSelec[0].precio}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Boton
+                variant="contained"
+                className={classes.boton}
+                color="primary"
+              >
+                Agregar a Carrito
+              </Boton>
+            </CardActions>
+          </Card>
+        </Popover>
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <Typography variant="h3" className="m-5">
+          <b>Destacados</b>
+        </Typography>
+        <Grid container className={classes.root} spacing={5}>
+          <Grid item xs={12}>
+            <Grid container justify="center" spacing={spacing}>
+              {lista.map((producto, value) => (
+                <Grid key={value} item>
+                  <Button
+                    variant="outlined"
+                    onClick={handleClick}
+                    className={classes.grid}
+                    id={value}
+                  >
+                    <img
+                      src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+                      class="tamañoLista"
+                      alt=""
+                    />
+                    {producto.nombre}
+                  </Button>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
+      </React.Fragment>
+    );
+  }
 }

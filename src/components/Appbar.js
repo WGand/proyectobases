@@ -283,7 +283,7 @@ export default function PrimarySearchAppBar(props) {
     setOpenBackdrop(true);
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/login",
+      url: "https://https://proyectobases1.herokuapp.com/login",
       data: {
         correo: correo,
         contrasena: contraseña,
@@ -298,7 +298,7 @@ export default function PrimarySearchAppBar(props) {
   const fetchProductos = async () => {
     await axios({
       method: "get",
-      url: "https://proyectobasesnode.azurewebsites.net/producto",
+      url: "https://proyectobases1.herokuapp.com/producto",
     }).then((response) => {
       setTodosProductos(response.data);
       setProductosFiltro(response.data);
