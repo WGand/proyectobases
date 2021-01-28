@@ -87,7 +87,7 @@ export default function TiendaModificar(props) {
     setOpenBackdrop(true);
     await axios({
       method: "delete",
-      url: "https://proyectobasesnode.azurewebsites.net/tienda",
+      url: "https://proyectobases1.herokuapp.com/tienda",
       data: {
         nombre: datosTienda.nombre,
       },

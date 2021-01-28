@@ -27,7 +27,7 @@ export default function TablaProductos(props) {
   const datos = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/inventario",
+      url: "https://proyectobases1.herokuapp.com/inventario",
       data: {
         tienda_id: props.tiendaId,
       },
