@@ -8,6 +8,9 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import Snackbar from "@material-ui/core/Snackbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -90,6 +93,8 @@ export default function ListaDestacados(props) {
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
+  const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
   const handleClick = (event) => {
     let aux = lista.filter(
       (producto) =>
@@ -101,6 +106,18 @@ export default function ListaDestacados(props) {
 
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleClickSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
   };
 
   React.useEffect(() => {
@@ -183,9 +200,32 @@ export default function ListaDestacados(props) {
                 variant="contained"
                 className={classes.boton}
                 color="primary"
+                onClick={handleClickSnackbar}
               >
                 Agregar a Carrito
               </Boton>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                message="Producto agregado al carrito"
+                action={
+                  <React.Fragment>
+                    <IconButton
+                      size="small"
+                      aria-label="close"
+                      color="inherit"
+                      onClick={handleCloseSnackbar}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </React.Fragment>
+                }
+              />
             </CardActions>
           </Card>
         </Popover>
