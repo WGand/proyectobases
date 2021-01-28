@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme) => ({
   control: {
     padding: theme.spacing(2),
   },
+  grid: {
+    width: 250,
+    height: 200,
+  },
 }));
 
 const useStylesCard = makeStyles({
@@ -75,11 +79,14 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ListaDestacados() {
+export default function ListaDestacados(props) {
   const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
   const classesCard = useStylesCard();
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [lista, setLista] = React.useState([]);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -106,6 +113,13 @@ export default function ListaDestacados() {
     setOpenSnackbar(false);
   };
 
+  React.useEffect(() => {
+    setLista(props.productos);
+  });
+
+  // console.log("lista: ");
+  // console.log(lista);
+
   return (
     <React.Fragment>
       <Typography variant="h3" className="m-5">
@@ -114,87 +128,20 @@ export default function ListaDestacados() {
       <Grid container className={classes.root} spacing={5}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={spacing}>
-            {[0, 1, 2, 3, 4, 5, 6, 7].map((value) => (
+            {lista.map((producto, value) => (
               <Grid key={value} item>
-                <Button variant="outlined" onClick={handleClick}>
+                <Button
+                  variant="outlined"
+                  onClick={handleClick}
+                  className={classes.grid}
+                >
                   <img
                     src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
                     class="tamañoLista"
                     alt=""
                   />
-                  Producto {value}
+                  {producto.nombre}
                 </Button>
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  elevation="1"
-                >
-                  <Card className={classesCard.root}>
-                    <CardMedia
-                      className={classesCard.media}
-                      image="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-                      title="Contemplative Reptile"
-                    />
-                    <CardContent>
-                      <Typography variant="h4" component="h1">
-                        Producto
-                      </Typography>
-                      <Typography gutterBottom variant="h6">
-                        500$
-                      </Typography>
-                      <Typography
-                        paragraph
-                        variant="body1"
-                        color="textSecondary"
-                        component="p"
-                      >
-                        Descripción del producto
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Boton
-                        variant="contained"
-                        color="primary"
-                        className="m-3"
-                        onClick={handleClickSnackbar}
-                      >
-                        Agregar
-                      </Boton>
-                      <Snackbar
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        open={openSnackbar}
-                        autoHideDuration={4000}
-                        onClose={handleCloseSnackbar}
-                        message="Producto agregado al carrito"
-                        action={
-                          <React.Fragment>
-                            <IconButton
-                              size="small"
-                              aria-label="close"
-                              color="inherit"
-                              onClick={handleCloseSnackbar}
-                            >
-                              <CloseIcon fontSize="small" />
-                            </IconButton>
-                          </React.Fragment>
-                        }
-                      />
-                    </CardActions>
-                  </Card>
-                </Popover>
               </Grid>
             ))}
           </Grid>
