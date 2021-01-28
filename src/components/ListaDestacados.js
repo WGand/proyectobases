@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -8,9 +8,6 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,10 +24,7 @@ const useStyles = makeStyles((theme) => ({
     width: 250,
     height: 200,
   },
-}));
-
-const useStylesCard = makeStyles({
-  root: {
+  rootCard: {
     maxWidth: 400,
   },
   media: {
@@ -39,7 +33,12 @@ const useStylesCard = makeStyles({
     width: 400,
     maxWidth: 400,
   },
-});
+  boton: {
+    margin: 20,
+    marginRight: 30,
+    marginLeft: 15,
+  },
+}));
 
 const Boton = withStyles({
   root: {
@@ -82,35 +81,26 @@ const Boton = withStyles({
 export default function ListaDestacados(props) {
   const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
-  const classesCard = useStylesCard();
+
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const [lista, setLista] = React.useState([]);
+  const [productoSelec, setProductoSelec] = React.useState({});
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   const handleClick = (event) => {
+    let aux = lista.filter(
+      (producto) =>
+        producto.nombre.toUpperCase() === event.currentTarget.innerText
+    );
+    setProductoSelec(aux);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
-    handleCloseSnackbar();
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
-
-  const [openSnackbar, setOpenSnackbar] = React.useState(false);
-
-  const handleClickSnackbar = () => {
-    setOpenSnackbar(true);
-  };
-
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpenSnackbar(false);
   };
 
   React.useEffect(() => {
@@ -119,6 +109,7 @@ export default function ListaDestacados(props) {
 
   // console.log("lista: ");
   // console.log(lista);
+  console.log(productoSelec);
 
   return (
     <React.Fragment>
@@ -134,6 +125,7 @@ export default function ListaDestacados(props) {
                   variant="outlined"
                   onClick={handleClick}
                   className={classes.grid}
+                  id={value}
                 >
                   <img
                     src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
@@ -147,6 +139,55 @@ export default function ListaDestacados(props) {
           </Grid>
         </Grid>
       </Grid>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+      >
+        <Card className={classes.rootCard}>
+          <CardMedia
+            className={classes.media}
+            image="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+            title="Imagen"
+          />
+          <CardContent>
+            <Typography
+              gutterBottom
+              variant="h5"
+              component="h2"
+              className="m-2"
+            >
+              {productoSelec[0].nombre}
+            </Typography>
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              component="p"
+              className="m-2"
+            >
+              {productoSelec[0].precio}
+            </Typography>
+          </CardContent>
+          <CardActions>
+            <Boton
+              variant="contained"
+              className={classes.boton}
+              color="primary"
+            >
+              Agregar a Carrito
+            </Boton>
+          </CardActions>
+        </Card>
+      </Popover>
     </React.Fragment>
   );
 }
