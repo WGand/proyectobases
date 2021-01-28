@@ -175,7 +175,7 @@ export default function ListaDestacados(props) {
                 component="p"
                 className="m-2"
               >
-                {productoSelec[0].precio}
+                {productoSelec[0].precio} Bs.
               </Typography>
             </CardContent>
             <CardActions>
