@@ -58,6 +58,7 @@ export default function ListaCarrito(props) {
 
   const [listaProductos, setListaProductos] = React.useState([]);
   const [eliminarProducto, setEliminarProducto] = React.useState("");
+  const [precioTotal, setPrecioTotal] = React.useState(0);
 
   const borrarProducto = (producto) => {
     setEliminarProducto(producto);
@@ -76,6 +77,18 @@ export default function ListaCarrito(props) {
   }, [listaProductos]);
 
   React.useEffect(() => {
+    let total = 0;
+    if (listaProductos.length === 0) {
+      setPrecioTotal(total);
+    } else {
+      for (let index = 0; index < listaProductos.length; index++) {
+        total += Number(listaProductos[index].precio);
+      }
+    }
+    setPrecioTotal(total);
+  }, [listaProductos]);
+
+  React.useEffect(() => {
     if (eliminarProducto !== "") {
       let aux = listaProductos.filter(
         (producto) => producto.nombre !== eliminarProducto
@@ -86,6 +99,7 @@ export default function ListaCarrito(props) {
 
   // console.log(listaProductos);
   // console.log("producto a eliminar: " + eliminarProducto);
+  console.log(precioTotal);
 
   return (
     <div className={classes.root}>
@@ -101,7 +115,7 @@ export default function ListaCarrito(props) {
       <Typography variant="h4" align="right" className="m-4">
         Total
         <Typography variant="h5" align="right" color="textSecondary">
-          300$
+          {precioTotal}.000 Bs.
         </Typography>
       </Typography>
       <Boton variant="contained" className="m-3" color="primary">
