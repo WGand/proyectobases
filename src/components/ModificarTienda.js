@@ -90,7 +90,7 @@ export default function ModificarTienda(props) {
   const validarNombreTienda = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/validarTienda",
+      url: "https://proyectobases1.herokuapp.com/validarTienda",
       data: {
         nombre: nombreTienda,
       },
@@ -104,7 +104,7 @@ export default function ModificarTienda(props) {
     setOpenBackdrop(true);
     await axios({
       method: "put",
-      url: "https://proyectobasesnode.azurewebsites.net/tienda",
+      url: "https://proyectobases1.herokuapp.com/tienda",
       data: {
         nombre_antiguo: nombreActual,
         nombre_nuevo: nombreTienda,
@@ -128,7 +128,7 @@ export default function ModificarTienda(props) {
   const ubicacionActual = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/lugarparroquia",
+      url: "https://proyectobases1.herokuapp.com/lugarparroquia",
       data: {
         parroquia: props.datos.fk_lugar,
       },

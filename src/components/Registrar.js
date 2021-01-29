@@ -12,8 +12,14 @@ import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContentText from "@material-ui/core/DialogContentText";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import { DatePicker } from "material-ui";
 
 const useStyles = makeStyles((theme) => ({
   campo: {
@@ -103,14 +109,15 @@ const Boton = withStyles({
 export default function Registrar() {
   const [state, setState] = React.useState({
     checkedNinguno: true,
-    checkedEfectivo: true,
-    checkedDebito: true,
-    checkedCredito: true,
-    checkedCheque: true,
+    checkedEfectivo: false,
+    checkedDebito: false,
+    checkedCredito: false,
+    checkedCheque: false,
   });
 
   const classes = useStyles();
   const history = useHistory();
+  const [fechaActual, setFechaActual] = React.useState("");
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
   const [prefijoHabPC, setPrefijoHabPC] = React.useState("");
@@ -176,6 +183,15 @@ export default function Registrar() {
   const [capitalDisponible, setCapitalDisponible] = React.useState("");
 
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
+  const [openCredito, setOpenCredito] = React.useState(false);
+  const [openDebito, setOpenDebito] = React.useState(false);
+
+  const [numCredito, setNumCredito] = React.useState("");
+  const [numDebito, setNumDebito] = React.useState("");
+  const [fechaCredito, setFechaCredito] = React.useState("");
+  const [fechaDebito, setFechaDebito] = React.useState("");
+  const [nombreCredito, setNombreCredito] = React.useState("");
+  const [nombreDebito, setNombreDebito] = React.useState("");
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -296,11 +312,45 @@ export default function Registrar() {
     setCapitalDisponible(event.target.value);
   };
 
+  const handleChangeNumCredito = (event) => {
+    setNumCredito(event.target.value);
+  };
+
+  const handleChangeNumDebito = (event) => {
+    setNumDebito(event.target.velue);
+  };
+
+  const handleChangeFechaCredito = (event) => {
+    setFechaCredito(event.target.value);
+  };
+
+  const handleChangeFechaDebito = (event) => {
+    setFechaDebito(event.target.value);
+  };
+
+  const handleChangeNombreCredito = (event) => {
+    setNombreCredito(event.target.value);
+  };
+
+  const handleChangeNombreDebito = (event) => {
+    setNombreDebito(event.target.value);
+  };
+
+  const handleCloseCredito = () => {
+    setState({ ...state, ["checkedCredito"]: false });
+    setOpenCredito(false);
+  };
+
+  const handleCloseDebito = () => {
+    setState({ ...state, ["checkedDebito"]: false });
+    setOpenDebito(false);
+  };
+
   const enviarDatos = async () => {
     setOpenBackdrop(true);
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/usuarioNatural",
+      url: "https://proyectobases1.herokuapp.com/usuarioNatural",
       data: {
         rif: rif,
         correo: correo,
@@ -328,7 +378,7 @@ export default function Registrar() {
     setOpenBackdrop(true);
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/usuarioJuridico",
+      url: "https://proyectobases1.herokuapp.com/usuarioJuridico",
       data: {
         rif: rif,
         correo: correo,
@@ -359,7 +409,7 @@ export default function Registrar() {
   const compararCorreo = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/correo",
+      url: "https://proyectobases1.herokuapp.com/correo",
       data: {
         correo_electronico: correo,
         tipo: tipoPersona,
@@ -372,7 +422,7 @@ export default function Registrar() {
   const compararRif = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/rif",
+      url: "https://proyectobases1.herokuapp.com/rif",
       data: {
         rif: rif,
         tipo: tipoPersona,
@@ -436,7 +486,7 @@ export default function Registrar() {
   const fetchEstados = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
       data: {
         tipo_lugar: "ESTADO",
       },
@@ -448,7 +498,7 @@ export default function Registrar() {
   const fetchMunicipios = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
       data: {
         tipo_lugar: "MUNICIPIO",
         lugar: estadoSelec,
@@ -461,7 +511,7 @@ export default function Registrar() {
   const fetchParroquias = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
       data: {
         tipo_lugar: "PARROQUIA",
         lugar: municipioSelec,
@@ -475,7 +525,7 @@ export default function Registrar() {
   const fetchMunicipiosF = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
       data: {
         tipo_lugar: "MUNICIPIO",
         lugar: estadoFSelec,
@@ -488,7 +538,7 @@ export default function Registrar() {
   const fetchParroquiasF = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
       data: {
         tipo_lugar: "PARROQUIA",
         lugar: municipioFSelec,
@@ -501,6 +551,14 @@ export default function Registrar() {
 
   React.useEffect(() => {
     fetchEstados();
+    const hoy = new Date();
+    if (hoy.getMonth() + 1 >= 10) {
+      const fecha = hoy.getFullYear() + "-" + (hoy.getMonth() + 1);
+      setFechaActual(fecha);
+    } else {
+      const fecha = hoy.getFullYear() + "-0" + (hoy.getMonth() + 1);
+      setFechaActual(fecha);
+    }
   }, []);
 
   React.useEffect(() => {
@@ -686,6 +744,18 @@ export default function Registrar() {
     }
   }, [tipo]);
 
+  React.useEffect(() => {
+    if (state.checkedCredito === true) {
+      setOpenCredito(true);
+    }
+  }, [state.checkedCredito]);
+
+  React.useEffect(() => {
+    if (state.checkedDebito === true) {
+      setOpenDebito(true);
+    }
+  }, [state.checkedDebito]);
+
   console.log("tipo persona: ", tipoPersona);
   console.log("primer nombre contacto: " + primNombre);
   console.log("primer apellido contacto: " + primApellido);
@@ -707,6 +777,9 @@ export default function Registrar() {
   console.log("telefono: " + movil);
   console.log("prefijo habitacion : " + preHabitacion);
   console.log("habitacion: " + habitacion);
+  console.log("numero credito:" + numCredito);
+  console.log("fecha credito: " + fechaCredito);
+  console.log("fecha actual: ", fechaActual);
 
   if (tipo === "") {
     return (
@@ -957,6 +1030,98 @@ export default function Registrar() {
               />
             </ListItem>
           </List>
+          <Dialog
+            open={openCredito}
+            onClose={handleCloseCredito}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">
+              Tarjeta de Crédito
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Ingrese datos de la tarjeta
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Número de tarjeta"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeNumCredito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Nombre de la tarjeta"
+                variant="outlined"
+                onChange={handleChangeNombreCredito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                helperText="Fecha de vencimiento"
+                type="month"
+                variant="outlined"
+                InputProps={{ inputProps: { min: fechaActual } }}
+                onChange={handleChangeFechaCredito}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary">Agregar tarjeta</Button>
+              <Button onClick={handleCloseCredito} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openDebito}
+            onClose={handleCloseDebito}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">Tarjeta de Débito</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Ingrese datos de la tarjeta
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Número de tarjeta"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeNumDebito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Nombre de la tarjeta"
+                variant="outlined"
+                onChange={handleChangeNombreDebito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                helperText="Fecha de vencimiento"
+                type="month"
+                variant="outlined"
+                InputProps={{ inputProps: { min: fechaActual } }}
+                onChange={handleChangeFechaDebito}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary">Agregar tarjeta</Button>
+              <Button onClick={handleCloseDebito} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
         <div class="m-4">
           <Typography variant="h6" className="m-2">
@@ -965,7 +1130,6 @@ export default function Registrar() {
           <List>
             <ListItem>
               <Select
-                /* Los datos de LUGAR se recibirán de la DB, por ahora hardcoded */
                 value={estado}
                 onChange={handleChangeEstado}
                 displayEmpty
@@ -1374,6 +1538,98 @@ export default function Registrar() {
               />
             </ListItem>
           </List>
+          <Dialog
+            open={openCredito}
+            onClose={handleCloseCredito}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">
+              Tarjeta de Crédito
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Ingrese datos de la tarjeta
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Número de tarjeta"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeNumCredito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Nombre de la tarjeta"
+                variant="outlined"
+                onChange={handleChangeNombreCredito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                helperText="Fecha de vencimiento"
+                type="month"
+                variant="outlined"
+                InputProps={{ inputProps: { min: fechaActual } }}
+                onChange={handleChangeFechaCredito}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary">Agregar tarjeta</Button>
+              <Button onClick={handleCloseCredito} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openDebito}
+            onClose={handleCloseDebito}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">Tarjeta de Débito</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Ingrese datos de la tarjeta
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Número de tarjeta"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeNumDebito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Nombre de la tarjeta"
+                variant="outlined"
+                onChange={handleChangeNombreDebito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                helperText="Fecha de vencimiento"
+                type="month"
+                variant="outlined"
+                InputProps={{ inputProps: { min: fechaActual } }}
+                onChange={handleChangeFechaDebito}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary">Agregar tarjeta</Button>
+              <Button onClick={handleCloseDebito} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
         <div class="m-4">
           <Typography variant="h6" className="m-2">
@@ -1382,7 +1638,6 @@ export default function Registrar() {
           <List>
             <ListItem>
               <Select
-                /* Los datos de LUGAR se recibirán de la DB, por ahora hardcoded */
                 value={estado}
                 onChange={handleChangeEstado}
                 displayEmpty
@@ -1440,7 +1695,6 @@ export default function Registrar() {
           <List>
             <ListItem>
               <Select
-                /* Los datos de LUGAR se recibirán de la DB, por ahora hardcoded */
                 value={estadoF}
                 onChange={handleChangeEstadoF}
                 displayEmpty

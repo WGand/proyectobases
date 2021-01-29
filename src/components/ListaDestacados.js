@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, makeStyles } from "@material-ui/core/styles";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
@@ -23,10 +23,11 @@ const useStyles = makeStyles((theme) => ({
   control: {
     padding: theme.spacing(2),
   },
-}));
-
-const useStylesCard = makeStyles({
-  root: {
+  grid: {
+    width: 250,
+    height: 200,
+  },
+  rootCard: {
     maxWidth: 400,
   },
   media: {
@@ -35,7 +36,12 @@ const useStylesCard = makeStyles({
     width: 400,
     maxWidth: 400,
   },
-});
+  boton: {
+    margin: 20,
+    marginRight: 30,
+    marginLeft: 15,
+  },
+}));
 
 const Boton = withStyles({
   root: {
@@ -75,26 +81,38 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ListaDestacados() {
+export default function ListaDestacados(props) {
   const [spacing, setSpacing] = React.useState(2);
   const classes = useStyles();
-  const classesCard = useStylesCard();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-    handleCloseSnackbar();
-  };
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [lista, setLista] = React.useState([]);
+  const [productoSelec, setProductoSelec] = React.useState({});
+
+  const [datos, setDatos] = React.useState([]);
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
 
   const [openSnackbar, setOpenSnackbar] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
+
+  const handleClick = (event) => {
+    let aux = lista.filter(
+      (producto) =>
+        producto.nombre.toUpperCase() === event.currentTarget.innerText
+    );
+    setProductoSelec(aux);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleClickSnackbar = () => {
+    productoHome();
     setOpenSnackbar(true);
   };
 
@@ -106,100 +124,167 @@ export default function ListaDestacados() {
     setOpenSnackbar(false);
   };
 
-  return (
-    <React.Fragment>
-      <Typography variant="h3" className="m-5">
-        <b>Destacados</b>
-      </Typography>
-      <Grid container className={classes.root} spacing={5}>
-        <Grid item xs={12}>
-          <Grid container justify="center" spacing={spacing}>
-            {[0, 1, 2, 3, 4, 5, 6, 7].map((value) => (
-              <Grid key={value} item>
-                <Button variant="outlined" onClick={handleClick}>
-                  <img
-                    src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-                    class="tamañoLista"
-                    alt=""
-                  />
-                  Producto {value}
-                </Button>
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "left",
-                  }}
-                  transformOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                  elevation="1"
-                >
-                  <Card className={classesCard.root}>
-                    <CardMedia
-                      className={classesCard.media}
-                      image="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-                      title="Contemplative Reptile"
+  const productoHome = () => {
+    let aux = JSON.parse(localStorage.getItem("carrito"));
+    aux.push(productoSelec[0]);
+    localStorage.setItem("carrito", JSON.stringify(aux));
+  };
+
+  React.useEffect(() => {
+    setLista(props.productos);
+  });
+
+  React.useEffect(() => {
+    setDatos(props.datos);
+  });
+
+  React.useEffect(() => {
+    if (datos.length !== 0) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [datos]);
+
+  // console.log("lista: ");
+  // console.log(lista);
+  //console.log(productoSelec);
+  //console.log(datos);
+
+  if (productoSelec[0]) {
+    return (
+      <React.Fragment>
+        <Typography variant="h3" className="m-5">
+          <b>Destacados</b>
+        </Typography>
+        <Grid container className={classes.root} spacing={5}>
+          <Grid item xs={12}>
+            <Grid container justify="center" spacing={spacing}>
+              {lista.map((producto, value) => (
+                <Grid key={value} item>
+                  <Button
+                    variant="outlined"
+                    onClick={handleClick}
+                    className={classes.grid}
+                    id={value}
+                  >
+                    <img
+                      src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+                      class="tamañoLista"
+                      alt=""
                     />
-                    <CardContent>
-                      <Typography variant="h4" component="h1">
-                        Producto
-                      </Typography>
-                      <Typography gutterBottom variant="h6">
-                        500$
-                      </Typography>
-                      <Typography
-                        paragraph
-                        variant="body1"
-                        color="textSecondary"
-                        component="p"
-                      >
-                        Descripción del producto
-                      </Typography>
-                    </CardContent>
-                    <CardActions>
-                      <Boton
-                        variant="contained"
-                        color="primary"
-                        className="m-3"
-                        onClick={handleClickSnackbar}
-                      >
-                        Agregar
-                      </Boton>
-                      <Snackbar
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left",
-                        }}
-                        open={openSnackbar}
-                        autoHideDuration={4000}
-                        onClose={handleCloseSnackbar}
-                        message="Producto agregado al carrito"
-                        action={
-                          <React.Fragment>
-                            <IconButton
-                              size="small"
-                              aria-label="close"
-                              color="inherit"
-                              onClick={handleCloseSnackbar}
-                            >
-                              <CloseIcon fontSize="small" />
-                            </IconButton>
-                          </React.Fragment>
-                        }
-                      />
-                    </CardActions>
-                  </Card>
-                </Popover>
-              </Grid>
-            ))}
+                    {producto.nombre}
+                  </Button>
+                </Grid>
+              ))}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
-    </React.Fragment>
-  );
+        <Popover
+          id={id}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <Card className={classes.rootCard}>
+            <CardMedia
+              className={classes.media}
+              image="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+              title="Imagen"
+            />
+            <CardContent>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="h2"
+                className="m-2"
+              >
+                {productoSelec[0].nombre}
+              </Typography>
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                component="p"
+                className="m-2"
+              >
+                {productoSelec[0].precio} Bs.
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Boton
+                variant="contained"
+                className={classes.boton}
+                color="primary"
+                onClick={handleClickSnackbar}
+                disabled={disabled}
+              >
+                Agregar a Carrito
+              </Boton>
+              <Snackbar
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                open={openSnackbar}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                message="Producto agregado al carrito"
+                action={
+                  <React.Fragment>
+                    <IconButton
+                      size="small"
+                      aria-label="close"
+                      color="inherit"
+                      onClick={handleCloseSnackbar}
+                    >
+                      <CloseIcon fontSize="small" />
+                    </IconButton>
+                  </React.Fragment>
+                }
+              />
+            </CardActions>
+          </Card>
+        </Popover>
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <Typography variant="h3" className="m-5">
+          <b>Destacados</b>
+        </Typography>
+        <Grid container className={classes.root} spacing={5}>
+          <Grid item xs={12}>
+            <Grid container justify="center" spacing={spacing}>
+              {lista.map((producto, value) => (
+                <Grid key={value} item>
+                  <Button
+                    variant="outlined"
+                    onClick={handleClick}
+                    className={classes.grid}
+                    id={value}
+                  >
+                    <img
+                      src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+                      class="tamañoLista"
+                      alt=""
+                    />
+                    {producto.nombre}
+                  </Button>
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        </Grid>
+      </React.Fragment>
+    );
+  }
 }

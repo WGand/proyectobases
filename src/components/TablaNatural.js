@@ -42,7 +42,7 @@ export default function TablaUsuarios(props) {
   const datos = async () => {
     await axios({
       method: "get",
-      url: "https://proyectobasesnode.azurewebsites.net/login",
+      url: "https://proyectobases1.herokuapp.com/login",
     }).then((response) => {
       setUsuarios(response.data);
     });

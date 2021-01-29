@@ -105,7 +105,7 @@ export default function TiendaRegistrar() {
   const validarNombreTienda = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/validarTienda",
+      url: "https://proyectobases1.herokuapp.com/validarTienda",
       data: {
         nombre: nombreTienda,
       },
@@ -119,7 +119,7 @@ export default function TiendaRegistrar() {
     setOpenBackdrop(true);
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/tienda",
+      url: "https://proyectobases1.herokuapp.com/tienda",
       data: {
         nombre: nombreTienda,
         fk_lugar: parroquiaSelec,
@@ -142,7 +142,7 @@ export default function TiendaRegistrar() {
   const fetchEstados = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
       data: {
         tipo_lugar: "ESTADO",
       },
@@ -154,7 +154,7 @@ export default function TiendaRegistrar() {
   const fetchMunicipios = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
       data: {
         tipo_lugar: "MUNICIPIO",
         lugar: estadoSelec,
@@ -167,7 +167,7 @@ export default function TiendaRegistrar() {
   const fetchParroquias = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/especificolugar",
+      url: "https://proyectobases1.herokuapp.com/especificolugar",
       data: {
         tipo_lugar: "PARROQUIA",
         lugar: municipioSelec,

@@ -177,6 +177,7 @@ export default function PrimarySearchAppBar(props) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+
   const [categoria, setCategoria] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [empleado, setEmpleado] = React.useState("natural");
@@ -185,6 +186,12 @@ export default function PrimarySearchAppBar(props) {
   const [datos, setDatos] = React.useState([]);
   const [error, setError] = React.useState(false);
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
+
+  const [todosProductos, setTodosProductos] = React.useState([]);
+  const [productosFiltro, setProductosFiltro] = React.useState([]);
+  const [filtroCategoria, setFiltroCategoria] = React.useState("");
+
+  const [busqueda, setBusqueda] = React.useState("");
 
   const history = useHistory();
 
@@ -220,6 +227,10 @@ export default function PrimarySearchAppBar(props) {
 
   const handleChangeContraseña = (event) => {
     setContraseña(event.target.value);
+  };
+
+  const handleChangeBusqueda = (event) => {
+    setBusqueda(event.target.value);
   };
 
   const irCarrito = () => {
@@ -264,11 +275,15 @@ export default function PrimarySearchAppBar(props) {
     props.conseguirTipo(empleado);
   };
 
+  const productosApp = () => {
+    props.conseguirProductos(productosFiltro);
+  };
+
   const compararDatos = async () => {
     setOpenBackdrop(true);
     await axios({
       method: "post",
-      url: "https://proyectobasesnode.azurewebsites.net/login",
+      url: "https://proyectobases1.herokuapp.com/login",
       data: {
         correo: correo,
         contrasena: contraseña,
@@ -280,7 +295,19 @@ export default function PrimarySearchAppBar(props) {
     setOpenBackdrop(false);
   };
 
+  const fetchProductos = async () => {
+    await axios({
+      method: "get",
+      url: "https://proyectobases1.herokuapp.com/producto",
+    }).then((response) => {
+      setTodosProductos(response.data);
+      setProductosFiltro(response.data);
+    });
+  };
+
   React.useEffect(() => {
+    fetchProductos();
+    productosApp();
     if (!datos || JSON.parse(localStorage.getItem("datos")) === null) {
       setDatos([]);
       localStorage.setItem("datos", JSON.stringify([]));
@@ -311,14 +338,87 @@ export default function PrimarySearchAppBar(props) {
     }
   }, [datos]);
 
+  React.useEffect(() => {
+    switch (categoria) {
+      case "":
+        setFiltroCategoria("CATEGORIAS");
+        break;
+      case 1:
+        setFiltroCategoria("FRUTAS Y VEGETALES");
+        break;
+      case 2:
+        setFiltroCategoria("VIVERES");
+        break;
+      case 3:
+        setFiltroCategoria("REFRIGERADOS Y CONGELADOS");
+        break;
+      case 4:
+        setFiltroCategoria("CUIDADO PERSONAL Y SALUD");
+        break;
+      case 5:
+        setFiltroCategoria("LIMPIEZA");
+        break;
+      case 6:
+        setFiltroCategoria("HOGAR Y TEMPORADA");
+        break;
+      case 7:
+        setFiltroCategoria("MASCOTAS");
+        break;
+      case 8:
+        setFiltroCategoria("LICORES");
+        break;
+      case 9:
+        setFiltroCategoria("VEHICULOS");
+        break;
+      case 10:
+        setFiltroCategoria("OFICINA Y TECNOLOGIA");
+        break;
+
+      default:
+        break;
+    }
+  }, [categoria]);
+
+  React.useEffect(() => {
+    if (filtroCategoria === "CATEGORIAS") {
+      setProductosFiltro(todosProductos);
+    } else {
+      let aux = todosProductos.filter(
+        (producto) => producto.categoria === filtroCategoria
+      );
+      setProductosFiltro(aux);
+    }
+  }, [filtroCategoria]);
+
+  React.useEffect(() => {
+    if (busqueda !== "") {
+      let aux = productosFiltro.filter((producto) =>
+        producto.nombre.toLowerCase().includes(busqueda)
+      );
+      setProductosFiltro(aux);
+    }
+  }, [busqueda]);
+
+  React.useEffect(() => {
+    productosApp();
+  }, [productosFiltro]);
+
+  React.useEffect(() => {
+    datosApp();
+  }, [datos]);
+
   const menuId = "primary-search-account-menu";
   const mobileMenuId = "primary-search-account-menu-mobile";
 
-  console.log(datos);
-  console.log(JSON.parse(localStorage.getItem("datos")));
-  console.log(correo);
-  console.log(contraseña);
-  console.log(empleado);
+  // console.log(datos);
+  // console.log(JSON.parse(localStorage.getItem("datos")));
+  // console.log(correo);
+  // console.log(contraseña);
+  // console.log(empleado);
+  // console.log("--------------");
+  // console.log(filtroCategoria);
+  // console.log(productosFiltro);
+  // console.log("busqueda: " + busqueda);
 
   const renderMobileMenu = (
     <Menu
@@ -420,7 +520,7 @@ export default function PrimarySearchAppBar(props) {
               </MenuItem>
               <MenuItem value={1}>Frutas y Vegetales</MenuItem>
               <MenuItem value={2}>Víveres</MenuItem>
-              <MenuItem value={3}>Reffrigerados y Congelados</MenuItem>
+              <MenuItem value={3}>Refrigerados y Congelados</MenuItem>
               <MenuItem value={4}>Cuidado Personal y Salud</MenuItem>
               <MenuItem value={5}>Limpieza</MenuItem>
               <MenuItem value={6}>Hogar y Temporada</MenuItem>
@@ -441,6 +541,7 @@ export default function PrimarySearchAppBar(props) {
                 }}
                 inputProps={{ "aria-label": "search" }}
                 type="search"
+                onChange={handleChangeBusqueda}
               />
             </div>
             <div className={classes.grow} />
@@ -595,7 +696,7 @@ export default function PrimarySearchAppBar(props) {
               </MenuItem>
               <MenuItem value={1}>Frutas y Vegetales</MenuItem>
               <MenuItem value={2}>Víveres</MenuItem>
-              <MenuItem value={3}>Reffrigerados y Congelados</MenuItem>
+              <MenuItem value={3}>Refrigerados y Congelados</MenuItem>
               <MenuItem value={4}>Cuidado Personal y Salud</MenuItem>
               <MenuItem value={5}>Limpieza</MenuItem>
               <MenuItem value={6}>Hogar y Temporada</MenuItem>
@@ -616,6 +717,7 @@ export default function PrimarySearchAppBar(props) {
                 }}
                 inputProps={{ "aria-label": "search" }}
                 type="search"
+                onChange={handleChangeBusqueda}
               />
             </div>
             <div className={classes.grow} />

@@ -30,6 +30,7 @@ function App() {
   const [tipoPersona, setTipoPersona] = React.useState("");
   const [empleado, setEmpleado] = React.useState({});
   const [tienda, setTienda] = React.useState({});
+  const [productos, setProductos] = React.useState([]);
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
@@ -47,12 +48,20 @@ function App() {
     setTienda(datosTiendaModificar);
   };
 
+  const listaProductos = (datosProductos) => {
+    setProductos(datosProductos);
+  };
+
   return (
     <BrowserRouter>
-      <PrimarySearchAppBar conseguirDatos={datosUsuario} conseguirTipo={tipo} />
+      <PrimarySearchAppBar
+        conseguirDatos={datosUsuario}
+        conseguirTipo={tipo}
+        conseguirProductos={listaProductos}
+      />
       <Switch>
         <Route exact path={["/", "/proyectobases"]}>
-          <Home />
+          <Home productos={productos} datos={datos} />
         </Route>
         <Route path="/carrito">
           <Carrito />

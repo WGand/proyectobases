@@ -53,20 +53,92 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ListaCarrito() {
+export default function ListaCarrito(props) {
   const classes = useStyles();
+
+  const [listaProductos, setListaProductos] = React.useState([]);
+  const [eliminarProducto, setEliminarProducto] = React.useState("");
+  const [modificarCantidad, setModificarCantidad] = React.useState(1);
+  const [productoCantidad, setProductoCantidad] = React.useState("");
+  const [precioTotal, setPrecioTotal] = React.useState(0);
+  const [cambioPrecio, setCambioPrecio] = React.useState(0);
+
+  const borrarProducto = (producto) => {
+    setEliminarProducto(producto);
+  };
+
+  const modificar = (precioMod, producto) => {
+    setModificarCantidad(precioMod);
+    setProductoCantidad(producto);
+  };
+
+  React.useEffect(() => {
+    if (JSON.parse(localStorage.getItem("carrito"))) {
+      setListaProductos(JSON.parse(localStorage.getItem("carrito")));
+    } else {
+      localStorage.setItem("carrito", JSON.stringify([]));
+    }
+  }, []);
+
+  React.useEffect(() => {
+    localStorage.setItem("carrito", JSON.stringify(listaProductos));
+  }, [listaProductos]);
+
+  React.useEffect(() => {
+    let total = 0;
+    if (listaProductos.length === 0) {
+      setPrecioTotal(total);
+    } else {
+      for (let index = 0; index < listaProductos.length; index++) {
+        total += Number(listaProductos[index].precio);
+      }
+    }
+    setPrecioTotal(total);
+  }, [listaProductos, cambioPrecio]);
+
+  React.useEffect(() => {
+    if (eliminarProducto !== "") {
+      let aux = listaProductos.filter(
+        (producto) => producto.nombre !== eliminarProducto
+      );
+      setListaProductos(aux);
+    }
+  }, [eliminarProducto]);
+
+  React.useEffect(() => {
+    if (productoCantidad !== "") {
+      let aux = listaProductos;
+      for (let index = 0; index < aux.length; index++) {
+        if (aux[index].nombre === productoCantidad) {
+          aux[index].precio = modificarCantidad;
+        }
+      }
+      setListaProductos(aux);
+      setCambioPrecio(modificarCantidad);
+    }
+  }, [modificarCantidad]);
+
+  console.log(listaProductos);
+  // console.log("producto a eliminar: " + eliminarProducto);
+  console.log(precioTotal);
+  //console.log(modificarCantidad);
 
   return (
     <div className={classes.root}>
       <List>
-        <ProductoCarrito />
-        <ProductoCarrito />
-        <ProductoCarrito />
+        {listaProductos.map((producto, value) => (
+          <ProductoCarrito
+            nombre={producto.nombre}
+            precio={producto.precio}
+            borrar={borrarProducto}
+            modificarCantidad={modificar}
+          />
+        ))}
       </List>
       <Typography variant="h4" align="right" className="m-4">
         Total
         <Typography variant="h5" align="right" color="textSecondary">
-          300$
+          {precioTotal}.000 Bs.
         </Typography>
       </Typography>
       <Boton variant="contained" className="m-3" color="primary">
