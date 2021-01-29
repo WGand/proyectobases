@@ -5,6 +5,12 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
@@ -17,12 +23,23 @@ export default function ProductoCarrito(props) {
   const [cantidad, setCantidad] = React.useState("");
   const classes = useStyles();
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const handleChange = (event) => {
     setCantidad(event.target.value);
   };
 
   const deleteSignal = () => {
+    setOpen(false);
     props.borrar(props.nombre);
+  };
+
+  const manejarBorrar = () => {
+    setOpen(true);
   };
 
   return (
@@ -51,9 +68,32 @@ export default function ProductoCarrito(props) {
         <MenuItem value={8}>9</MenuItem>
         <MenuItem value={9}>10</MenuItem>
       </Select>
-      <IconButton className={classes.trash} onClick={deleteSignal}>
+      <IconButton className={classes.trash} onClick={manejarBorrar}>
         <DeleteIcon />
       </IconButton>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        className={classes.dialog}
+      >
+        <DialogTitle id="form-dialog-title" align="center">
+          Eliminar Producto de Carrito
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Seguro que desea eliminar "{props.nombre}" del Carrito?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={deleteSignal} color="primary" className="m-3">
+            Si
+          </Button>
+          <Button onClick={handleClose} color="primary" className="m-3">
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ListItem>
   );
 }
