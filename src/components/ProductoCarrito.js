@@ -20,8 +20,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ProductoCarrito(props) {
-  const [cantidad, setCantidad] = React.useState("");
   const classes = useStyles();
+
+  const [cantidad, setCantidad] = React.useState("");
+  const [cantidadProducto, setCantidadProducto] = React.useState(1);
+  const [precioOriginal, setPrecioOriginal] = React.useState(props.precio);
+  const [precioMod, setPrecioMod] = React.useState(0);
 
   const [open, setOpen] = React.useState(false);
 
@@ -42,6 +46,55 @@ export default function ProductoCarrito(props) {
     setOpen(true);
   };
 
+  React.useEffect(() => {
+    setPrecioOriginal(props.precio);
+  }, []);
+
+  React.useEffect(() => {
+    switch (cantidad) {
+      case "":
+        setCantidadProducto(1);
+        break;
+      case 1:
+        setCantidadProducto(2);
+        break;
+      case 2:
+        setCantidadProducto(3);
+        break;
+      case 3:
+        setCantidadProducto(4);
+        break;
+      case 4:
+        setCantidadProducto(5);
+        break;
+      case 5:
+        setCantidadProducto(6);
+        break;
+      case 6:
+        setCantidadProducto(7);
+        break;
+      case 7:
+        setCantidadProducto(8);
+        break;
+      case 8:
+        setCantidadProducto(9);
+        break;
+      case 9:
+        setCantidadProducto(10);
+        break;
+      default:
+        break;
+    }
+  }, [cantidad]);
+
+  React.useEffect(() => {
+    setPrecioMod(precioOriginal * cantidadProducto);
+  }, [cantidadProducto]);
+
+  React.useEffect(() => {
+    props.modificarCantidad(precioMod, props.nombre);
+  }, [precioMod]);
+
   return (
     <ListItem divider>
       <img
@@ -49,7 +102,7 @@ export default function ProductoCarrito(props) {
         class="tamañoCarrito"
         alt=""
       />
-      <ListItemText primary={props.nombre} secondary={props.precio} />
+      <ListItemText primary={props.nombre} secondary={precioMod + ".000"} />
       <Select
         variant="outlined"
         value={cantidad}

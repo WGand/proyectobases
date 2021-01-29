@@ -58,10 +58,18 @@ export default function ListaCarrito(props) {
 
   const [listaProductos, setListaProductos] = React.useState([]);
   const [eliminarProducto, setEliminarProducto] = React.useState("");
+  const [modificarCantidad, setModificarCantidad] = React.useState(1);
+  const [productoCantidad, setProductoCantidad] = React.useState("");
   const [precioTotal, setPrecioTotal] = React.useState(0);
+  const [cambioPrecio, setCambioPrecio] = React.useState(0);
 
   const borrarProducto = (producto) => {
     setEliminarProducto(producto);
+  };
+
+  const modificar = (precioMod, producto) => {
+    setModificarCantidad(precioMod);
+    setProductoCantidad(producto);
   };
 
   React.useEffect(() => {
@@ -86,7 +94,7 @@ export default function ListaCarrito(props) {
       }
     }
     setPrecioTotal(total);
-  }, [listaProductos]);
+  }, [listaProductos, cambioPrecio]);
 
   React.useEffect(() => {
     if (eliminarProducto !== "") {
@@ -97,9 +105,23 @@ export default function ListaCarrito(props) {
     }
   }, [eliminarProducto]);
 
-  // console.log(listaProductos);
+  React.useEffect(() => {
+    if (productoCantidad !== "") {
+      let aux = listaProductos;
+      for (let index = 0; index < aux.length; index++) {
+        if (aux[index].nombre === productoCantidad) {
+          aux[index].precio = modificarCantidad;
+        }
+      }
+      setListaProductos(aux);
+      setCambioPrecio(modificarCantidad);
+    }
+  }, [modificarCantidad]);
+
+  console.log(listaProductos);
   // console.log("producto a eliminar: " + eliminarProducto);
   console.log(precioTotal);
+  //console.log(modificarCantidad);
 
   return (
     <div className={classes.root}>
@@ -109,6 +131,7 @@ export default function ListaCarrito(props) {
             nombre={producto.nombre}
             precio={producto.precio}
             borrar={borrarProducto}
+            modificarCantidad={modificar}
           />
         ))}
       </List>
