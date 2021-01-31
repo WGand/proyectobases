@@ -343,18 +343,19 @@ export default function PerfilDatos(props) {
       url: "https://proyectobases1.herokuapp.com/usuarioNatural",
       data: {
         rif: props.datos[0].rif,
-        correo: correo,
-        cedula: props.datos[0].cedula_identidad,
+        correo_electronico: correo,
         primer_nombre: primNombre,
         segundo_nombre: segNombre,
         primer_apellido: primApellido,
         segundo_apellido: segApellido,
         contrasena: props.datos[0].contrasena,
         telefono: habitacion,
-        prefijo: preHabitacion,
+        prefijo_telefono: preHabitacion,
         celular: movil,
         prefijo_celular: preMovil,
-        lugar: parroquiaSelec,
+        parroquia: parroquiaSelec,
+        municipio: municipioSelec,
+        estado: estadoSelec,
       },
     }).then((response) => {
       console.log(response);
@@ -547,7 +548,7 @@ export default function PerfilDatos(props) {
     if (!listaParroquias[parroquia]) {
       fetchParroquias();
     } else {
-      setParroquiaSelec(listaParroquias[parroquia].lugar_id);
+      setParroquiaSelec(listaParroquias[parroquia].nombre);
     }
   }, [listaParroquias, parroquia, parroquiaSelec]);
 

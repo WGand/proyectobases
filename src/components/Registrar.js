@@ -353,7 +353,7 @@ export default function Registrar() {
       url: "https://proyectobases1.herokuapp.com/usuarioNatural",
       data: {
         rif: rif,
-        correo: correo,
+        correo_electronico: correo,
         cedula: numCedula,
         primer_nombre: primNombre,
         segundo_nombre: segNombre,
@@ -362,10 +362,12 @@ export default function Registrar() {
         contrasena: contraseña,
         tipo_cedula: tipoCedula,
         telefono: habitacion,
-        prefijo: preHabitacion,
+        prefijo_telefono: preHabitacion,
         celular: movil,
         prefijo_celular: preMovil,
-        lugar: parroquiaSelec,
+        parroquia: parroquiaSelec,
+        municipio: municipioSelec,
+        estado: estadoSelec,
       },
     }).then((response) => {
       console.log(response);
@@ -583,7 +585,7 @@ export default function Registrar() {
     if (!listaParroquias[parroquia]) {
       fetchParroquias();
     } else {
-      setParroquiaSelec(listaParroquias[parroquia].lugar_id);
+      setParroquiaSelec(listaParroquias[parroquia].nombre);
     }
   }, [listaParroquias, parroquia, parroquiaSelec]);
 
@@ -609,7 +611,7 @@ export default function Registrar() {
     if (!listaParroquiasF[parroquiaF]) {
       fetchParroquiasF();
     } else {
-      setParroquiaFSelec(listaParroquiasF[parroquiaF].lugar_id);
+      setParroquiaFSelec(listaParroquiasF[parroquiaF].nombre);
     }
   }, [listaParroquiasF, parroquiaF, parroquiaSelec]);
 
@@ -771,8 +773,10 @@ export default function Registrar() {
   console.log("correo: " + correo);
   console.log("rif: " + rif);
   console.log("contraseña: " + contraseña);
-  console.log("parroquia fk: " + parroquiaSelec);
-  console.log("parroquia F fk: " + parroquiaFSelec);
+  console.log("estado: " + estadoSelec);
+  console.log("municipio: " + municipioSelec);
+  console.log("parroquia: " + parroquiaSelec);
+  console.log("parroquia F : " + parroquiaFSelec);
   console.log("prefijo telefono: " + preMovil);
   console.log("telefono: " + movil);
   console.log("prefijo habitacion : " + preHabitacion);
