@@ -380,24 +380,40 @@ export default function PrimarySearchAppBar(props) {
   }, [categoria]);
 
   React.useEffect(() => {
-    if (filtroCategoria === "CATEGORIAS") {
+    if (filtroCategoria === "CATEGORIAS" && busqueda === "") {
       setProductosFiltro(todosProductos);
     } else {
-      let aux = todosProductos.filter(
-        (producto) => producto.categoria === filtroCategoria
-      );
-      setProductosFiltro(aux);
+      if (busqueda === "") {
+        let aux = todosProductos.filter(
+          (producto) => producto.categoria === filtroCategoria
+        );
+        setProductosFiltro(aux);
+      } else {
+        if (filtroCategoria === "CATEGORIAS") {
+          let aux = todosProductos.filter((producto) =>
+            producto.nombre.toLowerCase().includes(busqueda)
+          );
+          setProductosFiltro(aux);
+        } else {
+          let aux = todosProductos.filter(
+            (producto) =>
+              producto.categoria === filtroCategoria &&
+              producto.nombre.toLowerCase().includes(busqueda)
+          );
+          setProductosFiltro(aux);
+        }
+      }
     }
-  }, [filtroCategoria]);
+  }, [filtroCategoria, busqueda]);
 
-  React.useEffect(() => {
-    if (busqueda !== "") {
-      let aux = productosFiltro.filter((producto) =>
-        producto.nombre.toLowerCase().includes(busqueda)
-      );
-      setProductosFiltro(aux);
-    }
-  }, [busqueda]);
+  // React.useEffect(() => {
+  //   if (busqueda !== "") {
+  //     let aux = productosFiltro.filter((producto) =>
+  //       producto.nombre.toLowerCase().includes(busqueda)
+  //     );
+  //     setProductosFiltro(aux);
+  //   }
+  // }, [busqueda]);
 
   React.useEffect(() => {
     productosApp();
@@ -416,7 +432,7 @@ export default function PrimarySearchAppBar(props) {
   // console.log(contraseña);
   // console.log(empleado);
   // console.log("--------------");
-  // console.log(filtroCategoria);
+  console.log(filtroCategoria);
   // console.log(productosFiltro);
   // console.log("busqueda: " + busqueda);
 
