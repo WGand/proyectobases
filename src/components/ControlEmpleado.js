@@ -77,6 +77,7 @@ export default function ControlEmpleado(props) {
 
   const [datosEmpleado, setDatosEmpleado] = React.useState({});
   const [open, setOpen] = React.useState(false);
+  const [disabled, setDisabled] = React.useState(false);
   const [archivo, setArchivo] = React.useState([]);
 
   const handleClickopen = () => {
@@ -99,22 +100,26 @@ export default function ControlEmpleado(props) {
     history.push("/perfil/controlempleado/crear");
   };
 
-  const irModificar = () => {
-    history.push("/perfil/controlempleado/modificar");
-  };
-
   const conseguirDatos = () => {
     props.enviarDatos(datosEmpleado);
   };
 
-  const validarModificar = () => {
-    if (datosEmpleado) {
-      conseguirDatos();
-      irModificar();
-    }
+  const irModificar = () => {
+    conseguirDatos();
+    history.push("/perfil/controlempleado/modificar");
   };
 
+  React.useEffect(() => {
+    if (Object.entries(datosEmpleado).length !== 0) {
+      conseguirDatos();
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [datosEmpleado]);
+
   console.log(archivo);
+  //console.log(datosEmpleado);
 
   return (
     <React.Fragment>
@@ -140,7 +145,8 @@ export default function ControlEmpleado(props) {
           variant="contained"
           className="m-4"
           color="primary"
-          onClick={validarModificar}
+          onClick={irModificar}
+          disabled={disabled}
         >
           Modificar Empleado
         </Boton>

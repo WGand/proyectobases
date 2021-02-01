@@ -143,9 +143,6 @@ export default function CrearEmpleado() {
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const [horario, setHorario] = React.useState([]);
-  const [entrada, setEntrada] = React.useState("");
-  const [salida, setSalida] = React.useState("");
-  const [diaTrabajo, setDiaTrabajo] = React.useState("");
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -238,9 +235,9 @@ export default function CrearEmpleado() {
         celular: movil,
         prefijo_celular: preMovil,
         lugar: parroquiaSelec,
-        hora_inicio: entrada,
-        hora_fin: salida,
-        dia: diaTrabajo,
+        // hora_inicio: entrada,
+        //hora_fin: salida,
+        //dia: diaTrabajo,
       },
     }).then((response) => {
       console.log(response);
@@ -297,15 +294,6 @@ export default function CrearEmpleado() {
     }
   };
 
-  const fetchHorario = async () => {
-    await axios({
-      method: "get",
-      url: "https://proyectobases1.herokuapp.com/horario",
-    }).then((response) => {
-      setHorario(response.data);
-    });
-  };
-
   const fetchEstados = async () => {
     await axios({
       method: "post",
@@ -345,9 +333,12 @@ export default function CrearEmpleado() {
     });
   };
 
+  const horarioTabla = (horario) => {
+    setHorario(horario);
+  };
+
   React.useEffect(() => {
     fetchEstados();
-    fetchHorario();
   }, []);
 
   React.useEffect(() => {
@@ -456,12 +447,6 @@ export default function CrearEmpleado() {
     }
   }, [prefijoHab]);
 
-  React.useEffect(() => {
-    if (!horario) {
-      fetchHorario();
-    }
-  }, [horario]);
-
   console.log("-------------------------");
   console.log("primer nombre: " + primNombre);
   console.log("segundo nombre: " + segNombre);
@@ -477,9 +462,7 @@ export default function CrearEmpleado() {
   console.log("prefijo telefono: " + preHabitacion);
   console.log("telefono: " + habitacion);
   console.log("fk lugar: " + parroquiaSelec);
-  console.log("dia: " + diaTrabajo);
-  console.log("entrada: " + entrada);
-  console.log("salida: " + salida);
+  console.log(horario);
   console.log("--------------------------");
 
   return (
@@ -654,7 +637,7 @@ export default function CrearEmpleado() {
           <Typography variant="subtitle1" className="m-2">
             Seleccione turnos de empleado
           </Typography>
-          <TablaHorario />
+          <TablaHorario conseguirHorario={horarioTabla} />
         </Paper>
       </div>
       <div class="m-4">
