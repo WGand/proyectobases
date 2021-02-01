@@ -331,7 +331,6 @@ export default function PerfilDatos(props) {
   React.useEffect(() => {
     fetchEstados();
     conseguirDatosEmpleado();
-    ubicacionActual();
   }, []);
 
   React.useEffect(() => {
@@ -485,7 +484,7 @@ export default function PerfilDatos(props) {
 
   console.log("--------------------------");
   console.log(datosEmpleado);
-  console.log(props.datos);
+  //console.log(props.datos);
   console.log("--------------------------");
 
   return (
