@@ -161,6 +161,7 @@ export default function ListaCarrito(props) {
           <ProductoCarrito
             nombre={producto.nombre}
             precio={producto.precio}
+            cantidad={producto.cantidad}
             borrar={borrarProducto}
             modificarCantidad={modificar}
           />

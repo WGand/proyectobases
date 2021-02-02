@@ -6,7 +6,7 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import TablaProductos from "./TablaProductos";
+import TablaTodosProductos from "./TablaTodosProductos";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -87,7 +87,7 @@ export default function ProductoModificar() {
       </Typography>
 
       <Paper className={classes.paper} variant="outlined">
-        <TablaProductos />
+        <TablaTodosProductos />
       </Paper>
       <Paper
         className={classes.paperSelec}

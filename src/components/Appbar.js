@@ -406,15 +406,6 @@ export default function PrimarySearchAppBar(props) {
     }
   }, [filtroCategoria, busqueda]);
 
-  // React.useEffect(() => {
-  //   if (busqueda !== "") {
-  //     let aux = productosFiltro.filter((producto) =>
-  //       producto.nombre.toLowerCase().includes(busqueda)
-  //     );
-  //     setProductosFiltro(aux);
-  //   }
-  // }, [busqueda]);
-
   React.useEffect(() => {
     productosApp();
   }, [productosFiltro]);

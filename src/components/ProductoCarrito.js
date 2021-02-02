@@ -48,6 +48,11 @@ export default function ProductoCarrito(props) {
 
   React.useEffect(() => {
     setPrecioOriginal(props.precio);
+    if (props.cantidad === 1) {
+      setCantidad("");
+    } else {
+      setCantidad(props.cantidad - 1);
+    }
   }, []);
 
   React.useEffect(() => {
