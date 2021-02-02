@@ -22,6 +22,7 @@ import Registrar from "./components/Registrar";
 import CrearEmpleado from "./components/CrearEmpleado";
 import ModificarEmpleado from "./components/ModificarEmpleado";
 import ModificarTienda from "./components/ModificarTienda";
+import ProcederPago from "./components/ProcederPago";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -31,6 +32,7 @@ function App() {
   const [empleado, setEmpleado] = React.useState({});
   const [tienda, setTienda] = React.useState({});
   const [productos, setProductos] = React.useState([]);
+  const [totalCarrito, setTotalCarrito] = React.useState(0);
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
@@ -52,6 +54,10 @@ function App() {
     setProductos(datosProductos);
   };
 
+  const precioTotal = (datosTotal) => {
+    setTotalCarrito(datosTotal);
+  };
+
   return (
     <BrowserRouter>
       <PrimarySearchAppBar
@@ -63,8 +69,12 @@ function App() {
         <Route exact path={["/", "/proyectobases"]}>
           <Home productos={productos} datos={datos} />
         </Route>
+
+        <Route exact path="/carrito/pago">
+          <ProcederPago total={totalCarrito} />
+        </Route>
         <Route path="/carrito">
-          <Carrito />
+          <Carrito conseguirTotal={precioTotal} />
         </Route>
         <Route exact path="/perfil/reposicion">
           <ReposicionInventario />

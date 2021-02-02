@@ -5,6 +5,7 @@ import ProductoCarrito from "./ProductoCarrito";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +56,7 @@ const Boton = withStyles({
 
 export default function ListaCarrito(props) {
   const classes = useStyles();
+  const history = useHistory();
 
   const [listaProductos, setListaProductos] = React.useState([]);
   const [eliminarProducto, setEliminarProducto] = React.useState("");
@@ -63,6 +65,8 @@ export default function ListaCarrito(props) {
   const [precioTotal, setPrecioTotal] = React.useState(0);
   const [cambioPrecio, setCambioPrecio] = React.useState(0);
 
+  const [disabled, setDisabled] = React.useState(false);
+
   const borrarProducto = (producto) => {
     setEliminarProducto(producto);
   };
@@ -70,6 +74,15 @@ export default function ListaCarrito(props) {
   const modificar = (precioMod, producto) => {
     setModificarCantidad(precioMod);
     setProductoCantidad(producto);
+  };
+
+  const enviarTotal = () => {
+    props.conseguirTotal(precioTotal);
+  };
+
+  const irProcederPago = () => {
+    enviarTotal();
+    history.push("/carrito/pago");
   };
 
   React.useEffect(() => {
@@ -118,6 +131,18 @@ export default function ListaCarrito(props) {
     }
   }, [modificarCantidad]);
 
+  React.useEffect(() => {
+    if (listaProductos.length === 0) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [listaProductos]);
+
+  React.useEffect(() => {
+    enviarTotal();
+  }, [precioTotal]);
+
   console.log(listaProductos);
   // console.log("producto a eliminar: " + eliminarProducto);
   console.log(precioTotal);
@@ -141,8 +166,14 @@ export default function ListaCarrito(props) {
           {precioTotal}.000 Bs.
         </Typography>
       </Typography>
-      <Boton variant="contained" className="m-3" color="primary">
-        Comprar
+      <Boton
+        variant="contained"
+        className="m-3"
+        color="primary"
+        disabled={disabled}
+        onClick={irProcederPago}
+      >
+        Proceder a pago
       </Boton>
       <Divider variant="middle" class="border border-primary m-4" />
     </div>
