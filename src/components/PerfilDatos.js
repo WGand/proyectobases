@@ -4,8 +4,6 @@ import TextField from "@material-ui/core/TextField";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
@@ -42,16 +40,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
-
-const GreenCheckbox = withStyles({
-  root: {
-    color: "#00AAE3",
-    "&$checked": {
-      color: "#00AAE3",
-    },
-  },
-  checked: {},
-})((props) => <Checkbox color="default" {...props} />);
 
 const Boton = withStyles({
   root: {
@@ -92,13 +80,6 @@ const Boton = withStyles({
 })(Button);
 
 export default function PerfilDatos(props) {
-  const [state, setState] = React.useState({
-    checkedNinguno: true,
-    checkedEfectivo: true,
-    checkedDebito: true,
-    checkedCredito: true,
-    checkedCheque: true,
-  });
   const classes = useStyles();
 
   const [prefijoHab, setPrefijoHab] = React.useState("");
@@ -182,10 +163,6 @@ export default function PerfilDatos(props) {
 
   const handleChangeParroquia = (event) => {
     setParroquia(event.target.value);
-  };
-
-  const handleCheckboxes = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
   };
 
   const handleChangePrimerNombre = (event) => {
@@ -835,78 +812,6 @@ export default function PerfilDatos(props) {
         </div>
         <div class="m-4">
           <Typography variant="h6" className="m-2">
-            Medios de pago:
-          </Typography>
-          <List className={classes.dir}>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedNinguno}
-                    onChange={handleCheckboxes}
-                    name="checkedNinguno"
-                  />
-                }
-                label="Ninguno"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedEfectivo}
-                    onChange={handleCheckboxes}
-                    name="checkedEfectivo"
-                  />
-                }
-                label="Efectivo"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedDebito}
-                    onChange={handleCheckboxes}
-                    name="checkedDebito"
-                  />
-                }
-                label="Débito"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedCredito}
-                    onChange={handleCheckboxes}
-                    name="checkedCredito"
-                  />
-                }
-                label="Crédito"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedCheque}
-                    onChange={handleCheckboxes}
-                    name="checkedCheque"
-                  />
-                }
-                label="Cheque"
-              />
-            </ListItem>
-          </List>
-        </div>
-        <div class="m-4">
-          <Typography variant="h6" className="m-2">
             Dirección de habitación:
           </Typography>
           <List>
@@ -1106,78 +1011,6 @@ export default function PerfilDatos(props) {
             onChange={handleChangeCorreo}
             error={correoExiste}
           />
-        </div>
-        <div class="m-4">
-          <Typography variant="h6" className="m-2">
-            Medios de pago:
-          </Typography>
-          <List className={classes.dir}>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedNinguno}
-                    onChange={handleCheckboxes}
-                    name="checkedNinguno"
-                  />
-                }
-                label="Ninguno"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedEfectivo}
-                    onChange={handleCheckboxes}
-                    name="checkedEfectivo"
-                  />
-                }
-                label="Efectivo"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedDebito}
-                    onChange={handleCheckboxes}
-                    name="checkedDebito"
-                  />
-                }
-                label="Débito"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedCredito}
-                    onChange={handleCheckboxes}
-                    name="checkedCredito"
-                  />
-                }
-                label="Crédito"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedCheque}
-                    onChange={handleCheckboxes}
-                    name="checkedCheque"
-                  />
-                }
-                label="Cheque"
-              />
-            </ListItem>
-          </List>
         </div>
         <div class="m-4">
           <Typography variant="h6" className="m-2">
@@ -1444,78 +1277,6 @@ export default function PerfilDatos(props) {
             onChange={handleChangeCorreo}
             error={correoExiste}
           />
-        </div>
-        <div class="m-4">
-          <Typography variant="h6" className="m-2">
-            Medios de pago:
-          </Typography>
-          <List className={classes.dir}>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedNinguno}
-                    onChange={handleCheckboxes}
-                    name="checkedNinguno"
-                  />
-                }
-                label="Ninguno"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedEfectivo}
-                    onChange={handleCheckboxes}
-                    name="checkedEfectivo"
-                  />
-                }
-                label="Efectivo"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedDebito}
-                    onChange={handleCheckboxes}
-                    name="checkedDebito"
-                  />
-                }
-                label="Débito"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedCredito}
-                    onChange={handleCheckboxes}
-                    name="checkedCredito"
-                  />
-                }
-                label="Crédito"
-              />
-            </ListItem>
-            <ListItem>
-              <FormControlLabel
-                className="m-2"
-                control={
-                  <GreenCheckbox
-                    checked={state.checkedCheque}
-                    onChange={handleCheckboxes}
-                    name="checkedCheque"
-                  />
-                }
-                label="Cheque"
-              />
-            </ListItem>
-          </List>
         </div>
         <div class="m-4">
           <Typography variant="h6" className="m-2">
