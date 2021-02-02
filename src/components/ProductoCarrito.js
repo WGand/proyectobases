@@ -92,7 +92,7 @@ export default function ProductoCarrito(props) {
   }, [cantidadProducto]);
 
   React.useEffect(() => {
-    props.modificarCantidad(precioMod, props.nombre);
+    props.modificarCantidad(precioMod, props.nombre, cantidadProducto);
   }, [precioMod]);
 
   return (

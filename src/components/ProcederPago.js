@@ -207,7 +207,7 @@ export default function ProcederPago(props) {
   return (
     <React.Fragment>
       <Typography variant="h3" className="m-4">
-        <b>Pago de Órden</b>
+        <b>Pago</b>
       </Typography>
       <Typography variant="h5" className="m-4">
         Productos en la Órden
@@ -215,7 +215,10 @@ export default function ProcederPago(props) {
       <List className={classes.lista}>
         {carrito.map((producto, value) => (
           <ListItem divider>
-            <ListItemText primary={producto.nombre} />
+            <ListItemText
+              primary={producto.nombre}
+              secondary={"Cantidad: " + producto.cantidad}
+            />
           </ListItem>
         ))}
       </List>

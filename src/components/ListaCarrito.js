@@ -64,6 +64,7 @@ export default function ListaCarrito(props) {
   const [productoCantidad, setProductoCantidad] = React.useState("");
   const [precioTotal, setPrecioTotal] = React.useState(0);
   const [cambioPrecio, setCambioPrecio] = React.useState(0);
+  const [numeroProducto, setNumeroProducto] = React.useState(1);
 
   const [disabled, setDisabled] = React.useState(false);
 
@@ -71,9 +72,10 @@ export default function ListaCarrito(props) {
     setEliminarProducto(producto);
   };
 
-  const modificar = (precioMod, producto) => {
+  const modificar = (precioMod, producto, numeroProducto) => {
     setModificarCantidad(precioMod);
     setProductoCantidad(producto);
+    setNumeroProducto(numeroProducto);
   };
 
   const enviarTotal = () => {
@@ -124,12 +126,16 @@ export default function ListaCarrito(props) {
       for (let index = 0; index < aux.length; index++) {
         if (aux[index].nombre === productoCantidad) {
           aux[index].precio = modificarCantidad;
+          if (!aux[index].cantidad) {
+            aux[index].cantidad = 1;
+          } else aux[index].cantidad = numeroProducto;
         }
       }
       setListaProductos(aux);
       setCambioPrecio(modificarCantidad);
+      localStorage.setItem("carrito", JSON.stringify(listaProductos));
     }
-  }, [modificarCantidad]);
+  }, [modificarCantidad, numeroProducto]);
 
   React.useEffect(() => {
     if (listaProductos.length === 0) {
