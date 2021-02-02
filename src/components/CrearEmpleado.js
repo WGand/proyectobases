@@ -223,21 +223,22 @@ export default function CrearEmpleado() {
       url: "https://proyectobases1.herokuapp.com/empleado",
       data: {
         rif: rif,
-        correo: correo,
+        correo_electronico: correo,
         cedula: numCedula,
         primer_nombre: primNombre,
         segundo_nombre: segNombre,
         primer_apellido: primApellido,
         segundo_apellido: segApellido,
         contrasena: contraseña,
+        tipo_cedula: tipoCedula,
+        parroquia: parroquiaSelec,
+        municipio: municipioSelec,
+        estado: estadoSelec,
         telefono: habitacion,
-        prefijo: preHabitacion,
+        prefijo_telefono: preHabitacion,
         celular: movil,
         prefijo_celular: preMovil,
-        lugar: parroquiaSelec,
-        // hora_inicio: entrada,
-        //hora_fin: salida,
-        //dia: diaTrabajo,
+        horario: horario,
       },
     }).then((response) => {
       console.log(response);
@@ -363,7 +364,7 @@ export default function CrearEmpleado() {
     if (!listaParroquias[parroquia]) {
       fetchParroquias();
     } else {
-      setParroquiaSelec(listaParroquias[parroquia].lugar_id);
+      setParroquiaSelec(listaParroquias[parroquia].nombre);
     }
   }, [listaParroquias, parroquia, parroquiaSelec]);
 
@@ -461,7 +462,9 @@ export default function CrearEmpleado() {
   console.log("celular: " + movil);
   console.log("prefijo telefono: " + preHabitacion);
   console.log("telefono: " + habitacion);
-  console.log("fk lugar: " + parroquiaSelec);
+  console.log("parroquia: " + parroquiaSelec);
+  console.log("municipio: " + municipioSelec);
+  console.log("estado: " + estadoSelec);
   console.log(horario);
   console.log("--------------------------");
 

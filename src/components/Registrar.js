@@ -383,23 +383,26 @@ export default function Registrar() {
       url: "https://proyectobases1.herokuapp.com/usuarioJuridico",
       data: {
         rif: rif,
-        correo: correo,
+        correo_electronico: correo,
+        contrasena: contraseña,
         denominacion_comercial: demCom,
         razon_social: razonSocial,
         pagina_web: paginaWeb,
         capital_disponible: capitalDisponible,
-        contrasena: contraseña,
         telefono: habitacion,
         prefijo_telefono: preHabitacion,
         celular: movil,
         prefijo_celular: preMovil,
-        lugar: parroquiaSelec,
+        parroquia: parroquiaSelec,
+        municipio: municipioSelec,
+        estado: estadoSelec,
         persona_contacto_nombre: primNombre,
-        persona_contacto_apellido: primApellido,
+        persona_contacto_primer_apellido: primApellido,
+        persona_contacto_segundo_apellido: segApellido,
         persona_contacto_telefono: movilPC,
+        persona_contacto_prefijo_telefono: preHabitacionPC,
         persona_contacto_celular: habitacionPC,
         persona_contacto_prefijo_celular: preMovilPC,
-        persona_contacto_prefijo_telefono: preHabitacionPC,
       },
     }).then((response) => {
       console.log(response);
@@ -761,6 +764,7 @@ export default function Registrar() {
   console.log("tipo persona: ", tipoPersona);
   console.log("primer nombre contacto: " + primNombre);
   console.log("primer apellido contacto: " + primApellido);
+  console.log("segundo apellido contacto: " + segApellido);
   console.log("prefijo telefono contacto: " + preMovilPC);
   console.log("telefono contacto: " + movilPC);
   console.log("prefijo habitacion contacto: " + preHabitacionPC);
@@ -1410,6 +1414,16 @@ export default function Registrar() {
               variant="outlined"
               className={classes.campo}
               onChange={handleChangePrimApellido}
+            />
+            <Typography variant="subtitle1" className="m-2">
+              Segundo Apellido:
+            </Typography>
+            <TextField
+              id="outlined-segApellido"
+              label="Segundo Apellido"
+              variant="outlined"
+              className={classes.campo}
+              onChange={handleChangeSegApellido}
             />
           </div>
           <div class="m-4">

@@ -401,28 +401,30 @@ export default function PerfilDatos(props) {
       url: "https://proyectobases1.herokuapp.com/usuarioJuridico",
       data: {
         rif: props.datos[0].rif,
-        correo: correo,
+        correo_electronico: correo,
+        contrasena: props.datos[0].contrasena,
         denominacion_comercial: demCom,
         razon_social: razonSocial,
         pagina_web: paginaWeb,
         capital_disponible: capitalDisponible,
-        contrasena: props.datos[0].contrasena,
         telefono: habitacion,
-        prefijo: preHabitacion,
+        prefijo_telefono: preHabitacion,
         celular: movil,
         prefijo_celular: preMovil,
-        lugar: parroquiaSelec,
+        parroquia: parroquiaSelec,
+        municipio: municipioSelec,
+        estado: estadoSelec,
         persona_contacto_nombre: props.datos[0].persona_contacto_nombre,
-        persona_contacto_apellido:
+        persona_contacto_primer_apellido:
           props.datos[0].persona_contacto_primer_apellido,
         persona_contacto_segundo_apellido:
           props.datos[0].persona_contacto_segundo_apellido,
         persona_contacto_telefono: props.datos[0].persona_contacto_telefono,
+        persona_contacto_prefijo_telefono:
+          props.datos[0].persona_contacto_prefijo_telefono,
         persona_contacto_celular: props.datos[0].persona_contacto_celular,
         persona_contacto_prefijo_celular:
           props.datos[0].persona_contacto_prefijo_celular,
-        persona_contacto_prefijo_telefono:
-          props.datos[0].persona_contacto_prefijo_telefono,
       },
     }).then((response) => {
       console.log(response);
@@ -689,7 +691,7 @@ export default function PerfilDatos(props) {
     if (!listaParroquiasF[parroquiaF]) {
       fetchParroquiasF();
     } else {
-      setParroquiaFSelec(listaParroquiasF[parroquiaF].lugar_id);
+      setParroquiaFSelec(listaParroquiasF[parroquiaF].nombre);
     }
   }, [listaParroquiasF, parroquiaF, parroquiaSelec]);
 

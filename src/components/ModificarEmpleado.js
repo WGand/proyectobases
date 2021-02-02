@@ -11,7 +11,9 @@ import ListItem from "@material-ui/core/ListItem";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Paper from "@material-ui/core/Paper";
 import Backdrop from "@material-ui/core/Backdrop";
+import TablaHorario from "./TablaHorario";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 
@@ -41,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
+  },
+  paper: {
+    width: 550,
+    margin: 30,
+    marginTop: 60,
   },
 }));
 
@@ -145,6 +152,7 @@ export default function PerfilDatos(props) {
 
   const [correoRespuesta, setCorreoRespuesta] = React.useState(0);
   const [correoExiste, setCorreoExiste] = React.useState(false);
+  const [horario, setHorario] = React.useState({});
 
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
@@ -202,6 +210,10 @@ export default function PerfilDatos(props) {
 
   const irControlEmpleado = () => {
     history.push("/perfil/controlempleado");
+  };
+
+  const horarioTabla = (horario) => {
+    setHorario(horario);
   };
 
   const fetchEstados = async () => {
@@ -262,21 +274,20 @@ export default function PerfilDatos(props) {
       url: "https://proyectobases1.herokuapp.com/empleado",
       data: {
         rif: datosEmpleado[0].rif,
-        correo: correo,
-        cedula: datosEmpleado[0].cedula_identidad,
+        correo_electronico: correo,
         primer_nombre: primNombre,
         segundo_nombre: segNombre,
         primer_apellido: primApellido,
         segundo_apellido: segApellido,
         contrasena: datosEmpleado[0].contrasena,
+        parroquia: parroquiaSelec,
+        municipio: municipioSelec,
+        estado: estadoSelec,
         telefono: habitacion,
-        prefijo: preHabitacion,
+        prefijo_telefono: preHabitacion,
         celular: movil,
         prefijo_celular: preMovil,
-        lugar: parroquiaSelec,
-        hora_inicio: datosEmpleado[0].hora_inicio,
-        hora_fin: datosEmpleado[0].hora_fin,
-        dia: datosEmpleado[0].dia,
+        horario: horario,
       },
     }).then((response) => {
       console.log(response);
@@ -364,7 +375,7 @@ export default function PerfilDatos(props) {
     if (!listaParroquias[parroquia]) {
       fetchParroquias();
     } else {
-      setParroquiaSelec(listaParroquias[parroquia].lugar_id);
+      setParroquiaSelec(listaParroquias[parroquia].nombre);
     }
   }, [listaParroquias, parroquia, parroquiaSelec]);
 
@@ -484,7 +495,10 @@ export default function PerfilDatos(props) {
 
   console.log("--------------------------");
   console.log(datosEmpleado);
-  //console.log(props.datos);
+  console.log(horario);
+  console.log("nombre: " + primNombre);
+  console.log("apellido:" + primApellido);
+  console.log("segundo apellido: " + segApellido);
   console.log("--------------------------");
 
   return (
@@ -618,6 +632,17 @@ export default function PerfilDatos(props) {
           onChange={handleChangeCorreo}
           error={correoExiste}
         />
+      </div>
+      <div class="m-4">
+        <Typography variant="h6" className="m-2">
+          Horario
+        </Typography>
+        <Paper className={classes.paper} variant="outlined">
+          <Typography variant="subtitle1" className="m-2">
+            Seleccione turnos de empleado
+          </Typography>
+          <TablaHorario conseguirHorario={horarioTabla} />
+        </Paper>
       </div>
       <div class="m-4">
         <Typography variant="h6" className="m-2">

@@ -71,7 +71,7 @@ export default function TablaHorario(props) {
         }
       }
     }
-    setHorario(aux);
+    setHorario(JSON.stringify(aux));
   }, [seleccion]);
 
   React.useEffect(() => {
