@@ -1,13 +1,26 @@
 import React from "react";
-import DateAndTimePickers from "./FechaHora";
+import Typography from "@material-ui/core/Typography";
 import ListaCarrito from "./ListaCarrito";
 
-export default function Carrito() {
+export default function Carrito(props) {
   document.title = "Carrito de Compras";
+
+  const [total, setTotal] = React.useState(0);
+
+  const conseguirTotal = (datosTotal) => {
+    setTotal(datosTotal);
+  };
+
+  React.useEffect(() => {
+    props.conseguirTotal(total);
+  }, [total]);
+
   return (
     <React.Fragment>
-      <DateAndTimePickers />
-      <ListaCarrito />
+      <Typography variant="h3" className="m-4">
+        <b>Carrito de Compras</b>
+      </Typography>
+      <ListaCarrito conseguirTotal={conseguirTotal} />
     </React.Fragment>
   );
 }
