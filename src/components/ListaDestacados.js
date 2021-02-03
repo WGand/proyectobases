@@ -269,7 +269,7 @@ export default function ListaDestacados(props) {
                     id={value}
                   >
                     <img src={producto.imagen} class="tamañoLista" alt="" />
-                    {producto.nombre}
+                    <Typography className="m-2">{producto.nombre}</Typography>
                   </Button>
                 </Grid>
               ))}

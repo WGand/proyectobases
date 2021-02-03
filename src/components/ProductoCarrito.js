@@ -102,12 +102,12 @@ export default function ProductoCarrito(props) {
 
   return (
     <ListItem divider>
-      <img
-        src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-        class="tamañoCarrito"
-        alt=""
+      <img src={props.imagen} class="tamañoCarrito" alt="" />
+      <ListItemText
+        primary={props.nombre}
+        secondary={precioMod + ".000"}
+        className="m-2"
       />
-      <ListItemText primary={props.nombre} secondary={precioMod + ".000"} />
       <Select
         variant="outlined"
         value={cantidad}

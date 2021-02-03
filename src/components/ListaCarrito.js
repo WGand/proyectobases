@@ -162,6 +162,7 @@ export default function ListaCarrito(props) {
             nombre={producto.nombre}
             precio={producto.precio}
             cantidad={producto.cantidad}
+            imagen={producto.imagen}
             borrar={borrarProducto}
             modificarCantidad={modificar}
           />
