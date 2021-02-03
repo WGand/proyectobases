@@ -16,10 +16,15 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 500,
     marginLeft: 100,
   },
+  campoImagen: {
+    width: 700,
+    maxWidth: 700,
+    marginLeft: 100,
+  },
   prov: {
     marginLeft: 50,
     marginRight: 40,
-    width: 200,
+    width: 300,
   },
   precio: {
     marginLeft: 20,
@@ -69,19 +74,18 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ProductoRegistrar() {
+export default function ModificacionProducto(props) {
   const history = useHistory();
   const classes = useStyles();
 
-  const [proveedor, setProveedor] = React.useState("");
   const [categoria, setCategoria] = React.useState("");
   const [nombre, setNombre] = React.useState("");
   const [imagen, setImagen] = React.useState("");
   const [precio, setPrecio] = React.useState(0);
 
-  const [listaUsuarios, setListaUsuarios] = React.useState([]);
-  const [proveedores, setProveedores] = React.useState([]);
-  const [rif, setRif] = React.useState("");
+  const [labelNombre, setLabelNombre] = React.useState("");
+  const [labelImagen, setLabelImagen] = React.useState("");
+  const [labelPrecio, setLabelPrecio] = React.useState("");
 
   const [categoriaSelec, setCategoriaSelec] = React.useState("");
 
@@ -89,25 +93,16 @@ export default function ProductoRegistrar() {
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const irControlProducto = () => {
-    history.push("/perfil/controlproducto");
+    history.push("/perfil/controlproducto/modificar");
   };
 
-  const datos = async () => {
-    await axios({
-      method: "get",
-      url: "https://proyectobases1.herokuapp.com/login",
-    }).then((response) => {
-      setListaUsuarios(response.data);
-    });
-  };
-
-  const agregarProducto = async () => {
+  const modificarProducto = async () => {
     setOpenBackdrop(true);
     await axios({
-      method: "post",
+      method: "put",
       url: "https://proyectobases1.herokuapp.com/producto",
       data: {
-        rif: rif,
+        producto_id: props.producto.id,
         imagen: imagen,
         nombre: nombre,
         precio: precio,
@@ -118,10 +113,6 @@ export default function ProductoRegistrar() {
       console.log(response.data);
     });
     setOpenBackdrop(false);
-  };
-
-  const handleChangeProv = (event) => {
-    setProveedor(event.target.value);
   };
 
   const handleChangeCategoria = (event) => {
@@ -141,21 +132,48 @@ export default function ProductoRegistrar() {
   };
 
   React.useEffect(() => {
-    datos();
-  }, []);
+    setLabelNombre(props.producto.nombre);
+    setNombre(props.producto.nombre);
+    setLabelImagen(props.producto.imagen);
+    setImagen(props.producto.imagen);
+    setLabelPrecio(props.producto.precio);
+    setPrecio(props.producto.precio);
+    switch (props.producto.categoria) {
+      case "FRUTAS Y VEGETALES":
+        setCategoria("");
+        break;
+      case "VIVERES":
+        setCategoria(1);
+        break;
+      case "REFRIGERADOS Y CONGELADOS":
+        setCategoria(2);
+        break;
+      case "CUIDADO PERSONAL Y SALUD":
+        setCategoria(3);
+        break;
+      case "LIMPIEZA":
+        setCategoria(4);
+        break;
+      case "HOGAR Y TEMPORADA":
+        setCategoria(5);
+        break;
+      case "MASCOTAS":
+        setCategoria(6);
+        break;
+      case "LICORES":
+        setCategoria(7);
+        break;
+      case "VEHICULOS":
+        setCategoria(8);
+        break;
+      case "OFICINA Y TECNOLOGIA":
+        setCategoria(9);
+        break;
 
-  React.useEffect(() => {
-    if (!listaUsuarios["JURIDICO"]) {
-      console.log("no existe");
-      datos();
-    } else {
-      console.log("existe");
-      let aux = listaUsuarios["JURIDICO"].filter(
-        (proveedor) => proveedor.rubro !== null
-      );
-      setProveedores(aux);
+      default:
+        break;
     }
-  }, [listaUsuarios]);
+  }, []);
 
   React.useEffect(() => {
     switch (categoria) {
@@ -196,14 +214,6 @@ export default function ProductoRegistrar() {
   }, [categoria]);
 
   React.useEffect(() => {
-    for (let index = 0; index < proveedores.length; index++) {
-      if (index === proveedor) {
-        setRif(proveedores[index].rif);
-      }
-    }
-  }, [proveedor]);
-
-  React.useEffect(() => {
     if (nombre === "" || precio === "" || imagen === "") {
       setDisabled(true);
     } else {
@@ -211,19 +221,39 @@ export default function ProductoRegistrar() {
     }
   });
 
+  React.useEffect(() => {
+    if (nombre === "") {
+      setNombre(labelNombre);
+    }
+  }, [nombre]);
+
+  React.useEffect(() => {
+    if (imagen === "") {
+      setImagen(labelImagen);
+    }
+  }, [imagen]);
+
+  React.useEffect(() => {
+    if (precio === "") {
+      setPrecio(labelPrecio);
+    }
+  }, [precio]);
+
+  console.log(props.producto.id);
   console.log(nombre);
   console.log(imagen);
   console.log(precio);
   console.log(categoriaSelec);
-  console.log(rif);
 
   return (
     <React.Fragment>
       <Button className="m-3" onClick={irControlProducto}>
-        <Typography variant="h5">Control de Producto</Typography>
+        <Typography variant="h5">
+          Control de Producto: Modificar o Eliminar
+        </Typography>
       </Button>
       <Typography variant="h4" className="m-3">
-        <b>Control de Producto: Registrar</b>
+        <b>Modificar Producto</b>
       </Typography>
       <div style={{ display: "flex" }} className="m-4">
         <Typography variant="h6" className="m-2">
@@ -231,7 +261,7 @@ export default function ProductoRegistrar() {
         </Typography>
         <TextField
           id="outlined-nombre"
-          label="Nombre del Producto"
+          label={labelNombre}
           variant="outlined"
           className={classes.campo}
           onChange={handleChangeNombre}
@@ -243,31 +273,14 @@ export default function ProductoRegistrar() {
         </Typography>
         <TextField
           id="outlined-desc"
-          label="URL de la imagen"
+          label={labelImagen}
           variant="outlined"
-          className={classes.campo}
+          className={classes.campoImagen}
           type="url"
           onChange={handleChangeImagen}
         />
       </div>
       <div style={{ display: "flex" }} className="m-4">
-        <Typography variant="h6" className="m-2">
-          Proveedor:
-        </Typography>
-        <Select
-          value={proveedor}
-          onChange={handleChangeProv}
-          displayEmpty
-          inputProps={{ "aria-label": "Without label" }}
-          className={classes.prov}
-          variant="outlined"
-        >
-          {proveedores.map((proveedor, value) => (
-            <MenuItem value={value}>
-              {proveedor.denominacion_comercial}
-            </MenuItem>
-          ))}
-        </Select>
         <Typography variant="h6" className="m-2">
           Categoría:
         </Typography>
@@ -297,7 +310,7 @@ export default function ProductoRegistrar() {
         </Typography>
         <TextField
           id="outlined-precio"
-          label="Precio del Producto"
+          label={labelPrecio}
           variant="outlined"
           type="number"
           className={classes.campo}
@@ -309,9 +322,9 @@ export default function ProductoRegistrar() {
         className="m-4"
         color="primary"
         disabled={disabled}
-        onClick={agregarProducto}
+        onClick={modificarProducto}
       >
-        Registrar Producto
+        Modificar Producto
       </Boton>
       <Backdrop className={classes.backdrop} open={openBackdrop}>
         <CircularProgress color="inherit" />

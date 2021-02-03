@@ -6,7 +6,15 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import IconButton from "@material-ui/core/IconButton";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
 import TablaTodosProductos from "./TablaTodosProductos";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -14,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 30,
   },
   paper: {
-    width: 800,
+    width: 1000,
     margin: 30,
     marginTop: 60,
   },
@@ -28,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
   table: {
     width: 500,
     margin: "auto",
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -69,19 +81,63 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ProductoModificar() {
+export default function ProductoModificar(props) {
   const history = useHistory();
   const classes = useStyles();
 
   const [producto, setProducto] = React.useState({});
 
+  const [open, setOpen] = React.useState(false);
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
   const irControlProducto = () => {
     history.push("/perfil/controlproducto");
+  };
+
+  const irModificacion = () => {
+    history.push("/perfil/controlproducto/modificar/modificacion");
+  };
+
+  const deleteProducto = async () => {
+    setOpen(false);
+    setOpenBackdrop(true);
+    await axios({
+      method: "delete",
+      url: "https://proyectobases1.herokuapp.com/producto",
+      data: {
+        producto_id: producto.id,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    setOpen(false);
+    setOpenBackdrop(false);
+  };
+
+  const enviarProducto = () => {
+    props.conseguirProducto(producto);
   };
 
   const productoTabla = (datosTabla) => {
     setProducto(datosTabla);
   };
+
+  const manejarModificacion = () => {
+    enviarProducto();
+    irModificacion();
+  };
+
+  React.useEffect(() => {
+    enviarProducto();
+  }, [producto.id]);
 
   console.log(producto);
 
@@ -133,13 +189,41 @@ export default function ProductoModificar() {
           <Typography className={"m-3"}>
             <b>{producto.nombre}</b> / {producto.categoria} / {producto.precio}
           </Typography>
-          <IconButton className={classes.boton}>
+          <IconButton className={classes.boton} onClick={handleClickOpen}>
             <RemoveCircleIcon color="error" />
           </IconButton>
         </Paper>
-        <Boton variant="contained" className="m-4" color="primary">
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={manejarModificacion}
+        >
           Modificar Producto
         </Boton>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+        >
+          <DialogTitle id="alert-dialog-title">Eliminar producto</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              ¿Seguro que desea eliminar el producto seleccionado?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={deleteProducto}>
+              Si
+            </Button>
+            <Button onClick={handleClose} color="primary" autoFocus>
+              No
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Backdrop className={classes.backdrop} open={openBackdrop}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </React.Fragment>
     );
   }

@@ -23,6 +23,7 @@ import CrearEmpleado from "./components/CrearEmpleado";
 import ModificarEmpleado from "./components/ModificarEmpleado";
 import ModificarTienda from "./components/ModificarTienda";
 import ProcederPago from "./components/ProcederPago";
+import ModificacionProducto from "./components/ModificacionProducto";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -33,6 +34,7 @@ function App() {
   const [tienda, setTienda] = React.useState({});
   const [productos, setProductos] = React.useState([]);
   const [totalCarrito, setTotalCarrito] = React.useState(0);
+  const [producto, setProducto] = React.useState({});
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
@@ -56,6 +58,10 @@ function App() {
 
   const precioTotal = (datosTotal) => {
     setTotalCarrito(datosTotal);
+  };
+
+  const datosProducto = (datosModificarProducto) => {
+    setProducto(datosModificarProducto);
   };
 
   return (
@@ -119,7 +125,10 @@ function App() {
           <ProductoRegistrar />
         </Route>
         <Route exact path="/perfil/controlproducto/modificar">
-          <ProductoModificar />
+          <ProductoModificar conseguirProducto={datosProducto} />
+        </Route>
+        <Route exact path="/perfil/controlproducto/modificar/modificacion">
+          <ModificacionProducto producto={producto} />
         </Route>
         <Route exact path="/perfil/controlempleado/crear">
           <CrearEmpleado />

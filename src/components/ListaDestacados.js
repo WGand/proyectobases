@@ -168,11 +168,7 @@ export default function ListaDestacados(props) {
                     className={classes.grid}
                     id={value}
                   >
-                    <img
-                      src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-                      class="tamañoLista"
-                      alt=""
-                    />
+                    <img src={producto.imagen} class="tamañoLista" alt="" />
                     {producto.nombre}
                   </Button>
                 </Grid>
@@ -197,7 +193,7 @@ export default function ListaDestacados(props) {
           <Card className={classes.rootCard}>
             <CardMedia
               className={classes.media}
-              image="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
+              image={productoSelec[0].imagen}
               title="Imagen"
             />
             <CardContent>
@@ -272,12 +268,8 @@ export default function ListaDestacados(props) {
                     className={classes.grid}
                     id={value}
                   >
-                    <img
-                      src="https://http2.mlstatic.com/televisor-aiwa-32-led-hd-hdmi-isdbt-D_NQ_NP_766490-MLV43440988575_092020-W.webp"
-                      class="tamañoLista"
-                      alt=""
-                    />
-                    {producto.nombre}
+                    <img src={producto.imagen} class="tamañoLista" alt="" />
+                    <Typography className="m-2">{producto.nombre}</Typography>
                   </Button>
                 </Grid>
               ))}
