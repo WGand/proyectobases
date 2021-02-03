@@ -73,35 +73,74 @@ export default function ProductoModificar() {
   const history = useHistory();
   const classes = useStyles();
 
+  const [producto, setProducto] = React.useState({});
+
   const irControlProducto = () => {
     history.push("/perfil/controlproducto");
   };
 
-  return (
-    <React.Fragment>
-      <Button className="m-3" onClick={irControlProducto}>
-        <Typography variant="h5">Control de Producto</Typography>
-      </Button>
-      <Typography variant="h4" className="m-3">
-        <b>Control de Producto: Modificar o Eliminar</b>
-      </Typography>
+  const productoTabla = (datosTabla) => {
+    setProducto(datosTabla);
+  };
 
-      <Paper className={classes.paper} variant="outlined">
-        <TablaTodosProductos />
-      </Paper>
-      <Paper
-        className={classes.paperSelec}
-        variant="outlined"
-        style={{ display: "flex" }}
-      >
-        Producto / Descripción / Cantidad / Precio **PRODUCTO SELECCIONADO**
-        <IconButton className={classes.boton}>
-          <RemoveCircleIcon color="error" />
-        </IconButton>
-      </Paper>
-      <Boton variant="contained" className="m-4" color="primary">
-        Modificar Producto
-      </Boton>
-    </React.Fragment>
-  );
+  console.log(producto);
+
+  if (Object.entries(producto).length === 0) {
+    return (
+      <React.Fragment>
+        <Button className="m-3" onClick={irControlProducto}>
+          <Typography variant="h5">Control de Producto</Typography>
+        </Button>
+        <Typography variant="h4" className="m-3">
+          <b>Control de Producto: Modificar o Eliminar</b>
+        </Typography>
+
+        <Paper className={classes.paper} variant="outlined">
+          <TablaTodosProductos productoSelec={productoTabla} />
+        </Paper>
+        <Paper
+          className={classes.paperSelec}
+          variant="outlined"
+          style={{ display: "flex" }}
+        >
+          <Typography className={"m-3"}>
+            No se ha seleccionado un producto
+          </Typography>
+        </Paper>
+        <Boton variant="contained" className="m-4" color="primary" disabled>
+          Modificar Producto
+        </Boton>
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <Button className="m-3" onClick={irControlProducto}>
+          <Typography variant="h5">Control de Producto</Typography>
+        </Button>
+        <Typography variant="h4" className="m-3">
+          <b>Control de Producto: Modificar o Eliminar</b>
+        </Typography>
+
+        <Paper className={classes.paper} variant="outlined">
+          <TablaTodosProductos productoSelec={productoTabla} />
+        </Paper>
+        <Paper
+          className={classes.paperSelec}
+          variant="outlined"
+          style={{ display: "flex" }}
+        >
+          <Typography className={"m-3"}>
+            <b>{producto.nombre}</b> / {producto.categoria} / {producto.precio}
+          </Typography>
+          <IconButton className={classes.boton}>
+            <RemoveCircleIcon color="error" />
+          </IconButton>
+        </Paper>
+        <Boton variant="contained" className="m-4" color="primary">
+          Modificar Producto
+        </Boton>
+      </React.Fragment>
+    );
+  }
 }
