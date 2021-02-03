@@ -16,6 +16,7 @@ const columns = [
 
 export default function TablaTodosProductos(props) {
   const [productos, setProductos] = React.useState([]);
+  const [productoSelec, setProductoSelec] = React.useState({});
   const [cargando, setCargando] = React.useState(false);
 
   const datos = async () => {
@@ -25,6 +26,14 @@ export default function TablaTodosProductos(props) {
     }).then((response) => {
       setProductos(response.data);
     });
+  };
+
+  const conseguirProducto = () => {
+    props.productoSelec(productoSelec);
+  };
+
+  const productoSeleccionado = (event) => {
+    setProductoSelec(event.data);
   };
 
   React.useEffect(() => {
@@ -41,15 +50,18 @@ export default function TablaTodosProductos(props) {
     }
   }, [productos]);
 
-  console.log(productos);
+  React.useEffect(() => {
+    conseguirProducto();
+  }, [productoSelec]);
 
   return (
-    <div style={{ height: 500, width: "100%" }}>
+    <div style={{ height: 600, width: "100%" }}>
       <DataGrid
         rows={productos}
         columns={columns}
         pageSize={8}
         hideFooterSelectedRowCount
+        onRowSelected={productoSeleccionado}
         loading={cargando}
       />
     </div>
