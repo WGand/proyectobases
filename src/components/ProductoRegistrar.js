@@ -6,6 +6,9 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   campo: {
@@ -21,6 +24,10 @@ const useStyles = makeStyles((theme) => ({
   precio: {
     marginLeft: 20,
     width: 70,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -65,20 +72,150 @@ const Boton = withStyles({
 export default function ProductoRegistrar() {
   const history = useHistory();
   const classes = useStyles();
+
   const [proveedor, setProveedor] = React.useState("");
-  const [precio, setPrecio] = React.useState("");
+  const [categoria, setCategoria] = React.useState("");
+  const [nombre, setNombre] = React.useState("");
+  const [imagen, setImagen] = React.useState("");
+  const [precio, setPrecio] = React.useState(0);
+
+  const [listaUsuarios, setListaUsuarios] = React.useState([]);
+  const [proveedores, setProveedores] = React.useState([]);
+  const [rif, setRif] = React.useState("");
+
+  const [categoriaSelec, setCategoriaSelec] = React.useState("");
+
+  const [disabled, setDisabled] = React.useState(false);
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const irControlProducto = () => {
     history.push("/perfil/controlproducto");
+  };
+
+  const datos = async () => {
+    await axios({
+      method: "get",
+      url: "https://proyectobases1.herokuapp.com/login",
+    }).then((response) => {
+      setListaUsuarios(response.data);
+    });
+  };
+
+  const agregarProducto = async () => {
+    setOpenBackdrop(true);
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/producto",
+      data: {
+        rif: rif,
+        imagen: imagen,
+        nombre: nombre,
+        precio: precio,
+        ucabmart: null,
+        categoria: categoriaSelec,
+      },
+    }).then((response) => {
+      console.log(response.data);
+    });
+    setOpenBackdrop(false);
   };
 
   const handleChangeProv = (event) => {
     setProveedor(event.target.value);
   };
 
+  const handleChangeCategoria = (event) => {
+    setCategoria(event.target.value);
+  };
+
+  const handleChangeNombre = (event) => {
+    setNombre(event.target.value);
+  };
+
+  const handleChangeImagen = (event) => {
+    setImagen(event.target.value);
+  };
+
   const handleChangePrecio = (event) => {
     setPrecio(event.target.value);
   };
+
+  React.useEffect(() => {
+    datos();
+  }, []);
+
+  React.useEffect(() => {
+    if (!listaUsuarios["JURIDICO"]) {
+      console.log("no existe");
+      datos();
+    } else {
+      console.log("existe");
+      let aux = listaUsuarios["JURIDICO"].filter(
+        (proveedor) => proveedor.rubro !== null
+      );
+      setProveedores(aux);
+    }
+  }, [listaUsuarios]);
+
+  React.useEffect(() => {
+    switch (categoria) {
+      case "":
+        setCategoriaSelec("FRUTAS Y VEGETALES");
+        break;
+      case 1:
+        setCategoriaSelec("VIVERES");
+        break;
+      case 2:
+        setCategoriaSelec("REFRIGERADOS Y CONGELADOS");
+        break;
+      case 3:
+        setCategoriaSelec("CUIDADO PERSONAL Y SALUD");
+        break;
+      case 4:
+        setCategoriaSelec("LIMPIEZA");
+        break;
+      case 5:
+        setCategoriaSelec("HOGAR Y TEMPORADA");
+        break;
+      case 6:
+        setCategoriaSelec("MASCOTAS");
+        break;
+      case 7:
+        setCategoriaSelec("LICORES");
+        break;
+      case 8:
+        setCategoriaSelec("VEHICULOS");
+        break;
+      case 9:
+        setCategoriaSelec("OFICINA Y TECNOLOGIA");
+        break;
+
+      default:
+        break;
+    }
+  }, [categoria]);
+
+  React.useEffect(() => {
+    for (let index = 0; index < proveedores.length; index++) {
+      if (index === proveedor) {
+        setRif(proveedores[index].rif);
+      }
+    }
+  }, [proveedor]);
+
+  React.useEffect(() => {
+    if (nombre === "" || precio === "" || imagen === "") {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  });
+
+  console.log(nombre);
+  console.log(imagen);
+  console.log(precio);
+  console.log(categoriaSelec);
+  console.log(rif);
 
   return (
     <React.Fragment>
@@ -97,18 +234,20 @@ export default function ProductoRegistrar() {
           label="Nombre del Producto"
           variant="outlined"
           className={classes.campo}
+          onChange={handleChangeNombre}
         />
       </div>
       <div style={{ display: "flex" }} className="m-4">
         <Typography variant="h6" className="m-2">
-          Descripción:
+          Imágen:
         </Typography>
         <TextField
           id="outlined-desc"
-          label="Descripción del Producto"
+          label="URL de la imagen"
           variant="outlined"
           className={classes.campo}
-          multiline
+          type="url"
+          onChange={handleChangeImagen}
         />
       </div>
       <div style={{ display: "flex" }} className="m-4">
@@ -123,10 +262,33 @@ export default function ProductoRegistrar() {
           className={classes.prov}
           variant="outlined"
         >
-          <MenuItem value="">Proveedor 1</MenuItem>
-          <MenuItem value={1}>Proveedor 2</MenuItem>
-          <MenuItem value={2}>Proveedor 3</MenuItem>
-          <MenuItem value={3}>Proveedor 4</MenuItem>
+          {proveedores.map((proveedor, value) => (
+            <MenuItem value={value}>
+              {proveedor.denominacion_comercial}
+            </MenuItem>
+          ))}
+        </Select>
+        <Typography variant="h6" className="m-2">
+          Categoría:
+        </Typography>
+        <Select
+          value={categoria}
+          onChange={handleChangeCategoria}
+          displayEmpty
+          className={classes.prov}
+          inputProps={{ "aria-label": "Without label" }}
+          variant="outlined"
+        >
+          <MenuItem value={""}>Frutas y Vegetales</MenuItem>
+          <MenuItem value={1}>Víveres</MenuItem>
+          <MenuItem value={2}>Refrigerados y Congelados</MenuItem>
+          <MenuItem value={3}>Cuidado Personal y Salud</MenuItem>
+          <MenuItem value={4}>Limpieza</MenuItem>
+          <MenuItem value={5}>Hogar y Temporada</MenuItem>
+          <MenuItem value={6}>Mascotas</MenuItem>
+          <MenuItem value={7}>Licores</MenuItem>
+          <MenuItem value={8}>Vehículos</MenuItem>
+          <MenuItem value={9}>Oficina y Tecnología</MenuItem>
         </Select>
       </div>
       <div style={{ display: "flex" }} className="m-4">
@@ -137,23 +299,23 @@ export default function ProductoRegistrar() {
           id="outlined-precio"
           label="Precio del Producto"
           variant="outlined"
+          type="number"
           className={classes.campo}
-        />
-        <Select
-          value={precio}
           onChange={handleChangePrecio}
-          displayEmpty
-          inputProps={{ "aria-label": "Without label" }}
-          variant="outlined"
-          className={classes.precio}
-        >
-          <MenuItem value="">$</MenuItem>
-          <MenuItem value={1}>Bs.</MenuItem>
-        </Select>
+        />
       </div>
-      <Boton variant="contained" className="m-4" color="primary">
+      <Boton
+        variant="contained"
+        className="m-4"
+        color="primary"
+        disabled={disabled}
+        onClick={agregarProducto}
+      >
         Registrar Producto
       </Boton>
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </React.Fragment>
   );
 }
