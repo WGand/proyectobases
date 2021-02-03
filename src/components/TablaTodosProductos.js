@@ -4,8 +4,8 @@ import axios from "axios";
 
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "nombre", headerName: "Nombre", width: 250 },
-  { field: "categoria", headerName: "Categoría", width: 150 },
+  { field: "nombre", headerName: "Nombre", width: 320 },
+  { field: "categoria", headerName: "Categoría", width: 300 },
   {
     field: "precio",
     headerName: "Precio",

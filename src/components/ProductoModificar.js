@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     margin: 30,
   },
   paper: {
-    width: 800,
+    width: 1000,
     margin: 30,
     marginTop: 60,
   },
@@ -81,7 +81,7 @@ const Boton = withStyles({
   },
 })(Button);
 
-export default function ProductoModificar() {
+export default function ProductoModificar(props) {
   const history = useHistory();
   const classes = useStyles();
 
@@ -102,6 +102,10 @@ export default function ProductoModificar() {
     history.push("/perfil/controlproducto");
   };
 
+  const irModificacion = () => {
+    history.push("/perfil/controlproducto/modificar/modificacion");
+  };
+
   const deleteProducto = async () => {
     setOpen(false);
     setOpenBackdrop(true);
@@ -118,9 +122,22 @@ export default function ProductoModificar() {
     setOpenBackdrop(false);
   };
 
+  const enviarProducto = () => {
+    props.conseguirProducto(producto);
+  };
+
   const productoTabla = (datosTabla) => {
     setProducto(datosTabla);
   };
+
+  const manejarModificacion = () => {
+    enviarProducto();
+    irModificacion();
+  };
+
+  React.useEffect(() => {
+    enviarProducto();
+  }, [producto.id]);
 
   console.log(producto);
 
@@ -176,7 +193,12 @@ export default function ProductoModificar() {
             <RemoveCircleIcon color="error" />
           </IconButton>
         </Paper>
-        <Boton variant="contained" className="m-4" color="primary">
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={manejarModificacion}
+        >
           Modificar Producto
         </Boton>
         <Dialog
