@@ -24,7 +24,7 @@ const columns = [
   },
 ];
 
-export default function TablaUsuarios(props) {
+export default function TablaJuridico(props) {
   const [usuarios, setUsuarios] = React.useState({});
   const [juridico, setJuridico] = React.useState([]);
   const [juridicoSelec, setJuridicoSelec] = React.useState({});
@@ -58,7 +58,10 @@ export default function TablaUsuarios(props) {
       datos();
     } else {
       console.log("existe");
-      setJuridico(usuarios["JURIDICO"]);
+      let aux = usuarios["JURIDICO"].filter(
+        (proveedor) => proveedor.rubro === null
+      );
+      setJuridico(aux);
       setCargando(false);
     }
   }, [usuarios]);
