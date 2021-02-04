@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Link from "@material-ui/core/Link";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,8 +29,40 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function PerfilOrdenes() {
+export default function PerfilOrdenes(props) {
   const classes = useStyles();
+
+  const [datosOrdenes, setDatosOrdenes] = React.useState({});
+  const [ordenes, setOrdenes] = React.useState([]);
+
+  const getOrdenes = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/todasordenes",
+      data: {
+        rif: props.datos[0].rif,
+        tipo: props.tipo,
+      },
+    }).then((response) => {
+      setDatosOrdenes(response.data);
+    });
+  };
+
+  React.useEffect(() => {
+    getOrdenes();
+  }, []);
+
+  React.useEffect(() => {
+    if (!datosOrdenes["ordenes"]) {
+      getOrdenes();
+    } else {
+      setOrdenes(datosOrdenes["ordenes"]);
+    }
+  }, [datosOrdenes]);
+
+  console.log(ordenes);
+  console.log(datosOrdenes);
+
   return (
     <React.Fragment>
       <Typography variant="h5">
@@ -54,19 +87,15 @@ export default function PerfilOrdenes() {
         </form>
         <Typography variant="subtitle1" className="m-3">
           {" "}
-          Órdenes por fecha{" "}
+          Órdenes{" "}
         </Typography>
         <Paper variant="outlined" className={classes.paperOrden}>
           <List>
-            <ListItem>
-              <Link>Orden 1</Link>
-            </ListItem>
-            <ListItem>
-              <Link>Orden 2</Link>
-            </ListItem>
-            <ListItem>
-              <Link>Orden 3</Link>
-            </ListItem>
+            {ordenes.map((orden, value) => (
+              <ListItem>
+                <Link>Orden {value + 1}</Link>
+              </ListItem>
+            ))}
           </List>
         </Paper>
       </Paper>

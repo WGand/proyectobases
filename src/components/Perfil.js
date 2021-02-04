@@ -67,8 +67,6 @@ export default function Perfil(props) {
     }
   };
 
-  console.log("tipo: " + props.tipo);
-
   if (props.tipo === "empleado") {
     return (
       <React.Fragment>
@@ -94,7 +92,7 @@ export default function Perfil(props) {
             <PerfilDatos datos={props.datos} tipo={props.tipo} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <PerfilOrdenes />
+            <PerfilOrdenes datos={props.datos} tipo={props.tipo} />
           </TabPanel>
           <TabPanel value={value} index={2}>
             Item Three
@@ -129,7 +127,7 @@ export default function Perfil(props) {
             <PerfilDatos datos={props.datos} tipo={props.tipo} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <PerfilOrdenes />
+            <PerfilOrdenes datos={props.datos} tipo={props.tipo} />
           </TabPanel>
           <TabPanel value={value} index={2}>
             Item Three
