@@ -24,7 +24,9 @@ export default function ProductoCarrito(props) {
 
   const [cantidad, setCantidad] = React.useState("");
   const [cantidadProducto, setCantidadProducto] = React.useState(1);
-  const [precioOriginal, setPrecioOriginal] = React.useState(props.precio);
+  const [precioOriginal, setPrecioOriginal] = React.useState(
+    props.precioOriginal
+  );
   const [precioMod, setPrecioMod] = React.useState(0);
 
   const [open, setOpen] = React.useState(false);
@@ -47,7 +49,7 @@ export default function ProductoCarrito(props) {
   };
 
   React.useEffect(() => {
-    setPrecioOriginal(props.precio);
+    setPrecioOriginal(props.precioOriginal);
     if (props.cantidad === 1) {
       setCantidad("");
     } else {
