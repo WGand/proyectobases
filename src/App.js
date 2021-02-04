@@ -22,7 +22,7 @@ import Registrar from "./components/Registrar";
 import CrearEmpleado from "./components/CrearEmpleado";
 import ModificarEmpleado from "./components/ModificarEmpleado";
 import ModificarTienda from "./components/ModificarTienda";
-import ProcederPago from "./components/ProcederPago";
+import Factura from "./components/Factura";
 import ModificacionProducto from "./components/ModificacionProducto";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
@@ -76,8 +76,8 @@ function App() {
           <Home productos={productos} datos={datos} />
         </Route>
 
-        <Route exact path="/carrito/pago">
-          <ProcederPago total={totalCarrito} />
+        <Route exact path="/carrito/factura">
+          <Factura total={totalCarrito} datos={datos} tipo={tipoPersona} />
         </Route>
         <Route path="/carrito">
           <Carrito conseguirTotal={precioTotal} />

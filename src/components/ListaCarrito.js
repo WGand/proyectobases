@@ -82,9 +82,9 @@ export default function ListaCarrito(props) {
     props.conseguirTotal(precioTotal);
   };
 
-  const irProcederPago = () => {
+  const irFactura = () => {
     enviarTotal();
-    history.push("/carrito/pago");
+    history.push("/carrito/factura");
   };
 
   React.useEffect(() => {
@@ -105,7 +105,7 @@ export default function ListaCarrito(props) {
       setPrecioTotal(total);
     } else {
       for (let index = 0; index < listaProductos.length; index++) {
-        total += Number(listaProductos[index].precio);
+        total += Number(listaProductos[index].precioMod);
       }
     }
     setPrecioTotal(total);
@@ -125,7 +125,7 @@ export default function ListaCarrito(props) {
       let aux = listaProductos;
       for (let index = 0; index < aux.length; index++) {
         if (aux[index].nombre === productoCantidad) {
-          aux[index].precio = modificarCantidad;
+          aux[index].precioMod = modificarCantidad;
           if (!aux[index].cantidad) {
             aux[index].cantidad = 1;
           } else aux[index].cantidad = numeroProducto;
@@ -151,7 +151,7 @@ export default function ListaCarrito(props) {
 
   console.log(listaProductos);
   // console.log("producto a eliminar: " + eliminarProducto);
-  console.log(precioTotal);
+  //console.log(precioTotal);
   //console.log(modificarCantidad);
 
   return (
@@ -160,7 +160,7 @@ export default function ListaCarrito(props) {
         {listaProductos.map((producto, value) => (
           <ProductoCarrito
             nombre={producto.nombre}
-            precio={producto.precio}
+            precioOriginal={producto.precio}
             cantidad={producto.cantidad}
             imagen={producto.imagen}
             borrar={borrarProducto}
@@ -179,9 +179,9 @@ export default function ListaCarrito(props) {
         className="m-3"
         color="primary"
         disabled={disabled}
-        onClick={irProcederPago}
+        onClick={irFactura}
       >
-        Proceder a pago
+        Ver factura
       </Boton>
       <Divider variant="middle" class="border border-primary m-4" />
     </div>

@@ -4,15 +4,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   dir: {
@@ -25,6 +22,10 @@ const useStyles = makeStyles((theme) => ({
   monto: {
     margin: 20,
     marginLeft: 200,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -76,7 +77,7 @@ const GreenCheckbox = withStyles({
   checked: {},
 })((props) => <Checkbox color="default" {...props} />);
 
-export default function ProcederPago(props) {
+export default function Factura(props) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
@@ -89,67 +90,137 @@ export default function ProcederPago(props) {
 
   const [openCredito, setOpenCredito] = React.useState(false);
   const [openDebito, setOpenDebito] = React.useState(false);
-  const [fechaActual, setFechaActual] = React.useState("");
-  const [numCredito, setNumCredito] = React.useState("");
-  const [numDebito, setNumDebito] = React.useState("");
-  const [fechaCredito, setFechaCredito] = React.useState("");
-  const [fechaDebito, setFechaDebito] = React.useState("");
-  const [nombreCredito, setNombreCredito] = React.useState("");
-  const [nombreDebito, setNombreDebito] = React.useState("");
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
+  // const [fechaActual, setFechaActual] = React.useState("");
+  // const [numCredito, setNumCredito] = React.useState("");
+  // const [numDebito, setNumDebito] = React.useState("");
+  // const [fechaCredito, setFechaCredito] = React.useState("");
+  // const [fechaDebito, setFechaDebito] = React.useState("");
+  // const [nombreCredito, setNombreCredito] = React.useState("");
+  // const [nombreDebito, setNombreDebito] = React.useState("");
 
   const [carrito, setCarrito] = React.useState([]);
-
-  const [disabled, setDisabled] = React.useState(false);
+  const [diccionarioCarrito, setDiccionarioCarrito] = React.useState({});
 
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  const handleCloseCredito = () => {
-    setState({ ...state, ["checkedCredito"]: false });
-    setOpenCredito(false);
+  // const handleCloseCredito = () => {
+  //   setState({ ...state, ["checkedCredito"]: false });
+  //   setOpenCredito(false);
+  // };
+
+  // const handleCloseDebito = () => {
+  //   setState({ ...state, ["checkedDebito"]: false });
+  //   setOpenDebito(false);
+  // };
+
+  // const handleChangeNumCredito = (event) => {
+  //   setNumCredito(event.target.value);
+  // };
+
+  // const handleChangeNumDebito = (event) => {
+  //   setNumDebito(event.target.value);
+  // };
+
+  // const handleChangeFechaCredito = (event) => {
+  //   setFechaCredito(event.target.value);
+  // };
+
+  // const handleChangeFechaDebito = (event) => {
+  //   setFechaDebito(event.target.value);
+  // };
+
+  // const handleChangeNombreCredito = (event) => {
+  //   setNombreCredito(event.target.value);
+  // };
+
+  // const handleChangeNombreDebito = (event) => {
+  //   setNombreDebito(event.target.value);
+  // };
+
+  const fecha = () => {
+    const fecha = new Date();
+    const año = fecha.getFullYear();
+    let mes = 0;
+    let dia = 0;
+    let hora = 0;
+    let minuto = 0;
+    let segundo = 0;
+
+    if (fecha.getMonth() < 10) mes = "0" + (fecha.getMonth() + 1);
+    else mes = fecha.getMonth() + 1;
+    if (fecha.getDate() < 10) dia = "0" + fecha.getDate();
+    else dia = fecha.getDate();
+    if (fecha.getHours() < 10) hora = "0" + fecha.getHours();
+    else hora = fecha.getHours();
+    if (fecha.getMinutes() < 10) minuto = "0" + fecha.getMinutes();
+    else minuto = fecha.getMinutes();
+    if (fecha.getSeconds() < 10) segundo = "0" + fecha.getSeconds();
+    else segundo = fecha.getSeconds();
+
+    const horaFecha =
+      mes + "-" + dia + "-" + año + ":" + hora + ":" + minuto + ":" + segundo;
+
+    return horaFecha;
   };
 
-  const handleCloseDebito = () => {
-    setState({ ...state, ["checkedDebito"]: false });
-    setOpenDebito(false);
+  const agregarOrden = async () => {
+    setOpenBackdrop(true);
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/orden",
+      data: {
+        producto: diccionarioCarrito,
+        rif: props.datos[0].rif,
+        fecha: fecha(),
+        monto_total: props.total,
+        tipo: props.tipo,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    setOpenBackdrop(false);
+    localStorage.setItem("carrito", JSON.stringify([]));
   };
 
-  const handleChangeNumCredito = (event) => {
-    setNumCredito(event.target.value);
-  };
-
-  const handleChangeNumDebito = (event) => {
-    setNumDebito(event.target.value);
-  };
-
-  const handleChangeFechaCredito = (event) => {
-    setFechaCredito(event.target.value);
-  };
-
-  const handleChangeFechaDebito = (event) => {
-    setFechaDebito(event.target.value);
-  };
-
-  const handleChangeNombreCredito = (event) => {
-    setNombreCredito(event.target.value);
-  };
-
-  const handleChangeNombreDebito = (event) => {
-    setNombreDebito(event.target.value);
+  const actualizarOrden = async () => {
+    await axios({
+      method: "put",
+      url: "https://proyectobases1.herokuapp.com/orden",
+      data: {
+        producto: diccionarioCarrito,
+        rif: props.datos[0].rif,
+        fecha: fecha(),
+        monto_total: props.total,
+        tipo: props.tipo,
+      },
+    });
   };
 
   React.useEffect(() => {
     setCarrito(JSON.parse(localStorage.getItem("carrito")));
-    const hoy = new Date();
-    if (hoy.getMonth() + 1 >= 10) {
-      const fecha = hoy.getFullYear() + "-" + (hoy.getMonth() + 1);
-      setFechaActual(fecha);
-    } else {
-      const fecha = hoy.getFullYear() + "-0" + (hoy.getMonth() + 1);
-      setFechaActual(fecha);
-    }
+    // const hoy = new Date();
+    // if (hoy.getMonth() + 1 >= 10) {
+    //   const fecha = hoy.getFullYear() + "-" + (hoy.getMonth() + 1); mes actual para tarjeta
+    //   setFechaActual(fecha);
+    // } else {
+    //   const fecha = hoy.getFullYear() + "-0" + (hoy.getMonth() + 1);
+    //   setFechaActual(fecha);
+    // }
   }, []);
+
+  React.useEffect(() => {
+    let aux = {};
+    for (let index = 0; index < carrito.length; index++) {
+      aux[index] = {
+        id: carrito[index].id,
+        cantidad: carrito[index].cantidad,
+      };
+    }
+    setDiccionarioCarrito(JSON.stringify(aux));
+  }, [carrito]);
 
   React.useEffect(() => {
     if (state.checkedCredito === true) {
@@ -165,7 +236,6 @@ export default function ProcederPago(props) {
 
   React.useEffect(() => {
     if (state.checkedNinguno === true) {
-      setDisabled(true);
       setState({
         ...state,
         ["checkedEfectivo"]: false,
@@ -174,7 +244,6 @@ export default function ProcederPago(props) {
         ["checkedCheque"]: false,
       });
     } else {
-      setDisabled(false);
     }
   }, [state.checkedNinguno]);
 
@@ -194,20 +263,24 @@ export default function ProcederPago(props) {
     state.checkedCheque,
   ]);
 
-  console.log("numero credito: " + numCredito);
-  console.log("numero debito: " + numDebito);
-  console.log("fecha credito " + fechaCredito);
-  console.log("fecha debito: " + fechaDebito);
-  console.log("nombre credito: " + nombreCredito);
-  console.log("nombre debito: " + nombreDebito);
+  // console.log("numero credito: " + numCredito);
+  // console.log("numero debito: " + numDebito);
+  // console.log("fecha credito " + fechaCredito);
+  // console.log("fecha debito: " + fechaDebito);
+  // console.log("nombre credito: " + nombreCredito);
+  // console.log("nombre debito: " + nombreDebito);
   console.log(carrito);
   console.log("-----------------");
   console.log(props.total);
+  console.log(props.tipo);
+  console.log(props.datos[0].rif);
+  console.log(diccionarioCarrito);
+  console.log(fecha());
 
   return (
     <React.Fragment>
       <Typography variant="h3" className="m-4">
-        <b>Pago</b>
+        <b>Factura</b>
       </Typography>
       <Typography variant="h5" className="m-4">
         Productos en la Órden
@@ -284,7 +357,7 @@ export default function ProcederPago(props) {
           }
           label="Cheque"
         />
-        <Dialog
+        {/* <Dialog
           open={openCredito}
           onClose={handleCloseCredito}
           aria-labelledby="alert-dialog-title"
@@ -328,8 +401,8 @@ export default function ProcederPago(props) {
               Volver
             </Button>
           </DialogActions>
-        </Dialog>
-        <Dialog
+        </Dialog> */}
+        {/* <Dialog
           open={openDebito}
           onClose={handleCloseDebito}
           aria-labelledby="alert-dialog-title"
@@ -373,16 +446,19 @@ export default function ProcederPago(props) {
               Volver
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog> */}
       </div>
       <Boton
         variant="contained"
         className="m-4"
         color="primary"
-        disabled={disabled}
+        onClick={agregarOrden}
       >
-        Comprar
+        Registrar Orden
       </Boton>
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </React.Fragment>
   );
 }

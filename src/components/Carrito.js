@@ -20,7 +20,11 @@ export default function Carrito(props) {
       <Typography variant="h3" className="m-4">
         <b>Carrito de Compras</b>
       </Typography>
-      <ListaCarrito conseguirTotal={conseguirTotal} />
+      <ListaCarrito
+        conseguirTotal={conseguirTotal}
+        datos={props.datos}
+        tipo={props.tipo}
+      />
     </React.Fragment>
   );
 }
