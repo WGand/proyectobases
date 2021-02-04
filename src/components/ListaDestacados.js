@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   grid: {
-    width: 250,
+    width: 280,
     height: 200,
   },
   rootCard: {
