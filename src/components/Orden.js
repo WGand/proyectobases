@@ -135,6 +135,9 @@ export default function Factura(props) {
   const [fechaCheque, setFechaCheque] = React.useState("");
   const [montoCheque, setMontoCheque] = React.useState(0);
 
+  const [cantidadPuntos, setCantidadPuntos] = React.useState(0);
+  const [montoPuntos, setMontoPuntos] = React.useState(0);
+
   const [productos, setProductos] = React.useState([]);
 
   const [montoPagar, setMontoPagar] = React.useState(0);
@@ -205,6 +208,12 @@ export default function Factura(props) {
     setState({ ...state, ["checkedCheque"]: false });
     setOpenCheque(false);
   };
+
+  const handleClosePuntos = () => {
+    setState({ ...state, ["checkedPuntos"]: false });
+    setOpenPuntos(false);
+  };
+
   const handleChangeNumCredito = (event) => {
     setNumCredito(event.target.value);
   };
@@ -263,6 +272,14 @@ export default function Factura(props) {
 
   const handleChangeMontoCheque = (event) => {
     setMontoCheque(event.target.value);
+  };
+
+  const handleChangeCantidadPuntos = (event) => {
+    setCantidadPuntos(event.target.value);
+  };
+
+  const handleChangeMontoPuntos = (event) => {
+    setMontoPuntos(event.target.value);
   };
 
   const irPerfil = () => {
@@ -335,6 +352,13 @@ export default function Factura(props) {
     setOpenCheque(false);
     let aux = Number(montoPagar);
     aux += Number(montoCheque);
+    setMontoPagar(aux);
+  };
+
+  const registrarPuntos = () => {
+    setOpenPuntos(false);
+    let aux = Number(montoPagar);
+    aux += Number(montoPuntos);
     setMontoPagar(aux);
   };
 
@@ -799,6 +823,44 @@ export default function Factura(props) {
               Registrar pago
             </Button>
             <Button onClick={handleCloseCheque} color="primary" autoFocus>
+              Volver
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openPuntos}
+          onClose={handleClosePuntos}
+          aria-labelledby="alert-dialog-title"
+        >
+          <DialogTitle id="alert-dialog-title">Puntos</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Pago por puntos
+            </DialogContentText>
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Cantidad de puntos"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeCantidadPuntos}
+            />
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Monto"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeMontoPuntos}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={registrarPuntos}>
+              Registrar pago
+            </Button>
+            <Button onClick={handleClosePuntos} color="primary" autoFocus>
               Volver
             </Button>
           </DialogActions>
