@@ -148,6 +148,9 @@ export default function Factura(props) {
   const [disabledDolar, setDisabledDolar] = React.useState(false);
   const [disabledEuro, setDisabledEuro] = React.useState(false);
 
+  const [diccionarioPago, setDiccionarioPago] = React.useState({});
+  const [contDiccionario, setContadorDiccionario] = React.useState(0);
+
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
     switch (event.target.name) {
@@ -329,6 +332,19 @@ export default function Factura(props) {
     let aux = Number(montoPagar);
     aux += Number(montoCredito);
     setMontoPagar(aux);
+
+    let cont = contDiccionario;
+    let diccionario = diccionarioPago;
+    diccionario[cont] = {
+      tipo_metodo: "tarjeta",
+      numero_tarjeta: numCredito,
+      fecha_caducidad: fechaCredito,
+      tipo: "credito",
+      nombre_tarjeta: nombreCredito,
+    };
+    cont++;
+    setContadorDiccionario(cont);
+    setDiccionarioPago(diccionario);
   };
 
   const registrarDebito = () => {
@@ -336,6 +352,19 @@ export default function Factura(props) {
     let aux = Number(montoPagar);
     aux += Number(montoDebito);
     setMontoPagar(aux);
+
+    let cont = contDiccionario;
+    let diccionario = diccionarioPago;
+    diccionario[cont] = {
+      tipo_metodo: "tarjeta",
+      numero_tarjeta: numDebito,
+      fecha_caducidad: fechaDebito,
+      tipo: "debito",
+      nombre_tarjeta: nombreDebito,
+    };
+    cont++;
+    setContadorDiccionario(cont);
+    setDiccionarioPago(diccionario);
   };
 
   const registrarEfectivo = () => {
@@ -346,6 +375,35 @@ export default function Factura(props) {
     let aux = Number(montoPagar);
     aux += bolivar + dolar + euro;
     setMontoPagar(aux);
+
+    let cont = contDiccionario;
+    let diccionario = diccionarioPago;
+    if (bolivar !== 0) {
+      diccionario[cont] = {
+        tipo_metodo: "moneda",
+        tipo: "bolivar",
+        cambio: montoBolivar,
+      };
+      cont++;
+    }
+    if (dolar !== 0) {
+      diccionario[cont] = {
+        tipo_metodo: "moneda",
+        tipo: "dolar",
+        cambio: montoDolar,
+      };
+      cont++;
+    }
+    if (euro !== 0) {
+      diccionario[cont] = {
+        tipo_metodo: "moneda",
+        tipo: "euro",
+        cambio: montoEuro,
+      };
+      cont++;
+    }
+    setContadorDiccionario(cont);
+    setDiccionarioPago(diccionario);
   };
 
   const registrarCheque = () => {
@@ -353,6 +411,18 @@ export default function Factura(props) {
     let aux = Number(montoPagar);
     aux += Number(montoCheque);
     setMontoPagar(aux);
+
+    let cont = contDiccionario;
+    let diccionario = diccionarioPago;
+    diccionario[cont] = {
+      tipo_metodo: "cheque",
+      numero_confirmacion: numConfirmacion,
+      nombre_banco: nombreBanco,
+      fecha: fechaCheque,
+    };
+    cont++;
+    setContadorDiccionario(cont);
+    setDiccionarioPago(diccionario);
   };
 
   const registrarPuntos = () => {
@@ -360,6 +430,17 @@ export default function Factura(props) {
     let aux = Number(montoPagar);
     aux += Number(montoPuntos);
     setMontoPagar(aux);
+
+    let cont = contDiccionario;
+    let diccionario = diccionarioPago;
+    diccionario[cont] = {
+      tipo_metodo: "canje",
+      cantidad: cantidadPuntos,
+      cambio: montoPuntos,
+    };
+    cont++;
+    setContadorDiccionario(cont);
+    setDiccionarioPago(diccionario);
   };
 
   React.useEffect(() => {
@@ -478,6 +559,7 @@ export default function Factura(props) {
   console.log(montoPagar);
   // console.log(props.productos);
   // console.log(productos);
+  console.log(JSON.stringify(diccionarioPago));
 
   return (
     <React.Fragment>
