@@ -14,7 +14,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
-import Radio from "@material-ui/core/Radio";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
@@ -116,6 +115,7 @@ export default function Factura(props) {
 
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
   const [fechaActual, setFechaActual] = React.useState("");
+  const [fechaActualDia, setFechaActualDia] = React.useState("");
 
   const [numCredito, setNumCredito] = React.useState("");
   const [numDebito, setNumDebito] = React.useState("");
@@ -126,7 +126,14 @@ export default function Factura(props) {
   const [montoCredito, setMontoCredito] = React.useState(0);
   const [montoDebito, setMontoDebito] = React.useState(0);
 
-  const [montoEfectivo, setMontoEfectivo] = React.useState(0);
+  const [montoBolivar, setMontoBolivar] = React.useState(0);
+  const [montoDolar, setMontoDolar] = React.useState(0);
+  const [montoEuro, setMontoEuro] = React.useState(0);
+
+  const [numConfirmacion, setNumConfirmacion] = React.useState("");
+  const [nombreBanco, setNombreBanco] = React.useState("");
+  const [fechaCheque, setFechaCheque] = React.useState("");
+  const [montoCheque, setMontoCheque] = React.useState(0);
 
   const [productos, setProductos] = React.useState([]);
 
@@ -134,6 +141,9 @@ export default function Factura(props) {
 
   const [disabled, setDisabled] = React.useState(false);
   const [textoBoton, setTextoBoton] = React.useState("");
+  const [disabledBolivar, setDisabledBolivar] = React.useState(false);
+  const [disabledDolar, setDisabledDolar] = React.useState(false);
+  const [disabledEuro, setDisabledEuro] = React.useState(false);
 
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -170,7 +180,10 @@ export default function Factura(props) {
   };
 
   const handleCheckBoxesMoneda = (event) => {
-    setStateMoneda({ ...state, [event.target.name]: event.target.checked });
+    setStateMoneda({
+      ...stateMoneda,
+      [event.target.name]: event.target.checked,
+    });
   };
 
   const handleCloseCredito = () => {
@@ -188,6 +201,10 @@ export default function Factura(props) {
     setOpenEfectivo(false);
   };
 
+  const handleCloseCheque = () => {
+    setState({ ...state, ["checkedCheque"]: false });
+    setOpenCheque(false);
+  };
   const handleChangeNumCredito = (event) => {
     setNumCredito(event.target.value);
   };
@@ -220,8 +237,32 @@ export default function Factura(props) {
     setMontoDebito(event.target.value);
   };
 
-  const handleChangeMontoEfectivo = (event) => {
-    setMontoEfectivo(event.target.value);
+  const handleChangeMontoBolivar = (event) => {
+    setMontoBolivar(event.target.value);
+  };
+
+  const handleChangeMontoDolar = (event) => {
+    setMontoDolar(event.target.value);
+  };
+
+  const handleChangeMontoEuro = (event) => {
+    setMontoEuro(event.target.value);
+  };
+
+  const handleChangeNumConfirmacion = (event) => {
+    setNumConfirmacion(event.target.value);
+  };
+
+  const handleChangeNombreBanco = (event) => {
+    setNombreBanco(event.target.value);
+  };
+
+  const handleChangeFechaCheque = (event) => {
+    setFechaCheque(event.target.value);
+  };
+
+  const handleChangeMontoCheque = (event) => {
+    setMontoCheque(event.target.value);
   };
 
   const irPerfil = () => {
@@ -282,19 +323,52 @@ export default function Factura(props) {
 
   const registrarEfectivo = () => {
     setOpenEfectivo(false);
+    let bolivar = Number(montoBolivar);
+    let dolar = Number(montoDolar);
+    let euro = Number(montoEuro);
     let aux = Number(montoPagar);
-    aux += Number(montoEfectivo);
+    aux += bolivar + dolar + euro;
+    setMontoPagar(aux);
+  };
+
+  const registrarCheque = () => {
+    setOpenCheque(false);
+    let aux = Number(montoPagar);
+    aux += Number(montoCheque);
     setMontoPagar(aux);
   };
 
   React.useEffect(() => {
     const hoy = new Date();
+
     if (hoy.getMonth() + 1 >= 10) {
       const fecha = hoy.getFullYear() + "-" + (hoy.getMonth() + 1);
       setFechaActual(fecha);
+      if (hoy.getDate() >= 10) {
+        const dia =
+          hoy.getFullYear() + "-" + (hoy.getMonth() + 1) + "-" + hoy.getDate();
+        setFechaActualDia(dia);
+      } else {
+        const dia =
+          hoy.getFullYear() + "-" + (hoy.getMonth() + 1) + "-0" + hoy.getDate();
+        setFechaActualDia(dia);
+      }
     } else {
       const fecha = hoy.getFullYear() + "-0" + (hoy.getMonth() + 1);
       setFechaActual(fecha);
+      if (hoy.getDate() >= 10) {
+        const dia =
+          hoy.getFullYear() + "-0" + (hoy.getMonth() + 1) + "-" + hoy.getDate();
+        setFechaActualDia(dia);
+      } else {
+        const dia =
+          hoy.getFullYear() +
+          "-0" +
+          (hoy.getMonth() + 1) +
+          "-0" +
+          hoy.getDate();
+        setFechaActualDia(dia);
+      }
     }
 
     for (let index = 0; index < props.productos.length; index++) {
@@ -332,6 +406,30 @@ export default function Factura(props) {
     state.checkedDebito,
     state.checkedCheque,
     state.checkedPuntos,
+  ]);
+
+  React.useEffect(() => {
+    if (stateMoneda.checkedBolivar === true) {
+      setDisabledBolivar(false);
+    } else {
+      setDisabledBolivar(true);
+    }
+
+    if (stateMoneda.checkedDolar === true) {
+      setDisabledDolar(false);
+    } else {
+      setDisabledDolar(true);
+    }
+
+    if (stateMoneda.checkedEuro === true) {
+      setDisabledEuro(false);
+    } else {
+      setDisabledEuro(true);
+    }
+  }, [
+    stateMoneda.checkedBolivar,
+    stateMoneda.checkedDolar,
+    stateMoneda.checkedEuro,
   ]);
 
   React.useEffect(() => {
@@ -580,16 +678,37 @@ export default function Factura(props) {
               margin="dense"
               fullWidth
               autoFocus
-              label="Monto a pagar"
+              label="Monto en Bs."
               type="number"
               variant="outlined"
-              onChange={handleChangeMontoEfectivo}
+              onChange={handleChangeMontoBolivar}
+              disabled={disabledBolivar}
+            />
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Monto en $"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeMontoDolar}
+              disabled={disabledDolar}
+            />
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Monto en €"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeMontoEuro}
+              disabled={disabledEuro}
             />
             <FormControlLabel
               className="m-2"
               control={
                 <GreenCheckbox
-                  checked={state.checkedEuro}
+                  checked={stateMoneda.checkedEuro}
                   onChange={handleCheckBoxesMoneda}
                   name="checkedEuro"
                 />
@@ -600,7 +719,7 @@ export default function Factura(props) {
               className="m-2"
               control={
                 <GreenCheckbox
-                  checked={state.checkedDolar}
+                  checked={stateMoneda.checkedDolar}
                   onChange={handleCheckBoxesMoneda}
                   name="checkedDolar"
                 />
@@ -611,7 +730,7 @@ export default function Factura(props) {
               className="m-2"
               control={
                 <GreenCheckbox
-                  checked={state.checkedBolivar}
+                  checked={stateMoneda.checkedBolivar}
                   onChange={handleCheckBoxesMoneda}
                   name="checkedBolivar"
                 />
@@ -624,6 +743,62 @@ export default function Factura(props) {
               Registrar pago
             </Button>
             <Button onClick={handleCloseEfectivo} color="primary" autoFocus>
+              Volver
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openCheque}
+          onClose={handleCloseCheque}
+          aria-labelledby="alert-dialog-title"
+        >
+          <DialogTitle id="alert-dialog-title">Cheque</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Información de cheque
+            </DialogContentText>
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Número de confirmación"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeNumConfirmacion}
+            />
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Nombre de Banco"
+              variant="outlined"
+              onChange={handleChangeNombreBanco}
+            />
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              helperText="Fecha"
+              type="date"
+              InputProps={{ inputProps: { min: fechaActualDia } }}
+              variant="outlined"
+              onChange={handleChangeFechaCheque}
+            />
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Monto"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeMontoCheque}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={registrarCheque}>
+              Registrar pago
+            </Button>
+            <Button onClick={handleCloseCheque} color="primary" autoFocus>
               Volver
             </Button>
           </DialogActions>
