@@ -14,6 +14,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
+import Radio from "@material-ui/core/Radio";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
@@ -33,6 +34,10 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
+  },
+  radio: {
+    marginTop: 20,
+    marginLeft: 50,
   },
 }));
 
@@ -94,22 +99,78 @@ export default function Factura(props) {
     checkedDebito: false,
     checkedCredito: false,
     checkedCheque: false,
+    checkedPuntos: false,
+  });
+
+  const [stateMoneda, setStateMoneda] = React.useState({
+    checkedBolivar: true,
+    checkedDolar: false,
+    checkedEuro: false,
   });
 
   const [openCredito, setOpenCredito] = React.useState(false);
   const [openDebito, setOpenDebito] = React.useState(false);
+  const [openEfectivo, setOpenEfectivo] = React.useState(false);
+  const [openCheque, setOpenCheque] = React.useState(false);
+  const [openPuntos, setOpenPuntos] = React.useState(false);
+
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
   const [fechaActual, setFechaActual] = React.useState("");
+
   const [numCredito, setNumCredito] = React.useState("");
   const [numDebito, setNumDebito] = React.useState("");
   const [fechaCredito, setFechaCredito] = React.useState("");
   const [fechaDebito, setFechaDebito] = React.useState("");
   const [nombreCredito, setNombreCredito] = React.useState("");
   const [nombreDebito, setNombreDebito] = React.useState("");
+  const [montoCredito, setMontoCredito] = React.useState(0);
+  const [montoDebito, setMontoDebito] = React.useState(0);
+
+  const [montoEfectivo, setMontoEfectivo] = React.useState(0);
+
   const [productos, setProductos] = React.useState([]);
+
+  const [montoPagar, setMontoPagar] = React.useState(0);
+
+  const [disabled, setDisabled] = React.useState(false);
+  const [textoBoton, setTextoBoton] = React.useState("");
 
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
+    switch (event.target.name) {
+      case "checkedCredito":
+        if (event.target.checked === true) {
+          setOpenCredito(true);
+        }
+        break;
+      case "checkedDebito":
+        if (event.target.checked === true) {
+          setOpenDebito(true);
+        }
+        break;
+      case "checkedEfectivo":
+        if (event.target.checked === true) {
+          setOpenEfectivo(true);
+        }
+        break;
+      case "checkedCheque":
+        if (event.target.checked === true) {
+          setOpenCheque(true);
+        }
+        break;
+      case "checkedPuntos":
+        if (event.target.checked === true) {
+          setOpenPuntos(true);
+        }
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleCheckBoxesMoneda = (event) => {
+    setStateMoneda({ ...state, [event.target.name]: event.target.checked });
   };
 
   const handleCloseCredito = () => {
@@ -120,6 +181,11 @@ export default function Factura(props) {
   const handleCloseDebito = () => {
     setState({ ...state, ["checkedDebito"]: false });
     setOpenDebito(false);
+  };
+
+  const handleCloseEfectivo = () => {
+    setState({ ...state, ["checkedEfectivo"]: false });
+    setOpenEfectivo(false);
   };
 
   const handleChangeNumCredito = (event) => {
@@ -144,6 +210,18 @@ export default function Factura(props) {
 
   const handleChangeNombreDebito = (event) => {
     setNombreDebito(event.target.value);
+  };
+
+  const handleChangeMontoCredito = (event) => {
+    setMontoCredito(event.target.value);
+  };
+
+  const handleChangeMontoDebito = (event) => {
+    setMontoDebito(event.target.value);
+  };
+
+  const handleChangeMontoEfectivo = (event) => {
+    setMontoEfectivo(event.target.value);
   };
 
   const irPerfil = () => {
@@ -188,6 +266,27 @@ export default function Factura(props) {
     return horaFecha;
   };
 
+  const registrarCredito = () => {
+    setOpenCredito(false);
+    let aux = Number(montoPagar);
+    aux += Number(montoCredito);
+    setMontoPagar(aux);
+  };
+
+  const registrarDebito = () => {
+    setOpenDebito(false);
+    let aux = Number(montoPagar);
+    aux += Number(montoDebito);
+    setMontoPagar(aux);
+  };
+
+  const registrarEfectivo = () => {
+    setOpenEfectivo(false);
+    let aux = Number(montoPagar);
+    aux += Number(montoEfectivo);
+    setMontoPagar(aux);
+  };
+
   React.useEffect(() => {
     const hoy = new Date();
     if (hoy.getMonth() + 1 >= 10) {
@@ -204,18 +303,6 @@ export default function Factura(props) {
   }, []);
 
   React.useEffect(() => {
-    if (state.checkedCredito === true) {
-      setOpenCredito(true);
-    }
-  }, [state.checkedCredito]);
-
-  React.useEffect(() => {
-    if (state.checkedDebito === true) {
-      setOpenDebito(true);
-    }
-  }, [state.checkedDebito]);
-
-  React.useEffect(() => {
     if (state.checkedNinguno === true) {
       setState({
         ...state,
@@ -223,8 +310,9 @@ export default function Factura(props) {
         ["checkedCredito"]: false,
         ["checkedDebito"]: false,
         ["checkedCheque"]: false,
+        ["checkedPuntos"]: false,
       });
-    } else {
+      setMontoPagar(0);
     }
   }, [state.checkedNinguno]);
 
@@ -233,7 +321,8 @@ export default function Factura(props) {
       state.checkedEfectivo === true ||
       state.checkedCredito === true ||
       state.checkedDebito === true ||
-      state.checkedCheque === true
+      state.checkedCheque === true ||
+      state.checkedPuntos === true
     ) {
       setState({ ...state, ["checkedNinguno"]: false });
     }
@@ -242,19 +331,31 @@ export default function Factura(props) {
     state.checkedCredito,
     state.checkedDebito,
     state.checkedCheque,
+    state.checkedPuntos,
   ]);
 
-  console.log("numero credito: " + numCredito);
-  console.log("numero debito: " + numDebito);
-  console.log("fecha credito " + fechaCredito);
-  console.log("fecha debito: " + fechaDebito);
-  console.log("nombre credito: " + nombreCredito);
-  console.log("nombre debito: " + nombreDebito);
+  React.useEffect(() => {
+    if (montoPagar !== Number(props.orden.monto_total)) {
+      setDisabled(true);
+      setTextoBoton("Se debe pagar el monto establecido");
+    } else {
+      setDisabled(false);
+      setTextoBoton("Pagar");
+    }
+  }, [montoPagar]);
+
+  // console.log("numero credito: " + numCredito);
+  // console.log("numero debito: " + numDebito);
+  // console.log("fecha credito " + fechaCredito);
+  // console.log("fecha debito: " + fechaDebito);
+  // console.log("nombre credito: " + nombreCredito);
+  // console.log("nombre debito: " + nombreDebito);
   console.log("-----------------");
-  console.log(fecha());
-  console.log(props.orden);
-  console.log(props.productos);
-  console.log(productos);
+  //console.log(fecha());
+  console.log(props.orden.monto_total);
+  console.log(montoPagar);
+  // console.log(props.productos);
+  // console.log(productos);
 
   return (
     <React.Fragment>
@@ -278,7 +379,7 @@ export default function Factura(props) {
         ))}
       </List>
       <Typography variant="h6" className={classes.monto}>
-        <b>Monto: {props.orden.monto_total} Bs.</b>
+        <b>Monto total: {props.orden.monto_total} Bs.</b>
       </Typography>
       <div class="m-4">
         <Typography variant="h6" className="m-2">
@@ -339,6 +440,20 @@ export default function Factura(props) {
           }
           label="Cheque"
         />
+        <FormControlLabel
+          className="m-2"
+          control={
+            <GreenCheckbox
+              checked={state.checkedPuntos}
+              onChange={handleCheckboxes}
+              name="checkedPuntos"
+            />
+          }
+          label="Puntos"
+        />
+        <Typography variant="subtitle1" className="m-2">
+          Monto registrado: {montoPagar}.000 Bs.
+        </Typography>
         <Dialog
           open={openCredito}
           onClose={handleCloseCredito}
@@ -376,9 +491,20 @@ export default function Factura(props) {
               InputProps={{ inputProps: { min: fechaActual } }}
               onChange={handleChangeFechaCredito}
             />
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Monto a pagar"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeMontoCredito}
+            />
           </DialogContent>
           <DialogActions>
-            <Button color="primary">Agregar tarjeta</Button>
+            <Button color="primary" onClick={registrarCredito}>
+              Agregar tarjeta
+            </Button>
             <Button onClick={handleCloseCredito} color="primary" autoFocus>
               Volver
             </Button>
@@ -421,17 +547,95 @@ export default function Factura(props) {
               InputProps={{ inputProps: { min: fechaActual } }}
               onChange={handleChangeFechaDebito}
             />
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Monto a pagar"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeMontoDebito}
+            />
           </DialogContent>
           <DialogActions>
-            <Button color="primary">Agregar tarjeta</Button>
+            <Button color="primary" onClick={registrarDebito}>
+              Agregar tarjeta
+            </Button>
             <Button onClick={handleCloseDebito} color="primary" autoFocus>
               Volver
             </Button>
           </DialogActions>
         </Dialog>
+        <Dialog
+          open={openEfectivo}
+          onClose={handleCloseEfectivo}
+          aria-labelledby="alert-dialog-title"
+        >
+          <DialogTitle id="alert-dialog-title">Efectivo</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Información de pago
+            </DialogContentText>
+            <TextField
+              margin="dense"
+              fullWidth
+              autoFocus
+              label="Monto a pagar"
+              type="number"
+              variant="outlined"
+              onChange={handleChangeMontoEfectivo}
+            />
+            <FormControlLabel
+              className="m-2"
+              control={
+                <GreenCheckbox
+                  checked={state.checkedEuro}
+                  onChange={handleCheckBoxesMoneda}
+                  name="checkedEuro"
+                />
+              }
+              label="€"
+            />
+            <FormControlLabel
+              className="m-2"
+              control={
+                <GreenCheckbox
+                  checked={state.checkedDolar}
+                  onChange={handleCheckBoxesMoneda}
+                  name="checkedDolar"
+                />
+              }
+              label="$"
+            />
+            <FormControlLabel
+              className="m-2"
+              control={
+                <GreenCheckbox
+                  checked={state.checkedBolivar}
+                  onChange={handleCheckBoxesMoneda}
+                  name="checkedBolivar"
+                />
+              }
+              label="Bs."
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary" onClick={registrarEfectivo}>
+              Registrar pago
+            </Button>
+            <Button onClick={handleCloseEfectivo} color="primary" autoFocus>
+              Volver
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
-      <Boton variant="contained" className="m-4" color="primary">
-        Pagar
+      <Boton
+        variant="contained"
+        className="m-4"
+        color="primary"
+        disabled={disabled}
+      >
+        {textoBoton}
       </Boton>
       <Backdrop className={classes.backdrop} open={openBackdrop}>
         <CircularProgress color="inherit" />
