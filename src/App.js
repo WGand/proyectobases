@@ -24,6 +24,7 @@ import ModificarEmpleado from "./components/ModificarEmpleado";
 import ModificarTienda from "./components/ModificarTienda";
 import Factura from "./components/Factura";
 import ModificacionProducto from "./components/ModificacionProducto";
+import Orden from "./components/Orden";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -35,6 +36,8 @@ function App() {
   const [productos, setProductos] = React.useState([]);
   const [totalCarrito, setTotalCarrito] = React.useState(0);
   const [producto, setProducto] = React.useState({});
+  const [orden, setOrden] = React.useState({});
+  const [productosOrden, setProductosOrden] = React.useState([]);
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
@@ -62,6 +65,11 @@ function App() {
 
   const datosProducto = (datosModificarProducto) => {
     setProducto(datosModificarProducto);
+  };
+
+  const datosOrden = (orden, productos) => {
+    setOrden(orden);
+    setProductosOrden(productos);
   };
 
   return (
@@ -136,8 +144,15 @@ function App() {
         <Route exact path="/perfil/controlempleado/modificar">
           <ModificarEmpleado datos={empleado} />
         </Route>
+        <Route exact path="/perfil/orden">
+          <Orden orden={orden} productos={productosOrden} />
+        </Route>
         <Route path="/perfil">
-          <Perfil datos={datos} tipo={tipoPersona} />
+          <Perfil
+            datos={datos}
+            tipo={tipoPersona}
+            conseguirDatosOrden={datosOrden}
+          />
         </Route>
         <Route path="/registrar">
           <Registrar />

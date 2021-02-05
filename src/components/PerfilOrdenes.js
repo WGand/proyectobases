@@ -7,6 +7,7 @@ import TextField from "@material-ui/core/TextField";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Link from "@material-ui/core/Link";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
@@ -24,16 +25,33 @@ const useStyles = makeStyles((theme) => ({
     width: 500,
   },
   paperOrden: {
-    width: 200,
+    width: 300,
     margin: theme.spacing(3),
   },
 }));
 
 export default function PerfilOrdenes(props) {
   const classes = useStyles();
+  const history = useHistory();
 
   const [datosOrdenes, setDatosOrdenes] = React.useState({});
   const [ordenes, setOrdenes] = React.useState([]);
+
+  const handleClick = (event) => {
+    enviarDatos(
+      datosOrdenes["operaciones"][event.target.lastChild.data - 1],
+      datosOrdenes["productos"][event.target.lastChild.data - 1]
+    );
+    irOrden();
+  };
+
+  const irOrden = () => {
+    history.push("/perfil/orden");
+  };
+
+  const enviarDatos = (datosOrden, productos) => {
+    props.conseguirDatosOrden(datosOrden, productos);
+  };
 
   const getOrdenes = async () => {
     await axios({
@@ -60,7 +78,7 @@ export default function PerfilOrdenes(props) {
     }
   }, [datosOrdenes]);
 
-  console.log(ordenes);
+  //console.log(ordenes);
   console.log(datosOrdenes);
 
   return (
@@ -70,7 +88,7 @@ export default function PerfilOrdenes(props) {
       </Typography>
       <Paper variant="outlined" className={classes.paper}>
         <Typography variant="h6" align="center" className="m-4">
-          <b>Historial de Órdenes</b>
+          <b>Órdenes</b>
         </Typography>
         <form className={classes.container} noValidate>
           <TextField
@@ -85,15 +103,17 @@ export default function PerfilOrdenes(props) {
             }}
           />
         </form>
-        <Typography variant="subtitle1" className="m-3">
-          {" "}
-          Órdenes{" "}
-        </Typography>
         <Paper variant="outlined" className={classes.paperOrden}>
           <List>
             {ordenes.map((orden, value) => (
               <ListItem>
-                <Link>Orden {value + 1}</Link>
+                <Link key={value} onClick={handleClick}>
+                  Orden {value + 1}
+                </Link>
+                <Typography variant="caption" className="m-3">
+                  {" "}
+                  {orden[0].fecha}
+                </Typography>
               </ListItem>
             ))}
           </List>

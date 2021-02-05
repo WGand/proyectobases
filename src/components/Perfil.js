@@ -92,7 +92,11 @@ export default function Perfil(props) {
             <PerfilDatos datos={props.datos} tipo={props.tipo} />
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <PerfilOrdenes datos={props.datos} tipo={props.tipo} />
+            <PerfilOrdenes
+              datos={props.datos}
+              tipo={props.tipo}
+              conseguirDatosOrden={props.conseguirDatosOrden}
+            />
           </TabPanel>
           <TabPanel value={value} index={2}>
             Item Three

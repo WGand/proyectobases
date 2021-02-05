@@ -80,65 +80,10 @@ const GreenCheckbox = withStyles({
 export default function Factura(props) {
   const classes = useStyles();
 
-  const [state, setState] = React.useState({
-    checkedNinguno: true,
-    checkedEfectivo: false,
-    checkedDebito: false,
-    checkedCredito: false,
-    checkedCheque: false,
-  });
-
-  const [openCredito, setOpenCredito] = React.useState(false);
-  const [openDebito, setOpenDebito] = React.useState(false);
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
-  // const [fechaActual, setFechaActual] = React.useState("");
-  // const [numCredito, setNumCredito] = React.useState("");
-  // const [numDebito, setNumDebito] = React.useState("");
-  // const [fechaCredito, setFechaCredito] = React.useState("");
-  // const [fechaDebito, setFechaDebito] = React.useState("");
-  // const [nombreCredito, setNombreCredito] = React.useState("");
-  // const [nombreDebito, setNombreDebito] = React.useState("");
 
   const [carrito, setCarrito] = React.useState([]);
   const [diccionarioCarrito, setDiccionarioCarrito] = React.useState({});
-
-  const handleCheckboxes = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
-
-  // const handleCloseCredito = () => {
-  //   setState({ ...state, ["checkedCredito"]: false });
-  //   setOpenCredito(false);
-  // };
-
-  // const handleCloseDebito = () => {
-  //   setState({ ...state, ["checkedDebito"]: false });
-  //   setOpenDebito(false);
-  // };
-
-  // const handleChangeNumCredito = (event) => {
-  //   setNumCredito(event.target.value);
-  // };
-
-  // const handleChangeNumDebito = (event) => {
-  //   setNumDebito(event.target.value);
-  // };
-
-  // const handleChangeFechaCredito = (event) => {
-  //   setFechaCredito(event.target.value);
-  // };
-
-  // const handleChangeFechaDebito = (event) => {
-  //   setFechaDebito(event.target.value);
-  // };
-
-  // const handleChangeNombreCredito = (event) => {
-  //   setNombreCredito(event.target.value);
-  // };
-
-  // const handleChangeNombreDebito = (event) => {
-  //   setNombreDebito(event.target.value);
-  // };
 
   const fecha = () => {
     const fecha = new Date();
@@ -185,30 +130,8 @@ export default function Factura(props) {
     localStorage.setItem("carrito", JSON.stringify([]));
   };
 
-  const actualizarOrden = async () => {
-    await axios({
-      method: "put",
-      url: "https://proyectobases1.herokuapp.com/orden",
-      data: {
-        producto: diccionarioCarrito,
-        rif: props.datos[0].rif,
-        fecha: fecha(),
-        monto_total: props.total,
-        tipo: props.tipo,
-      },
-    });
-  };
-
   React.useEffect(() => {
     setCarrito(JSON.parse(localStorage.getItem("carrito")));
-    // const hoy = new Date();
-    // if (hoy.getMonth() + 1 >= 10) {
-    //   const fecha = hoy.getFullYear() + "-" + (hoy.getMonth() + 1); mes actual para tarjeta
-    //   setFechaActual(fecha);
-    // } else {
-    //   const fecha = hoy.getFullYear() + "-0" + (hoy.getMonth() + 1);
-    //   setFechaActual(fecha);
-    // }
   }, []);
 
   React.useEffect(() => {
@@ -222,53 +145,6 @@ export default function Factura(props) {
     setDiccionarioCarrito(JSON.stringify(aux));
   }, [carrito]);
 
-  React.useEffect(() => {
-    if (state.checkedCredito === true) {
-      setOpenCredito(true);
-    }
-  }, [state.checkedCredito]);
-
-  React.useEffect(() => {
-    if (state.checkedDebito === true) {
-      setOpenDebito(true);
-    }
-  }, [state.checkedDebito]);
-
-  React.useEffect(() => {
-    if (state.checkedNinguno === true) {
-      setState({
-        ...state,
-        ["checkedEfectivo"]: false,
-        ["checkedCredito"]: false,
-        ["checkedDebito"]: false,
-        ["checkedCheque"]: false,
-      });
-    } else {
-    }
-  }, [state.checkedNinguno]);
-
-  React.useEffect(() => {
-    if (
-      state.checkedEfectivo === true ||
-      state.checkedCredito === true ||
-      state.checkedDebito === true ||
-      state.checkedCheque === true
-    ) {
-      setState({ ...state, ["checkedNinguno"]: false });
-    }
-  }, [
-    state.checkedEfectivo,
-    state.checkedCredito,
-    state.checkedDebito,
-    state.checkedCheque,
-  ]);
-
-  // console.log("numero credito: " + numCredito);
-  // console.log("numero debito: " + numDebito);
-  // console.log("fecha credito " + fechaCredito);
-  // console.log("fecha debito: " + fechaDebito);
-  // console.log("nombre credito: " + nombreCredito);
-  // console.log("nombre debito: " + nombreDebito);
   console.log(carrito);
   console.log("-----------------");
   console.log(props.total);
@@ -298,156 +174,6 @@ export default function Factura(props) {
       <Typography variant="h6" className={classes.monto}>
         <b>Monto: {props.total}.000 Bs.</b>
       </Typography>
-      <div class="m-4">
-        <Typography variant="h6" className="m-2">
-          Medios de pago:
-        </Typography>
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedNinguno}
-              onChange={handleCheckboxes}
-              name="checkedNinguno"
-            />
-          }
-          label="Ninguno"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedEfectivo}
-              onChange={handleCheckboxes}
-              name="checkedEfectivo"
-            />
-          }
-          label="Efectivo"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedDebito}
-              onChange={handleCheckboxes}
-              name="checkedDebito"
-            />
-          }
-          label="Débito"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedCredito}
-              onChange={handleCheckboxes}
-              name="checkedCredito"
-            />
-          }
-          label="Crédito"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedCheque}
-              onChange={handleCheckboxes}
-              name="checkedCheque"
-            />
-          }
-          label="Cheque"
-        />
-        {/* <Dialog
-          open={openCredito}
-          onClose={handleCloseCredito}
-          aria-labelledby="alert-dialog-title"
-        >
-          <DialogTitle id="alert-dialog-title">Tarjeta de Crédito</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Ingrese datos de la tarjeta
-            </DialogContentText>
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Número de tarjeta"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeNumCredito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Nombre de la tarjeta"
-              variant="outlined"
-              onChange={handleChangeNombreCredito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              helperText="Fecha de vencimiento"
-              type="month"
-              variant="outlined"
-              InputProps={{ inputProps: { min: fechaActual } }}
-              onChange={handleChangeFechaCredito}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary">Agregar tarjeta</Button>
-            <Button onClick={handleCloseCredito} color="primary" autoFocus>
-              Volver
-            </Button>
-          </DialogActions>
-        </Dialog> */}
-        {/* <Dialog
-          open={openDebito}
-          onClose={handleCloseDebito}
-          aria-labelledby="alert-dialog-title"
-        >
-          <DialogTitle id="alert-dialog-title">Tarjeta de Débito</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Ingrese datos de la tarjeta
-            </DialogContentText>
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Número de tarjeta"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeNumDebito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Nombre de la tarjeta"
-              variant="outlined"
-              onChange={handleChangeNombreDebito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              helperText="Fecha de vencimiento"
-              type="month"
-              variant="outlined"
-              InputProps={{ inputProps: { min: fechaActual } }}
-              onChange={handleChangeFechaDebito}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary">Agregar tarjeta</Button>
-            <Button onClick={handleCloseDebito} color="primary" autoFocus>
-              Volver
-            </Button>
-          </DialogActions>
-        </Dialog> */}
-      </div>
       <Boton
         variant="contained"
         className="m-4"
