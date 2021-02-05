@@ -16,6 +16,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import TextField from "@material-ui/core/TextField";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   dir: {
@@ -105,6 +106,7 @@ export default function Factura(props) {
   const [fechaDebito, setFechaDebito] = React.useState("");
   const [nombreCredito, setNombreCredito] = React.useState("");
   const [nombreDebito, setNombreDebito] = React.useState("");
+  const [productos, setProductos] = React.useState([]);
 
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -148,6 +150,18 @@ export default function Factura(props) {
     history.push("/perfil");
   };
 
+  const fetchProducto = async (id) => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/productoparticular",
+      data: {
+        producto_id: id,
+      },
+    }).then((response) => {
+      setProductos((productos) => [...productos, response.data]);
+    });
+  };
+
   const fecha = () => {
     const fecha = new Date();
     const año = fecha.getFullYear();
@@ -182,6 +196,10 @@ export default function Factura(props) {
     } else {
       const fecha = hoy.getFullYear() + "-0" + (hoy.getMonth() + 1);
       setFechaActual(fecha);
+    }
+
+    for (let index = 0; index < props.productos.length; index++) {
+      fetchProducto(props.productos[index].fk_producto);
     }
   }, []);
 
@@ -236,6 +254,7 @@ export default function Factura(props) {
   console.log(fecha());
   console.log(props.orden);
   console.log(props.productos);
+  console.log(productos);
 
   return (
     <React.Fragment>
@@ -248,7 +267,16 @@ export default function Factura(props) {
       <Typography variant="h5" className="m-4">
         Productos en la Órden
       </Typography>
-      <List className={classes.lista}></List>
+      <List className={classes.lista}>
+        {productos.map((producto, value) => (
+          <ListItem divider>
+            <ListItemText
+              primary={producto.nombre}
+              secondary={"Cantidad: " + props.productos[value].cantidad}
+            />
+          </ListItem>
+        ))}
+      </List>
       <Typography variant="h6" className={classes.monto}>
         <b>Monto: {props.orden.monto_total} Bs.</b>
       </Typography>

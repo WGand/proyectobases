@@ -1,6 +1,4 @@
 import React from "react";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -66,16 +64,6 @@ const Boton = withStyles({
     },
   },
 })(Button);
-
-const GreenCheckbox = withStyles({
-  root: {
-    color: "#00AAE3",
-    "&$checked": {
-      color: "#00AAE3",
-    },
-  },
-  checked: {},
-})((props) => <Checkbox color="default" {...props} />);
 
 export default function Factura(props) {
   const classes = useStyles();
