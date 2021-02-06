@@ -129,6 +129,9 @@ export default function Factura(props) {
   const [montoBolivar, setMontoBolivar] = React.useState(0);
   const [montoDolar, setMontoDolar] = React.useState(0);
   const [montoEuro, setMontoEuro] = React.useState(0);
+  const [errorDolar, setErrorDolar] = React.useState(false);
+  const [errorEuro, setErrorEuro] = React.useState(false);
+  const [disabledEfectivo, setDisabledEfectivo] = React.useState(false);
 
   const [numConfirmacion, setNumConfirmacion] = React.useState("");
   const [nombreBanco, setNombreBanco] = React.useState("");
@@ -137,6 +140,8 @@ export default function Factura(props) {
 
   const [cantidadPuntos, setCantidadPuntos] = React.useState(0);
   const [montoPuntos, setMontoPuntos] = React.useState(0);
+  const [errorPunto, setErrorPunto] = React.useState(false);
+  const [disabledPuntos, setDisabledPuntos] = React.useState(false);
 
   const [productos, setProductos] = React.useState([]);
 
@@ -150,6 +155,16 @@ export default function Factura(props) {
 
   const [diccionarioPago, setDiccionarioPago] = React.useState({});
   const [contDiccionario, setContadorDiccionario] = React.useState(0);
+
+  const [cambioDolar, setCambioDolar] = React.useState([]);
+  const [valorDolar, setValorDolar] = React.useState(0);
+  const [cambioEuro, setCambioEuro] = React.useState([]);
+  const [valorEuro, setValorEuro] = React.useState(0);
+  const [cambioPunto, setCambioPunto] = React.useState([]);
+  const [valorPunto, setValorPunto] = React.useState(0);
+
+  const [rif, setRif] = React.useState("");
+  const [tipo, setTipo] = React.useState("");
 
   const handleCheckboxes = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
@@ -289,6 +304,10 @@ export default function Factura(props) {
     history.push("/perfil");
   };
 
+  const irHome = () => {
+    history.push("/");
+  };
+
   const fetchProducto = async (id) => {
     await axios({
       method: "post",
@@ -301,30 +320,56 @@ export default function Factura(props) {
     });
   };
 
-  const fecha = () => {
-    const fecha = new Date();
-    const año = fecha.getFullYear();
-    let mes = 0;
-    let dia = 0;
-    let hora = 0;
-    let minuto = 0;
-    let segundo = 0;
+  const fetchCambioDolar = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/cambiodivisa",
+      data: {
+        tipo: "dolar",
+      },
+    }).then((response) => {
+      setCambioDolar(response.data);
+    });
+  };
 
-    if (fecha.getMonth() < 10) mes = "0" + (fecha.getMonth() + 1);
-    else mes = fecha.getMonth() + 1;
-    if (fecha.getDate() < 10) dia = "0" + fecha.getDate();
-    else dia = fecha.getDate();
-    if (fecha.getHours() < 10) hora = "0" + fecha.getHours();
-    else hora = fecha.getHours();
-    if (fecha.getMinutes() < 10) minuto = "0" + fecha.getMinutes();
-    else minuto = fecha.getMinutes();
-    if (fecha.getSeconds() < 10) segundo = "0" + fecha.getSeconds();
-    else segundo = fecha.getSeconds();
+  const fetchCambioEuro = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/cambiodivisa",
+      data: {
+        tipo: "euro",
+      },
+    }).then((response) => {
+      setCambioEuro(response.data);
+    });
+  };
 
-    const horaFecha =
-      mes + "-" + dia + "-" + año + ":" + hora + ":" + minuto + ":" + segundo;
+  const fetchCambioPunto = async () => {
+    await axios({
+      method: "get",
+      url: "https://proyectobases1.herokuapp.com/cambiopunto",
+    }).then((response) => {
+      setCambioPunto(response.data);
+    });
+  };
 
-    return horaFecha;
+  const pagarOrden = async () => {
+    let diccionario = JSON.stringify(diccionarioPago);
+    setOpenBackdrop(true);
+    await axios({
+      method: "put",
+      url: "https://proyectobases1.herokuapp.com/orden",
+      data: {
+        operacion_id: props.orden.operacion_id,
+        rif: rif,
+        tipo: tipo,
+        metodo: diccionario,
+      },
+    }).then((response) => {
+      console.log(response.data);
+    });
+    setOpenBackdrop(false);
+    irHome();
   };
 
   const registrarCredito = () => {
@@ -335,10 +380,13 @@ export default function Factura(props) {
 
     let cont = contDiccionario;
     let diccionario = diccionarioPago;
+    let mes = fechaCredito.split("-")[1];
+    let año = fechaCredito.split("-")[0];
     diccionario[cont] = {
       tipo_metodo: "tarjeta",
       numero_tarjeta: numCredito,
-      fecha_caducidad: fechaCredito,
+      mes_caducidad: mes,
+      anho_caducidad: año,
       tipo: "credito",
       nombre_tarjeta: nombreCredito,
     };
@@ -355,10 +403,13 @@ export default function Factura(props) {
 
     let cont = contDiccionario;
     let diccionario = diccionarioPago;
+    let mes = fechaDebito.split("-")[1];
+    let año = fechaDebito.split("-")[0];
     diccionario[cont] = {
       tipo_metodo: "tarjeta",
       numero_tarjeta: numDebito,
-      fecha_caducidad: fechaDebito,
+      mes_caducidad: mes,
+      anho_caducidad: año,
       tipo: "debito",
       nombre_tarjeta: nombreDebito,
     };
@@ -418,7 +469,6 @@ export default function Factura(props) {
       tipo_metodo: "cheque",
       numero_confirmacion: numConfirmacion,
       nombre_banco: nombreBanco,
-      fecha: fechaCheque,
     };
     cont++;
     setContadorDiccionario(cont);
@@ -443,7 +493,15 @@ export default function Factura(props) {
     setDiccionarioPago(diccionario);
   };
 
+  const calcularMultiplo = (numero, multiplo) => {
+    return multiplo % numero === 0;
+  };
+
   React.useEffect(() => {
+    fetchCambioDolar();
+    fetchCambioEuro();
+    fetchCambioPunto();
+
     const hoy = new Date();
 
     if (hoy.getMonth() + 1 >= 10) {
@@ -479,7 +537,30 @@ export default function Factura(props) {
     for (let index = 0; index < props.productos.length; index++) {
       fetchProducto(props.productos[index].fk_producto);
     }
+
+    if (props.orden.fk_empleado !== null) {
+      setRif(props.orden.fk_empleado);
+      setTipo("empleado");
+    } else if (props.orden.fk_natural !== null) {
+      setRif(props.orden.fk_natural);
+      setTipo("natural");
+    } else if (props.orden.fk_juridico !== null) {
+      setRif(props.orden.fk_juridico);
+      setTipo("juridico");
+    }
   }, []);
+
+  React.useEffect(() => {
+    if (cambioDolar[0]) {
+      setValorDolar(Number(cambioDolar[0].valor));
+    }
+    if (cambioEuro[0]) {
+      setValorEuro(Number(cambioEuro[0].valor));
+    }
+    if (cambioPunto[0]) {
+      setValorPunto(Number(cambioPunto[0].reference_bolivares));
+    }
+  }, [cambioDolar, cambioEuro, cambioPunto]);
 
   React.useEffect(() => {
     if (state.checkedNinguno === true) {
@@ -547,16 +628,47 @@ export default function Factura(props) {
     }
   }, [montoPagar]);
 
+  React.useEffect(() => {
+    if (calcularMultiplo(valorDolar, montoDolar) === true) {
+      setErrorDolar(false);
+      setDisabledEfectivo(false);
+    } else {
+      setErrorDolar(true);
+      setDisabledEfectivo(true);
+    }
+  }, [montoDolar]);
+
+  React.useEffect(() => {
+    if (calcularMultiplo(valorEuro, montoEuro) === true) {
+      setErrorEuro(false);
+      setDisabledEfectivo(false);
+    } else {
+      setErrorEuro(true);
+      setDisabledEfectivo(true);
+    }
+  }, [montoEuro]);
+
+  React.useEffect(() => {
+    if (calcularMultiplo(valorPunto, montoPuntos) === true) {
+      setErrorPunto(false);
+      setDisabledPuntos(false);
+    } else {
+      setErrorPunto(true);
+      setDisabledPuntos(true);
+    }
+  }, [montoPuntos]);
+
   // console.log("numero credito: " + numCredito);
   // console.log("numero debito: " + numDebito);
-  // console.log("fecha credito " + fechaCredito);
+  //console.log("fecha credito " + fechaCredito.split("-")[0]);
   // console.log("fecha debito: " + fechaDebito);
   // console.log("nombre credito: " + nombreCredito);
   // console.log("nombre debito: " + nombreDebito);
   console.log("-----------------");
-  //console.log(fecha());
-  console.log(props.orden.monto_total);
-  console.log(montoPagar);
+  console.log(props.orden.operacion_id);
+  console.log(String(rif));
+  console.log(tipo);
+  // console.log(montoPagar);
   // console.log(props.productos);
   // console.log(productos);
   console.log(JSON.stringify(diccionarioPago));
@@ -799,6 +911,8 @@ export default function Factura(props) {
               variant="outlined"
               onChange={handleChangeMontoDolar}
               disabled={disabledDolar}
+              error={errorDolar}
+              helperText={"Referencia en Bs.: " + valorDolar}
             />
             <TextField
               margin="dense"
@@ -809,6 +923,8 @@ export default function Factura(props) {
               variant="outlined"
               onChange={handleChangeMontoEuro}
               disabled={disabledEuro}
+              error={errorEuro}
+              helperText={"Referencia en Bs.: " + valorEuro}
             />
             <FormControlLabel
               className="m-2"
@@ -845,7 +961,11 @@ export default function Factura(props) {
             />
           </DialogContent>
           <DialogActions>
-            <Button color="primary" onClick={registrarEfectivo}>
+            <Button
+              color="primary"
+              onClick={registrarEfectivo}
+              disabled={disabledEfectivo}
+            >
               Registrar pago
             </Button>
             <Button onClick={handleCloseEfectivo} color="primary" autoFocus>
@@ -936,10 +1056,16 @@ export default function Factura(props) {
               type="number"
               variant="outlined"
               onChange={handleChangeMontoPuntos}
+              error={errorPunto}
+              helperText={"Referencia en Bs.: " + valorPunto}
             />
           </DialogContent>
           <DialogActions>
-            <Button color="primary" onClick={registrarPuntos}>
+            <Button
+              color="primary"
+              onClick={registrarPuntos}
+              disabled={disabledPuntos}
+            >
               Registrar pago
             </Button>
             <Button onClick={handleClosePuntos} color="primary" autoFocus>
@@ -953,6 +1079,7 @@ export default function Factura(props) {
         className="m-4"
         color="primary"
         disabled={disabled}
+        onClick={pagarOrden}
       >
         {textoBoton}
       </Boton>
