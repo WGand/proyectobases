@@ -22,10 +22,10 @@ const useStyles = makeStyles((theme) => ({
     width: 200,
   },
   paper: {
-    width: 500,
+    width: 600,
   },
   paperOrden: {
-    width: 400,
+    width: 500,
     margin: theme.spacing(3),
   },
 }));
@@ -158,7 +158,7 @@ export default function PerfilOrdenes(props) {
             {ordenesFiltroFecha.map((orden, value) => (
               <ListItem>
                 <Link key={value} onClick={handleClick}>
-                  Orden {value + 1}
+                  Detalle de Órden
                 </Link>
                 <Typography variant="caption" className="m-3">
                   {" "}
