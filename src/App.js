@@ -38,6 +38,7 @@ function App() {
   const [producto, setProducto] = React.useState({});
   const [orden, setOrden] = React.useState({});
   const [productosOrden, setProductosOrden] = React.useState([]);
+  const [estatus, setEstatus] = React.useState(0);
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
@@ -67,9 +68,10 @@ function App() {
     setProducto(datosModificarProducto);
   };
 
-  const datosOrden = (orden, productos) => {
+  const datosOrden = (orden, productos, estatus) => {
     setOrden(orden);
     setProductosOrden(productos);
+    setEstatus(estatus);
   };
 
   return (
@@ -145,7 +147,7 @@ function App() {
           <ModificarEmpleado datos={empleado} />
         </Route>
         <Route exact path="/perfil/orden">
-          <Orden orden={orden} productos={productosOrden} />
+          <Orden orden={orden} productos={productosOrden} estatus={estatus} />
         </Route>
         <Route path="/perfil">
           <Perfil

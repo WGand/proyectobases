@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     width: 500,
   },
   paperOrden: {
-    width: 300,
+    width: 400,
     margin: theme.spacing(3),
   },
 }));
@@ -36,21 +36,29 @@ export default function PerfilOrdenes(props) {
 
   const [datosOrdenes, setDatosOrdenes] = React.useState({});
   const [ordenes, setOrdenes] = React.useState([]);
+  const [ordenesFiltro, setOrdenesFiltro] = React.useState([]);
+  const [ordenesFiltroFecha, setOrdenesFiltroFecha] = React.useState([]);
+
+  const [fecha, setFecha] = React.useState("");
 
   const handleClick = (event) => {
     enviarDatos(
       datosOrdenes["operaciones"][event.target.lastChild.data - 1],
-      datosOrdenes["productos"][event.target.lastChild.data - 1]
+      datosOrdenes["productos"][event.target.lastChild.data - 1],
+      datosOrdenes["ordenes"][event.target.lastChild.data - 1][0].fk_estatus
     );
     irOrden();
   };
 
+  const handleChangeFecha = (event) => {
+    setFecha(event.target.value);
+  };
   const irOrden = () => {
     history.push("/perfil/orden");
   };
 
-  const enviarDatos = (datosOrden, productos) => {
-    props.conseguirDatosOrden(datosOrden, productos);
+  const enviarDatos = (datosOrden, productos, estatus) => {
+    props.conseguirDatosOrden(datosOrden, productos, estatus);
   };
 
   const getOrdenes = async () => {
@@ -66,6 +74,23 @@ export default function PerfilOrdenes(props) {
     });
   };
 
+  const estatus = (estatusId) => {
+    switch (estatusId) {
+      case 1:
+        return "Pendiente";
+        break;
+      case 3:
+        return "Recibido";
+        break;
+      case 4:
+        return "Pagado";
+        break;
+
+      default:
+        break;
+    }
+  };
+
   React.useEffect(() => {
     getOrdenes();
   }, []);
@@ -78,8 +103,32 @@ export default function PerfilOrdenes(props) {
     }
   }, [datosOrdenes]);
 
-  //console.log(ordenes);
+  React.useEffect(() => {
+    let aux = ordenes.filter(
+      (orden, value) =>
+        orden[0].fk_estatus === 1 ||
+        orden[0].fk_estatus === 3 ||
+        orden[0].fk_estatus === 4
+    );
+    setOrdenesFiltro(aux);
+    setOrdenesFiltroFecha(aux);
+  }, [ordenes]);
+
+  React.useEffect(() => {
+    if (fecha === "") {
+      setOrdenesFiltroFecha(ordenesFiltro);
+    } else {
+      let aux = ordenesFiltro.filter((orden, value) => {
+        let fechaOrden = orden[0].fecha.split("T")[0];
+        return fechaOrden === fecha;
+      });
+      setOrdenesFiltroFecha(aux);
+    }
+  }, [fecha]);
+
+  console.log(ordenes);
   console.log(datosOrdenes);
+  //console.log(fecha);
 
   return (
     <React.Fragment>
@@ -96,8 +145,9 @@ export default function PerfilOrdenes(props) {
             id="date"
             label="Fecha"
             type="date"
-            defaultValue="2017-05-24"
+            defaultValue=""
             className={classes.textField}
+            onChange={handleChangeFecha}
             InputLabelProps={{
               shrink: true,
             }}
@@ -105,7 +155,7 @@ export default function PerfilOrdenes(props) {
         </form>
         <Paper variant="outlined" className={classes.paperOrden}>
           <List>
-            {ordenes.map((orden, value) => (
+            {ordenesFiltroFecha.map((orden, value) => (
               <ListItem>
                 <Link key={value} onClick={handleClick}>
                   Orden {value + 1}
@@ -113,6 +163,10 @@ export default function PerfilOrdenes(props) {
                 <Typography variant="caption" className="m-3">
                   {" "}
                   {orden[0].fecha}
+                </Typography>
+                <Typography variant="caption" className="m-3" color="primary">
+                  {" "}
+                  {estatus(orden[0].fk_estatus)}
                 </Typography>
               </ListItem>
             ))}

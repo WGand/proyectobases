@@ -668,424 +668,456 @@ export default function Factura(props) {
   console.log(props.orden.operacion_id);
   console.log(String(rif));
   console.log(tipo);
+  console.log(props.estatus);
   // console.log(montoPagar);
   // console.log(props.productos);
   // console.log(productos);
   console.log(JSON.stringify(diccionarioPago));
 
-  return (
-    <React.Fragment>
-      <Button className="m-3" onClick={irPerfil}>
-        <Typography variant="h5">Perfil</Typography>
-      </Button>
-      <Typography variant="h3" className="m-4">
-        <b>Órden</b>
-      </Typography>
-      <Typography variant="h5" className="m-4">
-        Productos en la Órden
-      </Typography>
-      <List className={classes.lista}>
-        {productos.map((producto, value) => (
-          <ListItem divider>
-            <ListItemText
-              primary={producto.nombre}
-              secondary={"Cantidad: " + props.productos[value].cantidad}
-            />
-          </ListItem>
-        ))}
-      </List>
-      <Typography variant="h6" className={classes.monto}>
-        <b>Monto total: {props.orden.monto_total} Bs.</b>
-      </Typography>
-      <div class="m-4">
-        <Typography variant="h6" className="m-2">
-          Medios de pago:
+  if (props.estatus === 1) {
+    return (
+      <React.Fragment>
+        <Button className="m-3" onClick={irPerfil}>
+          <Typography variant="h5">Perfil</Typography>
+        </Button>
+        <Typography variant="h3" className="m-4">
+          <b>Órden</b>
         </Typography>
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedNinguno}
-              onChange={handleCheckboxes}
-              name="checkedNinguno"
-            />
-          }
-          label="Ninguno"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedEfectivo}
-              onChange={handleCheckboxes}
-              name="checkedEfectivo"
-            />
-          }
-          label="Efectivo"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedDebito}
-              onChange={handleCheckboxes}
-              name="checkedDebito"
-            />
-          }
-          label="Débito"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedCredito}
-              onChange={handleCheckboxes}
-              name="checkedCredito"
-            />
-          }
-          label="Crédito"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedCheque}
-              onChange={handleCheckboxes}
-              name="checkedCheque"
-            />
-          }
-          label="Cheque"
-        />
-        <FormControlLabel
-          className="m-2"
-          control={
-            <GreenCheckbox
-              checked={state.checkedPuntos}
-              onChange={handleCheckboxes}
-              name="checkedPuntos"
-            />
-          }
-          label="Puntos"
-        />
-        <Typography variant="subtitle1" className="m-2">
-          Monto registrado: {montoPagar}.000 Bs.
+        <Typography variant="h5" className="m-4">
+          Productos en la Órden
         </Typography>
-        <Dialog
-          open={openCredito}
-          onClose={handleCloseCredito}
-          aria-labelledby="alert-dialog-title"
+        <List className={classes.lista}>
+          {productos.map((producto, value) => (
+            <ListItem divider>
+              <ListItemText
+                primary={producto.nombre}
+                secondary={"Cantidad: " + props.productos[value].cantidad}
+              />
+            </ListItem>
+          ))}
+        </List>
+        <Typography variant="h6" className={classes.monto}>
+          <b>Monto total: {props.orden.monto_total} Bs.</b>
+        </Typography>
+        <div class="m-4">
+          <Typography variant="h6" className="m-2">
+            Medios de pago:
+          </Typography>
+          <FormControlLabel
+            className="m-2"
+            control={
+              <GreenCheckbox
+                checked={state.checkedNinguno}
+                onChange={handleCheckboxes}
+                name="checkedNinguno"
+              />
+            }
+            label="Ninguno"
+          />
+          <FormControlLabel
+            className="m-2"
+            control={
+              <GreenCheckbox
+                checked={state.checkedEfectivo}
+                onChange={handleCheckboxes}
+                name="checkedEfectivo"
+              />
+            }
+            label="Efectivo"
+          />
+          <FormControlLabel
+            className="m-2"
+            control={
+              <GreenCheckbox
+                checked={state.checkedDebito}
+                onChange={handleCheckboxes}
+                name="checkedDebito"
+              />
+            }
+            label="Débito"
+          />
+          <FormControlLabel
+            className="m-2"
+            control={
+              <GreenCheckbox
+                checked={state.checkedCredito}
+                onChange={handleCheckboxes}
+                name="checkedCredito"
+              />
+            }
+            label="Crédito"
+          />
+          <FormControlLabel
+            className="m-2"
+            control={
+              <GreenCheckbox
+                checked={state.checkedCheque}
+                onChange={handleCheckboxes}
+                name="checkedCheque"
+              />
+            }
+            label="Cheque"
+          />
+          <FormControlLabel
+            className="m-2"
+            control={
+              <GreenCheckbox
+                checked={state.checkedPuntos}
+                onChange={handleCheckboxes}
+                name="checkedPuntos"
+              />
+            }
+            label="Puntos"
+          />
+          <Typography variant="subtitle1" className="m-2">
+            Monto registrado: {montoPagar}.000 Bs.
+          </Typography>
+          <Dialog
+            open={openCredito}
+            onClose={handleCloseCredito}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">
+              Tarjeta de Crédito
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Ingrese datos de la tarjeta
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Número de tarjeta"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeNumCredito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Nombre de la tarjeta"
+                variant="outlined"
+                onChange={handleChangeNombreCredito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                helperText="Fecha de vencimiento"
+                type="month"
+                variant="outlined"
+                InputProps={{ inputProps: { min: fechaActual } }}
+                onChange={handleChangeFechaCredito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Monto a pagar"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeMontoCredito}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" onClick={registrarCredito}>
+                Agregar tarjeta
+              </Button>
+              <Button onClick={handleCloseCredito} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openDebito}
+            onClose={handleCloseDebito}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">Tarjeta de Débito</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Ingrese datos de la tarjeta
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Número de tarjeta"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeNumDebito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Nombre de la tarjeta"
+                variant="outlined"
+                onChange={handleChangeNombreDebito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                helperText="Fecha de vencimiento"
+                type="month"
+                variant="outlined"
+                InputProps={{ inputProps: { min: fechaActual } }}
+                onChange={handleChangeFechaDebito}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Monto a pagar"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeMontoDebito}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" onClick={registrarDebito}>
+                Agregar tarjeta
+              </Button>
+              <Button onClick={handleCloseDebito} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openEfectivo}
+            onClose={handleCloseEfectivo}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">Efectivo</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Información de pago
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Monto en Bs."
+                type="number"
+                variant="outlined"
+                onChange={handleChangeMontoBolivar}
+                disabled={disabledBolivar}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Monto en $"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeMontoDolar}
+                disabled={disabledDolar}
+                error={errorDolar}
+                helperText={"Referencia en Bs.: " + valorDolar}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Monto en €"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeMontoEuro}
+                disabled={disabledEuro}
+                error={errorEuro}
+                helperText={"Referencia en Bs.: " + valorEuro}
+              />
+              <FormControlLabel
+                className="m-2"
+                control={
+                  <GreenCheckbox
+                    checked={stateMoneda.checkedEuro}
+                    onChange={handleCheckBoxesMoneda}
+                    name="checkedEuro"
+                  />
+                }
+                label="€"
+              />
+              <FormControlLabel
+                className="m-2"
+                control={
+                  <GreenCheckbox
+                    checked={stateMoneda.checkedDolar}
+                    onChange={handleCheckBoxesMoneda}
+                    name="checkedDolar"
+                  />
+                }
+                label="$"
+              />
+              <FormControlLabel
+                className="m-2"
+                control={
+                  <GreenCheckbox
+                    checked={stateMoneda.checkedBolivar}
+                    onChange={handleCheckBoxesMoneda}
+                    name="checkedBolivar"
+                  />
+                }
+                label="Bs."
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                color="primary"
+                onClick={registrarEfectivo}
+                disabled={disabledEfectivo}
+              >
+                Registrar pago
+              </Button>
+              <Button onClick={handleCloseEfectivo} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openCheque}
+            onClose={handleCloseCheque}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">Cheque</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Información de cheque
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Número de confirmación"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeNumConfirmacion}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Nombre de Banco"
+                variant="outlined"
+                onChange={handleChangeNombreBanco}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                helperText="Fecha"
+                type="date"
+                InputProps={{ inputProps: { min: fechaActualDia } }}
+                variant="outlined"
+                onChange={handleChangeFechaCheque}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Monto"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeMontoCheque}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button color="primary" onClick={registrarCheque}>
+                Registrar pago
+              </Button>
+              <Button onClick={handleCloseCheque} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog
+            open={openPuntos}
+            onClose={handleClosePuntos}
+            aria-labelledby="alert-dialog-title"
+          >
+            <DialogTitle id="alert-dialog-title">Puntos</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                Pago por puntos
+              </DialogContentText>
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Cantidad de puntos"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeCantidadPuntos}
+              />
+              <TextField
+                margin="dense"
+                fullWidth
+                autoFocus
+                label="Monto"
+                type="number"
+                variant="outlined"
+                onChange={handleChangeMontoPuntos}
+                error={errorPunto}
+                helperText={"Referencia en Bs.: " + valorPunto}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                color="primary"
+                onClick={registrarPuntos}
+                disabled={disabledPuntos}
+              >
+                Registrar pago
+              </Button>
+              <Button onClick={handleClosePuntos} color="primary" autoFocus>
+                Volver
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          disabled={disabled}
+          onClick={pagarOrden}
         >
-          <DialogTitle id="alert-dialog-title">Tarjeta de Crédito</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Ingrese datos de la tarjeta
-            </DialogContentText>
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Número de tarjeta"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeNumCredito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Nombre de la tarjeta"
-              variant="outlined"
-              onChange={handleChangeNombreCredito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              helperText="Fecha de vencimiento"
-              type="month"
-              variant="outlined"
-              InputProps={{ inputProps: { min: fechaActual } }}
-              onChange={handleChangeFechaCredito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Monto a pagar"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeMontoCredito}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary" onClick={registrarCredito}>
-              Agregar tarjeta
-            </Button>
-            <Button onClick={handleCloseCredito} color="primary" autoFocus>
-              Volver
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          open={openDebito}
-          onClose={handleCloseDebito}
-          aria-labelledby="alert-dialog-title"
-        >
-          <DialogTitle id="alert-dialog-title">Tarjeta de Débito</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Ingrese datos de la tarjeta
-            </DialogContentText>
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Número de tarjeta"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeNumDebito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Nombre de la tarjeta"
-              variant="outlined"
-              onChange={handleChangeNombreDebito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              helperText="Fecha de vencimiento"
-              type="month"
-              variant="outlined"
-              InputProps={{ inputProps: { min: fechaActual } }}
-              onChange={handleChangeFechaDebito}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Monto a pagar"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeMontoDebito}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary" onClick={registrarDebito}>
-              Agregar tarjeta
-            </Button>
-            <Button onClick={handleCloseDebito} color="primary" autoFocus>
-              Volver
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          open={openEfectivo}
-          onClose={handleCloseEfectivo}
-          aria-labelledby="alert-dialog-title"
-        >
-          <DialogTitle id="alert-dialog-title">Efectivo</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Información de pago
-            </DialogContentText>
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Monto en Bs."
-              type="number"
-              variant="outlined"
-              onChange={handleChangeMontoBolivar}
-              disabled={disabledBolivar}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Monto en $"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeMontoDolar}
-              disabled={disabledDolar}
-              error={errorDolar}
-              helperText={"Referencia en Bs.: " + valorDolar}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Monto en €"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeMontoEuro}
-              disabled={disabledEuro}
-              error={errorEuro}
-              helperText={"Referencia en Bs.: " + valorEuro}
-            />
-            <FormControlLabel
-              className="m-2"
-              control={
-                <GreenCheckbox
-                  checked={stateMoneda.checkedEuro}
-                  onChange={handleCheckBoxesMoneda}
-                  name="checkedEuro"
-                />
-              }
-              label="€"
-            />
-            <FormControlLabel
-              className="m-2"
-              control={
-                <GreenCheckbox
-                  checked={stateMoneda.checkedDolar}
-                  onChange={handleCheckBoxesMoneda}
-                  name="checkedDolar"
-                />
-              }
-              label="$"
-            />
-            <FormControlLabel
-              className="m-2"
-              control={
-                <GreenCheckbox
-                  checked={stateMoneda.checkedBolivar}
-                  onChange={handleCheckBoxesMoneda}
-                  name="checkedBolivar"
-                />
-              }
-              label="Bs."
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              color="primary"
-              onClick={registrarEfectivo}
-              disabled={disabledEfectivo}
-            >
-              Registrar pago
-            </Button>
-            <Button onClick={handleCloseEfectivo} color="primary" autoFocus>
-              Volver
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          open={openCheque}
-          onClose={handleCloseCheque}
-          aria-labelledby="alert-dialog-title"
-        >
-          <DialogTitle id="alert-dialog-title">Cheque</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Información de cheque
-            </DialogContentText>
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Número de confirmación"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeNumConfirmacion}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Nombre de Banco"
-              variant="outlined"
-              onChange={handleChangeNombreBanco}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              helperText="Fecha"
-              type="date"
-              InputProps={{ inputProps: { min: fechaActualDia } }}
-              variant="outlined"
-              onChange={handleChangeFechaCheque}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Monto"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeMontoCheque}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button color="primary" onClick={registrarCheque}>
-              Registrar pago
-            </Button>
-            <Button onClick={handleCloseCheque} color="primary" autoFocus>
-              Volver
-            </Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog
-          open={openPuntos}
-          onClose={handleClosePuntos}
-          aria-labelledby="alert-dialog-title"
-        >
-          <DialogTitle id="alert-dialog-title">Puntos</DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              Pago por puntos
-            </DialogContentText>
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Cantidad de puntos"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeCantidadPuntos}
-            />
-            <TextField
-              margin="dense"
-              fullWidth
-              autoFocus
-              label="Monto"
-              type="number"
-              variant="outlined"
-              onChange={handleChangeMontoPuntos}
-              error={errorPunto}
-              helperText={"Referencia en Bs.: " + valorPunto}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              color="primary"
-              onClick={registrarPuntos}
-              disabled={disabledPuntos}
-            >
-              Registrar pago
-            </Button>
-            <Button onClick={handleClosePuntos} color="primary" autoFocus>
-              Volver
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </div>
-      <Boton
-        variant="contained"
-        className="m-4"
-        color="primary"
-        disabled={disabled}
-        onClick={pagarOrden}
-      >
-        {textoBoton}
-      </Boton>
-      <Backdrop className={classes.backdrop} open={openBackdrop}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </React.Fragment>
-  );
+          {textoBoton}
+        </Boton>
+        <Backdrop className={classes.backdrop} open={openBackdrop}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <Button className="m-3" onClick={irPerfil}>
+          <Typography variant="h5">Perfil</Typography>
+        </Button>
+        <Typography variant="h3" className="m-4">
+          <b>Órden</b>
+        </Typography>
+        <Typography variant="h5" className="m-4">
+          Productos en la Órden
+        </Typography>
+        <List className={classes.lista}>
+          {productos.map((producto, value) => (
+            <ListItem divider>
+              <ListItemText
+                primary={producto.nombre}
+                secondary={"Cantidad: " + props.productos[value].cantidad}
+              />
+            </ListItem>
+          ))}
+        </List>
+        <Typography variant="h6" className={classes.monto}>
+          <b>Monto total: {props.orden.monto_total} Bs.</b>
+        </Typography>
+      </React.Fragment>
+    );
+  }
 }
