@@ -158,7 +158,7 @@ export default function PerfilOrdenes(props) {
             {ordenesFiltroFecha.map((orden, value) => (
               <ListItem>
                 <Link key={value} onClick={handleClick}>
-                  Detalle de Órden
+                  Órden {value + 1}
                 </Link>
                 <Typography variant="caption" className="m-3">
                   {" "}
