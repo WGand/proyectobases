@@ -41,11 +41,15 @@ export default function PerfilOrdenes(props) {
 
   const [fecha, setFecha] = React.useState("");
 
+  const enviarDatos = (datosOrden, productos, estatus) => {
+    props.conseguirDatosOrden(datosOrden, productos, estatus);
+  };
+
   const handleClick = (event) => {
     enviarDatos(
-      datosOrdenes["operaciones"][event.target.lastChild.data - 1],
-      datosOrdenes["productos"][event.target.lastChild.data - 1],
-      datosOrdenes["ordenes"][event.target.lastChild.data - 1][0].fk_estatus
+      datosOrdenes["operaciones"][event.target.id],
+      datosOrdenes["productos"][event.target.id],
+      datosOrdenes["ordenes"][event.target.id][0].fk_estatus
     );
     irOrden();
   };
@@ -55,10 +59,6 @@ export default function PerfilOrdenes(props) {
   };
   const irOrden = () => {
     history.push("/perfil/orden");
-  };
-
-  const enviarDatos = (datosOrden, productos, estatus) => {
-    props.conseguirDatosOrden(datosOrden, productos, estatus);
   };
 
   const getOrdenes = async () => {
@@ -126,9 +126,9 @@ export default function PerfilOrdenes(props) {
     }
   }, [fecha]);
 
-  console.log(ordenes);
+  //console.log(ordenes);
   console.log(datosOrdenes);
-  //console.log(fecha);
+  //console.log(ordenesFiltroFecha);
 
   return (
     <React.Fragment>
@@ -157,8 +157,8 @@ export default function PerfilOrdenes(props) {
           <List>
             {ordenesFiltroFecha.map((orden, value) => (
               <ListItem>
-                <Link key={value} onClick={handleClick}>
-                  Órden {value + 1}
+                <Link id={value} onClick={handleClick}>
+                  Detalle de Órden
                 </Link>
                 <Typography variant="caption" className="m-3">
                   {" "}
