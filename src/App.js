@@ -22,8 +22,9 @@ import Registrar from "./components/Registrar";
 import CrearEmpleado from "./components/CrearEmpleado";
 import ModificarEmpleado from "./components/ModificarEmpleado";
 import ModificarTienda from "./components/ModificarTienda";
-import ProcederPago from "./components/ProcederPago";
+import Factura from "./components/Factura";
 import ModificacionProducto from "./components/ModificacionProducto";
+import Orden from "./components/Orden";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -35,6 +36,9 @@ function App() {
   const [productos, setProductos] = React.useState([]);
   const [totalCarrito, setTotalCarrito] = React.useState(0);
   const [producto, setProducto] = React.useState({});
+  const [orden, setOrden] = React.useState({});
+  const [productosOrden, setProductosOrden] = React.useState([]);
+  const [estatus, setEstatus] = React.useState(0);
 
   const datosUsuario = (datosAppbar) => {
     setDatos(datosAppbar);
@@ -64,6 +68,12 @@ function App() {
     setProducto(datosModificarProducto);
   };
 
+  const datosOrden = (orden, productos, estatus) => {
+    setOrden(orden);
+    setProductosOrden(productos);
+    setEstatus(estatus);
+  };
+
   return (
     <BrowserRouter>
       <PrimarySearchAppBar
@@ -76,8 +86,8 @@ function App() {
           <Home productos={productos} datos={datos} />
         </Route>
 
-        <Route exact path="/carrito/pago">
-          <ProcederPago total={totalCarrito} />
+        <Route exact path="/carrito/factura">
+          <Factura total={totalCarrito} datos={datos} tipo={tipoPersona} />
         </Route>
         <Route path="/carrito">
           <Carrito conseguirTotal={precioTotal} />
@@ -136,8 +146,15 @@ function App() {
         <Route exact path="/perfil/controlempleado/modificar">
           <ModificarEmpleado datos={empleado} />
         </Route>
+        <Route exact path="/perfil/orden">
+          <Orden orden={orden} productos={productosOrden} estatus={estatus} />
+        </Route>
         <Route path="/perfil">
-          <Perfil datos={datos} tipo={tipoPersona} />
+          <Perfil
+            datos={datos}
+            tipo={tipoPersona}
+            conseguirDatosOrden={datosOrden}
+          />
         </Route>
         <Route path="/registrar">
           <Registrar />

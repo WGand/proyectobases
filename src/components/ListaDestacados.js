@@ -114,6 +114,7 @@ export default function ListaDestacados(props) {
   const handleClickSnackbar = () => {
     productoHome();
     setOpenSnackbar(true);
+    handleClose();
   };
 
   const handleCloseSnackbar = (event, reason) => {
@@ -224,31 +225,31 @@ export default function ListaDestacados(props) {
               >
                 Agregar a Carrito
               </Boton>
-              <Snackbar
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                open={openSnackbar}
-                autoHideDuration={3000}
-                onClose={handleCloseSnackbar}
-                message="Producto agregado al carrito"
-                action={
-                  <React.Fragment>
-                    <IconButton
-                      size="small"
-                      aria-label="close"
-                      color="inherit"
-                      onClick={handleCloseSnackbar}
-                    >
-                      <CloseIcon fontSize="small" />
-                    </IconButton>
-                  </React.Fragment>
-                }
-              />
             </CardActions>
           </Card>
         </Popover>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={handleCloseSnackbar}
+          message="Producto agregado al carrito"
+          action={
+            <React.Fragment>
+              <IconButton
+                size="small"
+                aria-label="close"
+                color="inherit"
+                onClick={handleCloseSnackbar}
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </React.Fragment>
+          }
+        />
       </React.Fragment>
     );
   } else {
