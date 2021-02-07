@@ -96,9 +96,7 @@ export default function PerfilOrdenes(props) {
   }, []);
 
   React.useEffect(() => {
-    if (!datosOrdenes["ordenes"]) {
-      getOrdenes();
-    } else {
+    if (datosOrdenes["ordenes"]) {
       setOrdenes(datosOrdenes["ordenes"]);
     }
   }, [datosOrdenes]);
