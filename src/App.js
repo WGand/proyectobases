@@ -25,6 +25,7 @@ import ModificarTienda from "./components/ModificarTienda";
 import Factura from "./components/Factura";
 import ModificacionProducto from "./components/ModificacionProducto";
 import Orden from "./components/Orden";
+import Cajero from "./components/Cajero";
 import "./App.css";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
@@ -148,6 +149,9 @@ function App() {
         </Route>
         <Route exact path="/perfil/orden">
           <Orden orden={orden} productos={productosOrden} estatus={estatus} />
+        </Route>
+        <Route exact path="/perfil/cajero">
+          <Cajero />
         </Route>
         <Route path="/perfil">
           <Perfil
