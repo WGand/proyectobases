@@ -65,6 +65,10 @@ export default function Responsabilidades() {
     history.push("/perfil/controlproducto");
   };
 
+  const irCajero = () => {
+    history.push("/perfil/cajero");
+  };
+
   return (
     <React.Fragment>
       <Typography variant="h5">Responsabilidades</Typography>
@@ -133,6 +137,13 @@ export default function Responsabilidades() {
               onClick={irControlProducto}
             >
               Control de Productos
+            </Button>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irCajero}
+            >
+              Sistema de Cajero
             </Button>
           </Grid>
         </Grid>

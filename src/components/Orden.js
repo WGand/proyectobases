@@ -115,7 +115,6 @@ export default function Factura(props) {
 
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
   const [fechaActual, setFechaActual] = React.useState("");
-  const [fechaActualDia, setFechaActualDia] = React.useState("");
 
   const [numCredito, setNumCredito] = React.useState("");
   const [numDebito, setNumDebito] = React.useState("");
@@ -135,7 +134,6 @@ export default function Factura(props) {
 
   const [numConfirmacion, setNumConfirmacion] = React.useState("");
   const [nombreBanco, setNombreBanco] = React.useState("");
-  const [fechaCheque, setFechaCheque] = React.useState("");
   const [montoCheque, setMontoCheque] = React.useState(0);
 
   const [cantidadPuntos, setCantidadPuntos] = React.useState(0);
@@ -284,10 +282,6 @@ export default function Factura(props) {
     setNombreBanco(event.target.value);
   };
 
-  const handleChangeFechaCheque = (event) => {
-    setFechaCheque(event.target.value);
-  };
-
   const handleChangeMontoCheque = (event) => {
     setMontoCheque(event.target.value);
   };
@@ -363,6 +357,7 @@ export default function Factura(props) {
         operacion_id: props.orden.operacion_id,
         rif: rif,
         tipo: tipo,
+        estatus: "Pagado",
         metodo: diccionario,
       },
     }).then((response) => {
@@ -507,31 +502,9 @@ export default function Factura(props) {
     if (hoy.getMonth() + 1 >= 10) {
       const fecha = hoy.getFullYear() + "-" + (hoy.getMonth() + 1);
       setFechaActual(fecha);
-      if (hoy.getDate() >= 10) {
-        const dia =
-          hoy.getFullYear() + "-" + (hoy.getMonth() + 1) + "-" + hoy.getDate();
-        setFechaActualDia(dia);
-      } else {
-        const dia =
-          hoy.getFullYear() + "-" + (hoy.getMonth() + 1) + "-0" + hoy.getDate();
-        setFechaActualDia(dia);
-      }
     } else {
       const fecha = hoy.getFullYear() + "-0" + (hoy.getMonth() + 1);
       setFechaActual(fecha);
-      if (hoy.getDate() >= 10) {
-        const dia =
-          hoy.getFullYear() + "-0" + (hoy.getMonth() + 1) + "-" + hoy.getDate();
-        setFechaActualDia(dia);
-      } else {
-        const dia =
-          hoy.getFullYear() +
-          "-0" +
-          (hoy.getMonth() + 1) +
-          "-0" +
-          hoy.getDate();
-        setFechaActualDia(dia);
-      }
     }
 
     for (let index = 0; index < props.productos.length; index++) {
@@ -1003,16 +976,6 @@ export default function Factura(props) {
                 label="Nombre de Banco"
                 variant="outlined"
                 onChange={handleChangeNombreBanco}
-              />
-              <TextField
-                margin="dense"
-                fullWidth
-                autoFocus
-                helperText="Fecha"
-                type="date"
-                InputProps={{ inputProps: { min: fechaActualDia } }}
-                variant="outlined"
-                onChange={handleChangeFechaCheque}
               />
               <TextField
                 margin="dense"
