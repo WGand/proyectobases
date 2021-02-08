@@ -23,11 +23,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Responsabilidades() {
+export default function Responsabilidades(props) {
   const history = useHistory();
 
   const classes = useStyles();
   const [spacing, setSpacing] = React.useState(2);
+
+  const [disabledNotimart, setDisabledNotimart] = React.useState(true);
+  const [disabledReportes, setDisabledReportes] = React.useState(true);
+  const [disabledControlUsuario, setDisabledControlUsuario] = React.useState(
+    true
+  );
+  const [
+    disabledReposicionInventario,
+    setDisabledReposicionInventario,
+  ] = React.useState(true);
+  const [disabledProcesarPedidos, setDisabledProcesarPedidos] = React.useState(
+    true
+  );
+  const [
+    disabledControlProveedor,
+    setDisabledControlProveedor,
+  ] = React.useState(true);
+  const [disabledControlEmpleado, setDisabledControlEmpleado] = React.useState(
+    true
+  );
+  const [disabledControlTienda, setDisabledControlTienda] = React.useState(
+    true
+  );
+  const [
+    disabledControlProductos,
+    setDisabledControlProductos,
+  ] = React.useState(true);
+  const [disabledCajero, setDisabledCajero] = React.useState(true);
 
   const irReposicion = () => {
     history.push("/perfil/reposicion");
@@ -69,6 +97,35 @@ export default function Responsabilidades() {
     history.push("/perfil/cajero");
   };
 
+  React.useEffect(() => {
+    props.cargos.forEach((cargo, value) => {
+      switch (cargo.fk_cargo) {
+        case 1:
+          setDisabledReposicionInventario(false);
+          break;
+        case 2:
+          setDisabledCajero(false);
+          break;
+        case 3:
+          setDisabledNotimart(false);
+          break;
+        case 4:
+          setDisabledReportes(false);
+          setDisabledReposicionInventario(false);
+          break;
+        case 5:
+          setDisabledReportes(false);
+          setDisabledControlEmpleado(false);
+          break;
+
+        default:
+          break;
+      }
+    });
+  }, []);
+
+  console.log(props.cargos);
+
   return (
     <React.Fragment>
       <Typography variant="h5">Responsabilidades</Typography>
@@ -79,6 +136,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irNotimart}
+              disabled={disabledNotimart}
             >
               NotiMart
             </Button>
@@ -86,6 +144,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irReportes}
+              disabled={disabledReportes}
             >
               Reportes
             </Button>
@@ -93,6 +152,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irControlUsuario}
+              disabled={disabledControlUsuario}
             >
               Control de Usuario
             </Button>
@@ -100,6 +160,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irReposicion}
+              disabled={disabledReposicionInventario}
             >
               Reposición de Inventario
             </Button>
@@ -107,6 +168,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irProcesarPedidos}
+              disabled={disabledProcesarPedidos}
             >
               Procesar Pedidos
             </Button>
@@ -114,6 +176,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irControlProveedor}
+              disabled={disabledControlProveedor}
             >
               Control de Proveedor
             </Button>
@@ -121,6 +184,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irControlEmpleado}
+              disabled={disabledControlEmpleado}
             >
               Control de Empleado
             </Button>
@@ -128,6 +192,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irControlTienda}
+              disabled={disabledControlTienda}
             >
               Control de Tienda
             </Button>
@@ -135,6 +200,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irControlProducto}
+              disabled={disabledControlProductos}
             >
               Control de Productos
             </Button>
@@ -142,6 +208,7 @@ export default function Responsabilidades() {
               variant="outlined"
               className={classes.boton}
               onClick={irCajero}
+              disabled={disabledCajero}
             >
               Sistema de Cajero
             </Button>

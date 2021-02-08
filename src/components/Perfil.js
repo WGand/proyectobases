@@ -102,7 +102,7 @@ export default function Perfil(props) {
             Item Three
           </TabPanel>
           <TabPanel value={value} index={3}>
-            <Responsabilidades />
+            <Responsabilidades cargos={props.datos[0].cargos} />
           </TabPanel>
         </div>
       </React.Fragment>
@@ -139,9 +139,6 @@ export default function Perfil(props) {
           </TabPanel>
           <TabPanel value={value} index={2}>
             Item Three
-          </TabPanel>
-          <TabPanel value={value} index={3}>
-            <Responsabilidades />
           </TabPanel>
         </div>
       </React.Fragment>
