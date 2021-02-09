@@ -1014,14 +1014,6 @@ export default function Registrar() {
               </Select>
             </ListItem>
           </List>
-          <TextField
-            id="outlined-direccion"
-            label="Dirección específica"
-            variant="outlined"
-            multiline
-            rows="3"
-            className={classes.dirEsp}
-          />
         </div>
         <div style={{ display: "flex" }} class="m-4">
           <Typography variant="h6" className="m-2">
@@ -1532,14 +1524,6 @@ export default function Registrar() {
               </Select>
             </ListItem>
           </List>
-          <TextField
-            id="outlined-direccion"
-            label="Dirección específica"
-            variant="outlined"
-            multiline
-            rows="3"
-            className={classes.dirEsp}
-          />
         </div>
         <div class="m-4">
           <Typography variant="h6" className="m-2">
@@ -1589,14 +1573,6 @@ export default function Registrar() {
               </Select>
             </ListItem>
           </List>
-          <TextField
-            id="outlined-direccion"
-            label="Dirección específica"
-            variant="outlined"
-            multiline
-            rows="3"
-            className={classes.dirEsp}
-          />
         </div>
         <div style={{ display: "flex" }} class="m-4">
           <Typography variant="h6" className="m-2">

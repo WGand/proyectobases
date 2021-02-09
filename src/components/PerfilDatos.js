@@ -867,14 +867,6 @@ export default function PerfilDatos(props) {
               </FormHelperText>
             </ListItem>
           </List>
-          <TextField
-            id="outlined-direccion"
-            label="Dirección específica"
-            variant="outlined"
-            multiline
-            rows="3"
-            className={classes.dirEsp}
-          />
         </div>
         <Boton
           variant="contained"
@@ -1069,14 +1061,6 @@ export default function PerfilDatos(props) {
               </FormHelperText>
             </ListItem>
           </List>
-          <TextField
-            id="outlined-direccion"
-            label="Dirección específica"
-            variant="outlined"
-            multiline
-            rows="3"
-            className={classes.dirEsp}
-          />
         </div>
         <div class="m-4">
           <Typography variant="h6" className="m-2">
@@ -1126,14 +1110,6 @@ export default function PerfilDatos(props) {
               </Select>
             </ListItem>
           </List>
-          <TextField
-            id="outlined-direccion"
-            label="Dirección específica"
-            variant="outlined"
-            multiline
-            rows="3"
-            className={classes.dirEsp}
-          />
         </div>
         <Boton
           variant="contained"
@@ -1193,18 +1169,6 @@ export default function PerfilDatos(props) {
             variant="outlined"
             className={classes.campo}
             onChange={handleChangeSegundoApellido}
-          />
-        </div>
-        <div style={{ display: "flex" }} class="m-4">
-          <Typography variant="h6" className="m-2">
-            Cargos:
-          </Typography>
-          <TextField
-            id="outlined-primNombre"
-            label="Cargos"
-            variant="outlined"
-            className={classes.campo}
-            disabled
           />
         </div>
         <div class="m-4">
@@ -1335,14 +1299,6 @@ export default function PerfilDatos(props) {
               </FormHelperText>
             </ListItem>
           </List>
-          <TextField
-            id="outlined-direccion"
-            label="Dirección específica"
-            variant="outlined"
-            multiline
-            rows="3"
-            className={classes.dirEsp}
-          />
         </div>
         <Boton
           variant="contained"
