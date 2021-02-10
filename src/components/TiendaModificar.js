@@ -73,10 +73,11 @@ export default function TiendaModificar(props) {
   const [open, setOpen] = React.useState(false);
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
+  const [disabled, setDisabled] = React.useState(false);
+  const [disabledEliminar, setDisabledEliminar] = React.useState(false);
+
   const handleClickOpen = () => {
-    if (datosTienda.tienda_id) {
-      setOpen(true);
-    }
+    setOpen(true);
   };
 
   const handleClose = () => {
@@ -114,14 +115,22 @@ export default function TiendaModificar(props) {
     history.push("/perfil/controltienda/modificar/tienda");
   };
 
-  const validarSelec = () => {
-    if (datosTienda.tienda_id) {
-      conseguirDatos();
-      irModificar();
-    }
+  const modificarTienda = () => {
+    conseguirDatos();
+    irModificar();
   };
 
-  console.log(datosTienda);
+  React.useEffect(() => {
+    if (Object.keys(datosTienda).length === 0) {
+      setDisabled(true);
+      setDisabledEliminar(true);
+    } else {
+      setDisabled(false);
+      setDisabledEliminar(false);
+    }
+  }, [datosTienda]);
+
+  console.log(datosTienda.nombre);
 
   return (
     <React.Fragment>
@@ -139,7 +148,8 @@ export default function TiendaModificar(props) {
           variant="contained"
           className="m-4"
           color="primary"
-          onClick={validarSelec}
+          onClick={modificarTienda}
+          disabled={disabled}
         >
           Modificar Tienda
         </Boton>
@@ -148,6 +158,7 @@ export default function TiendaModificar(props) {
           className="m-4"
           color="primary"
           onClick={handleClickOpen}
+          disabled={disabledEliminar}
         >
           Eliminar Tienda
         </Boton>
