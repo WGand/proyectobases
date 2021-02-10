@@ -6,10 +6,14 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
 import Paper from "@material-ui/core/Paper";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import TablaHorario from "./TablaHorario";
@@ -53,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     width: 550,
     margin: 30,
     marginTop: 60,
+  },
+  lista: {
+    width: 400,
   },
 }));
 
@@ -144,6 +151,17 @@ export default function CrearEmpleado() {
 
   const [horario, setHorario] = React.useState([]);
 
+  const [listaCargos, setListaCargos] = React.useState([
+    { nombre: "Gerente General de promociones", id: 3 },
+    { nombre: "Cajero", id: 2 },
+    { nombre: "Jefe de Compras", id: 4 },
+    { nombre: "Jefe de Pasillo", id: 1 },
+    { nombre: "Jefe de Tienda", id: 5 },
+  ]);
+
+  const [cargosAgregados, setCargosAgregados] = React.useState([]);
+  const [diccionarioCargos, setDiccionarioCargos] = React.useState({});
+
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
   };
@@ -212,6 +230,21 @@ export default function CrearEmpleado() {
     setHabitacion(event.target.value);
   };
 
+  const handleClickAgregar = (index) => {
+    setCargosAgregados((cargosAgregados) => [
+      ...cargosAgregados,
+      listaCargos[index],
+    ]);
+    let aux = listaCargos.filter((cargo, value) => value !== index);
+    setListaCargos(aux);
+  };
+
+  const handleClickEliminar = (index) => {
+    setListaCargos((listaCargos) => [...listaCargos, cargosAgregados[index]]);
+    let aux = cargosAgregados.filter((cargo, value) => value !== index);
+    setCargosAgregados(aux);
+  };
+
   const irControlEmpleado = () => {
     history.push("/perfil/controlempleado");
   };
@@ -239,6 +272,16 @@ export default function CrearEmpleado() {
         celular: movil,
         prefijo_celular: preMovil,
         horario: horario,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/cargo",
+      data: {
+        rif: rif,
+        cargo: diccionarioCargos,
       },
     }).then((response) => {
       console.log(response);
@@ -448,6 +491,14 @@ export default function CrearEmpleado() {
     }
   }, [prefijoHab]);
 
+  React.useEffect(() => {
+    let aux = {};
+    cargosAgregados.forEach((cargo, value) => {
+      aux[value] = { id: cargo.id };
+    });
+    setDiccionarioCargos(JSON.stringify(aux));
+  }, [cargosAgregados]);
+
   console.log("-------------------------");
   console.log("primer nombre: " + primNombre);
   console.log("segundo nombre: " + segNombre);
@@ -467,6 +518,8 @@ export default function CrearEmpleado() {
   console.log("estado: " + estadoSelec);
   console.log(horario);
   console.log("--------------------------");
+  console.log(cargosAgregados);
+  console.log(diccionarioCargos);
 
   return (
     <React.Fragment>
@@ -634,6 +687,39 @@ export default function CrearEmpleado() {
       </div>
       <div class="m-4">
         <Typography variant="h6" className="m-2">
+          Cargos
+        </Typography>
+        <div style={{ display: "flex" }} class="m-4">
+          <Paper variant="outlined" className="m-3">
+            <List className={classes.lista}>
+              {listaCargos.map((cargo, value) => (
+                <ListItem>
+                  <ListItemText primary={cargo.nombre} />
+                  <IconButton>
+                    <AddIcon onClick={handleClickAgregar.bind(null, value)} />
+                  </IconButton>
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+          <Paper variant="outlined" className="m-3">
+            <List className={classes.lista}>
+              {cargosAgregados.map((cargo, value) => (
+                <ListItem>
+                  <ListItemText primary={cargo.nombre} />
+                  <IconButton>
+                    <DeleteIcon
+                      onClick={handleClickEliminar.bind(null, value)}
+                    />
+                  </IconButton>
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+        </div>
+      </div>
+      <div class="m-4">
+        <Typography variant="h6" className="m-2">
           Horario
         </Typography>
         <Paper className={classes.paper} variant="outlined">
@@ -691,14 +777,6 @@ export default function CrearEmpleado() {
             </Select>
           </ListItem>
         </List>
-        <TextField
-          id="outlined-direccion"
-          label="Dirección específica"
-          variant="outlined"
-          multiline
-          rows="3"
-          className={classes.dirEsp}
-        />
       </div>
       <div style={{ display: "flex" }} class="m-4">
         <Typography variant="h6" className="m-2">

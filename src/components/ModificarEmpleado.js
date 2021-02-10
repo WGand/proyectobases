@@ -6,6 +6,10 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import IconButton from "@material-ui/core/IconButton";
+import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -88,7 +92,6 @@ const Boton = withStyles({
 })(Button);
 
 export default function PerfilDatos(props) {
-
   const [datosEmpleado, setDatosEmpleado] = React.useState([]);
 
   const classes = useStyles();
@@ -136,6 +139,21 @@ export default function PerfilDatos(props) {
   const [horario, setHorario] = React.useState({});
 
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
+
+  const [listaCargos, setListaCargos] = React.useState([]);
+  const [cargosAgregados, setCargosAgregados] = React.useState([]);
+  const [datosCargos, setDatosCargos] = React.useState([]);
+  const [cargosCompletos, setCargosCompletos] = React.useState([
+    { nombre: "Gerente General de promociones", id: 3 },
+    { nombre: "Cajero", id: 2 },
+    { nombre: "Jefe de Compras", id: 4 },
+    { nombre: "Jefe de Pasillo", id: 1 },
+    { nombre: "Jefe de Tienda", id: 5 },
+  ]);
+  const [cargosEliminados, setCargosEliminados] = React.useState([]);
+  const [cargosNuevos, setCargosNuevos] = React.useState([]);
+  const [diccionarioEliminados, setDiccionarioEliminados] = React.useState({});
+  const [diccionarioCargos, setDiccionarioCargos] = React.useState({});
 
   const handleChangeHab = (event) => {
     setPrefijoHab(event.target.value);
@@ -191,6 +209,29 @@ export default function PerfilDatos(props) {
 
   const horarioTabla = (horario) => {
     setHorario(horario);
+  };
+
+  const handleClickAgregar = (index) => {
+    setCargosAgregados((cargosAgregados) => [
+      ...cargosAgregados,
+      listaCargos[index],
+    ]);
+    setCargosNuevos((cargosAgregados) => [
+      ...cargosAgregados,
+      listaCargos[index],
+    ]);
+    let aux = listaCargos.filter((cargo, value) => value !== index);
+    setListaCargos(aux);
+  };
+
+  const handleClickEliminar = (index) => {
+    setListaCargos((listaCargos) => [...listaCargos, cargosAgregados[index]]);
+    setCargosEliminados((listaCargos) => [
+      ...listaCargos,
+      cargosAgregados[index],
+    ]);
+    let aux = cargosAgregados.filter((cargo, value) => value !== index);
+    setCargosAgregados(aux);
   };
 
   const fetchEstados = async () => {
@@ -265,6 +306,17 @@ export default function PerfilDatos(props) {
         celular: movil,
         prefijo_celular: preMovil,
         horario: horario,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    await axios({
+      method: "put",
+      url: "https://proyectobases1.herokuapp.com/cargo",
+      data: {
+        rif: datosEmpleado[0].rif,
+        cargo_viejo: diccionarioEliminados,
+        cargo_nuevo: diccionarioCargos,
       },
     }).then((response) => {
       console.log(response);
@@ -391,6 +443,7 @@ export default function PerfilDatos(props) {
         default:
           break;
       }
+
       switch (datosEmpleado[0].prefijo_telefono) {
         case "0241":
           setPrefijoHab(0);
@@ -407,6 +460,8 @@ export default function PerfilDatos(props) {
         default:
           break;
       }
+
+      setDatosCargos(datosEmpleado[0].cargos);
     }
   }, [labelPrimNombre, labelCorreo, datosEmpleado]);
 
@@ -470,6 +525,87 @@ export default function PerfilDatos(props) {
     }
   }, [correoRespuesta, labelCorreo]);
 
+  React.useEffect(() => {
+    if (cargosAgregados.length === 0) {
+      datosCargos.forEach((cargo, value) => {
+        switch (cargo.fk_cargo) {
+          case 1:
+            if (cargo.fecha_fin === null) {
+              setCargosAgregados((cargos) => [
+                ...cargos,
+                { nombre: "Jefe de Pasillo", id: 1 },
+              ]);
+            }
+            break;
+          case 2:
+            if (cargo.fecha_fin === null) {
+              setCargosAgregados((cargos) => [
+                ...cargos,
+                { nombre: "Cajero", id: 2 },
+              ]);
+            }
+            break;
+          case 3:
+            if (cargo.fecha_fin === null) {
+              setCargosAgregados((cargos) => [
+                ...cargos,
+                { nombre: "Gerente General de promociones", id: 3 },
+              ]);
+            }
+            break;
+          case 4:
+            if (cargo.fecha_fin === null) {
+              setCargosAgregados((cargos) => [
+                ...cargos,
+                { nombre: "Jefe de Compras", id: 4 },
+              ]);
+            }
+            break;
+          case 5:
+            if (cargo.fecha_fin === null) {
+              setCargosAgregados((cargos) => [
+                ...cargos,
+                { nombre: "Jefe de Tienda", id: 5 },
+              ]);
+            }
+            break;
+
+          default:
+            break;
+        }
+      });
+      if (cargosAgregados.length === 0) {
+        setListaCargos(cargosCompletos);
+      }
+    } else {
+      let aux = [];
+      cargosCompletos.forEach((cargo, value) => {
+        let cont = 0;
+        for (let index = 0; index < cargosAgregados.length; index++) {
+          if (cargo.id === cargosAgregados[index].id) cont++;
+        }
+        if (cont === 0) aux.push(cargo);
+      });
+      setListaCargos(aux);
+    }
+  }, [datosCargos]);
+
+  React.useEffect(() => {
+    let aux = {};
+    cargosNuevos.forEach((cargo, value) => {
+      aux[value] = { id: cargo.id };
+    });
+    setDiccionarioCargos(JSON.stringify(aux));
+  }, [cargosNuevos]);
+
+  React.useEffect(() => {
+    let aux = {};
+    cargosEliminados.forEach((cargo, value) => {
+      aux[value] = { id: cargo.id };
+    });
+    setDiccionarioEliminados(JSON.stringify(aux));
+  }, [cargosEliminados]);
+
   console.log("--------------------------");
   console.log(datosEmpleado);
   console.log(horario);
@@ -477,6 +613,9 @@ export default function PerfilDatos(props) {
   console.log("apellido:" + primApellido);
   console.log("segundo apellido: " + segApellido);
   console.log("--------------------------");
+  // console.log(diccionarioEliminados);
+  // console.log(diccionarioCargos);
+  console.log(datosCargos);
 
   return (
     <React.Fragment>
@@ -525,18 +664,6 @@ export default function PerfilDatos(props) {
           variant="outlined"
           className={classes.campo}
           onChange={handleChangeSegundoApellido}
-        />
-      </div>
-      <div style={{ display: "flex" }} class="m-4">
-        <Typography variant="h6" className="m-2">
-          Cargos:
-        </Typography>
-        <TextField
-          id="outlined-primNombre"
-          label="Cargos"
-          variant="outlined"
-          className={classes.campo}
-          disabled
         />
       </div>
       <div class="m-4">
@@ -609,6 +736,39 @@ export default function PerfilDatos(props) {
           onChange={handleChangeCorreo}
           error={correoExiste}
         />
+      </div>
+      <div class="m-4">
+        <Typography variant="h6" className="m-2">
+          Cargos
+        </Typography>
+        <div style={{ display: "flex" }} class="m-4">
+          <Paper variant="outlined" className="m-3">
+            <List className={classes.lista}>
+              {listaCargos.map((cargo, value) => (
+                <ListItem>
+                  <ListItemText primary={cargo.nombre} />
+                  <IconButton>
+                    <AddIcon onClick={handleClickAgregar.bind(null, value)} />
+                  </IconButton>
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+          <Paper variant="outlined" className="m-3">
+            <List className={classes.lista}>
+              {cargosAgregados.map((cargo, value) => (
+                <ListItem>
+                  <ListItemText primary={cargo.nombre} />
+                  <IconButton>
+                    <DeleteIcon
+                      onClick={handleClickEliminar.bind(null, value)}
+                    />
+                  </IconButton>
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+        </div>
       </div>
       <div class="m-4">
         <Typography variant="h6" className="m-2">
