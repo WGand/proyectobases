@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,44 +19,6 @@ const useStyles = makeStyles((theme) => ({
     margin: 20,
   },
 }));
-
-const Boton = withStyles({
-  root: {
-    boxShadow: "none",
-    textTransform: "none",
-    fontSize: 16,
-    padding: "6px 12px",
-    border: "1px solid",
-    lineHeight: 1.5,
-    backgroundColor: "#00aae3",
-    borderColor: "#00aae3",
-    fontFamily: [
-      "-apple-system",
-      "BlinkMacSystemFont",
-      '"Segoe UI"',
-      "Roboto",
-      '"Helvetica Neue"',
-      "Arial",
-      "sans-serif",
-      '"Apple Color Emoji"',
-      '"Segoe UI Emoji"',
-      '"Segoe UI Symbol"',
-    ].join(","),
-    "&:hover": {
-      backgroundColor: "#1d8fb5",
-      borderColor: "#1d8fb5",
-      boxShadow: "none",
-    },
-    "&:active": {
-      boxShadow: "none",
-      backgroundColor: "#0062cc",
-      borderColor: "#005cbf",
-    },
-    "&:focus": {
-      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.5)",
-    },
-  },
-})(Button);
 
 export default function Reportes() {
   const history = useHistory();
@@ -77,8 +40,18 @@ export default function Reportes() {
       <Grid container className={classes.root} spacing={5}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={spacing}>
-            <Button variant="outlined" className={classes.boton}>
-              Control de Nómina
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={(event) => {
+                event.preventDefault();
+                window.open(
+                  "https://proyectobases1.herokuapp.com/empleadohoras"
+                );
+              }}
+              href="https://proyectobases1.herokuapp.com/empleadohoras"
+            >
+              Horas trabajadas
             </Button>
             <Button variant="outlined" className={classes.boton}>
               Productos más Vendidos
@@ -95,9 +68,6 @@ export default function Reportes() {
           </Grid>
         </Grid>
       </Grid>
-      <Boton variant="contained" className="m-4" color="primary">
-        Descargar Reporte
-      </Boton>
     </React.Fragment>
   );
 }

@@ -88,6 +88,7 @@ export default function ControlEmpleado(props) {
   const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const [disabled, setDisabled] = React.useState(false);
+  const [disabledCargar, setDisabledCargar] = React.useState(false);
 
   const [archivo, setArchivo] = React.useState([]);
   const [respuesta, setRespuesta] = React.useState("");
@@ -127,7 +128,7 @@ export default function ControlEmpleado(props) {
       method: "post",
       url: "https://proyectobases1.herokuapp.com/upload",
       data: {
-        file: archivo[0],
+        file: archivo,
       },
     }).then((response) => {
       setRespuesta(response);
@@ -162,8 +163,10 @@ export default function ControlEmpleado(props) {
   }, [archivo]);
 
   React.useEffect(() => {
-    if (respuesta !== "") {
-      llenarTabla();
+    if (respuesta.length === 0) {
+      setDisabledCargar(true);
+    } else {
+      setDisabledCargar(false);
     }
   }, [respuesta]);
 
@@ -206,6 +209,15 @@ export default function ControlEmpleado(props) {
           onClick={handleClickopen}
         >
           Subir horarios
+        </Boton>
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          onClick={llenarTabla}
+          disabled={disabledCargar}
+        >
+          Llenar base con archivo cargado
         </Boton>
       </div>
       <DropzoneDialog

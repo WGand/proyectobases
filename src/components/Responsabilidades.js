@@ -127,6 +127,7 @@ export default function Responsabilidades(props) {
           setDisabledProcesarPedidos(false);
           setDisabledControlProveedor(false);
           setDisabledControlTienda(false);
+          setDisabledControlProductos(false);
           break;
 
         default:
