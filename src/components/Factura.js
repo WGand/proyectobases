@@ -6,6 +6,9 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Backdrop from "@material-ui/core/Backdrop";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormHelperText from "@material-ui/core/FormHelperText";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import axios from "axios";
 
@@ -24,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
+  },
+  helper: {
+    marginLeft: 20,
+    marginTop: 30,
   },
 }));
 
@@ -72,6 +79,17 @@ export default function Factura(props) {
 
   const [carrito, setCarrito] = React.useState([]);
   const [diccionarioCarrito, setDiccionarioCarrito] = React.useState({});
+  const [tiendas, setTiendas] = React.useState([]);
+  const [tienda, setTienda] = React.useState("");
+  const [tiendaSelec, setTiendaSelec] = React.useState(0);
+  const [inventario, setInventario] = React.useState([]);
+
+  const [disabled, setDisabled] = React.useState(false);
+  const [labelTienda, setLabelTienda] = React.useState("");
+
+  const handleChangeTienda = (event) => {
+    setTienda(event.target.value);
+  };
 
   const fecha = () => {
     const fecha = new Date();
@@ -106,6 +124,8 @@ export default function Factura(props) {
       url: "https://proyectobases1.herokuapp.com/orden",
       data: {
         producto: diccionarioCarrito,
+        tienda_id: tiendaSelec,
+        tipo_compra: "en linea",
         rif: props.datos[0].rif,
         fecha: fecha(),
         monto_total: props.total,
@@ -118,8 +138,31 @@ export default function Factura(props) {
     localStorage.setItem("carrito", JSON.stringify([]));
   };
 
+  const datosTiendas = async () => {
+    await axios({
+      method: "get",
+      url: "https://proyectobases1.herokuapp.com/inventario",
+    }).then((response) => {
+      setTiendas(response.data);
+    });
+  };
+
+  const inventarioTiendas = async () => {
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/inventario",
+      data: {
+        tienda_id: tiendaSelec,
+        tipo: "en linea",
+      },
+    }).then((response) => {
+      setInventario(response.data);
+    });
+  };
+
   React.useEffect(() => {
     setCarrito(JSON.parse(localStorage.getItem("carrito")));
+    datosTiendas();
   }, []);
 
   React.useEffect(() => {
@@ -133,6 +176,36 @@ export default function Factura(props) {
     setDiccionarioCarrito(JSON.stringify(aux));
   }, [carrito]);
 
+  React.useEffect(() => {
+    if (tiendas[tienda]) {
+      setTiendaSelec(tiendas[tienda].tienda_id);
+    }
+  }, [tienda]);
+
+  React.useEffect(() => {
+    inventarioTiendas();
+  }, [tiendaSelec]);
+
+  React.useEffect(() => {
+    let cont = 0;
+    carrito.forEach((producto, index) => {
+      for (let j = 0; j < inventario.length; j++) {
+        if (producto.id === inventario[j].producto_id) {
+          if (producto.cantidad > inventario[j].cantidad_almacen) {
+            cont++;
+          }
+        }
+      }
+    });
+    if (cont !== 0) {
+      setDisabled(true);
+      setLabelTienda("Inventario insuficiente");
+    } else {
+      setDisabled(false);
+      setLabelTienda("Inventario disponible");
+    }
+  }, [inventario]);
+
   console.log(carrito);
   console.log("-----------------");
   console.log(props.total);
@@ -140,6 +213,8 @@ export default function Factura(props) {
   console.log(props.datos[0].rif);
   console.log(diccionarioCarrito);
   console.log(fecha());
+  console.log(inventario);
+  console.log(tiendaSelec);
 
   return (
     <React.Fragment>
@@ -162,11 +237,31 @@ export default function Factura(props) {
       <Typography variant="h6" className={classes.monto}>
         <b>Monto: {props.total}.000 Bs.</b>
       </Typography>
+      <div class="m-4" style={{ display: "flex" }}>
+        <Typography variant="h6" className="m-4">
+          Tienda donde se procesará la órden:
+        </Typography>
+        <Select
+          value={tienda}
+          onChange={handleChangeTienda}
+          displayEmpty
+          inputProps={{ "aria-label": "Without label" }}
+          variant="outlined"
+        >
+          {tiendas.map((tienda, value) => (
+            <MenuItem value={value}>{tienda.nombre}</MenuItem>
+          ))}
+        </Select>
+        <FormHelperText className={classes.helper}>
+          {labelTienda}
+        </FormHelperText>
+      </div>
       <Boton
         variant="contained"
         className="m-4"
         color="primary"
         onClick={agregarOrden}
+        disabled={disabled}
       >
         Registrar Orden
       </Boton>

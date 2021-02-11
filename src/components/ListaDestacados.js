@@ -148,8 +148,8 @@ export default function ListaDestacados(props) {
   }, [datos]);
 
   // console.log("lista: ");
-  // console.log(lista);
-  //console.log(productoSelec);
+  console.log(lista);
+  console.log(productoSelec);
   //console.log(datos);
 
   if (productoSelec[0]) {
