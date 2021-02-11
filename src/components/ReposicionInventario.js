@@ -106,10 +106,7 @@ export default function ReposicionInventario(props) {
               <Typography variant="caption" className="m-4">
                 Monto: {orden.monto_total}
               </Typography>
-              <IconButton
-                className={classes.x}
-                onClick={handleClickOpen.bind(null, value)}
-              >
+              <IconButton onClick={handleClickOpen.bind(null, value)}>
                 <CancelIcon color="error" />
               </IconButton>
             </ListItem>
