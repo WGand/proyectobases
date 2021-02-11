@@ -6,6 +6,9 @@ import Paper from "@material-ui/core/Paper";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { DropzoneDialog } from "material-ui-dropzone";
 import TablaEmpleados from "./TablaEmpleados";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -30,6 +33,10 @@ const useStyles = makeStyles((theme) => ({
   botonCrear: {
     height: 55,
     margin: 30,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -76,9 +83,14 @@ export default function ControlEmpleado(props) {
   const classes = useStyles();
 
   const [datosEmpleado, setDatosEmpleado] = React.useState({});
+
   const [open, setOpen] = React.useState(false);
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
+
   const [disabled, setDisabled] = React.useState(false);
+
   const [archivo, setArchivo] = React.useState([]);
+  const [respuesta, setRespuesta] = React.useState("");
 
   const handleClickopen = () => {
     setOpen(true);
@@ -109,6 +121,31 @@ export default function ControlEmpleado(props) {
     history.push("/perfil/controlempleado/modificar");
   };
 
+  const subirArchivo = async () => {
+    setOpenBackdrop(true);
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/upload",
+      data: {
+        file: archivo[0],
+      },
+    }).then((response) => {
+      setRespuesta(response);
+    });
+    setOpenBackdrop(false);
+  };
+
+  const llenarTabla = async () => {
+    setOpenBackdrop(true);
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/horarioempleados",
+    }).then((response) => {
+      console.log(response);
+    });
+    setOpenBackdrop(false);
+  };
+
   React.useEffect(() => {
     if (Object.entries(datosEmpleado).length !== 0) {
       conseguirDatos();
@@ -118,8 +155,20 @@ export default function ControlEmpleado(props) {
     }
   }, [datosEmpleado]);
 
+  React.useEffect(() => {
+    if (archivo.length !== 0) {
+      subirArchivo();
+    }
+  }, [archivo]);
+
+  React.useEffect(() => {
+    if (respuesta !== "") {
+      llenarTabla();
+    }
+  }, [respuesta]);
+
   console.log(archivo);
-  //console.log(datosEmpleado);
+  console.log(respuesta);
 
   return (
     <React.Fragment>
@@ -175,6 +224,9 @@ export default function ControlEmpleado(props) {
         showPreviews={true}
         showFileNamesInPreview={true}
       />
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </React.Fragment>
   );
 }
