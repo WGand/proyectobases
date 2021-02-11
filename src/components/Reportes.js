@@ -53,8 +53,16 @@ export default function Reportes() {
             >
               Horas trabajadas
             </Button>
-            <Button variant="outlined" className={classes.boton}>
-              Productos más Vendidos
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={(event) => {
+                event.preventDefault();
+                window.open("https://proyectobases1.herokuapp.com/envio");
+              }}
+              href="https://proyectobases1.herokuapp.com/envio"
+            >
+              Asistencia
             </Button>
             <Button variant="outlined" className={classes.boton}>
               Productos menos vendidos
