@@ -56,6 +56,7 @@ export default function Responsabilidades(props) {
     setDisabledControlProductos,
   ] = React.useState(true);
   const [disabledCajero, setDisabledCajero] = React.useState(true);
+  const [disabledPasillo, setDisabledPasillo] = React.useState(true);
 
   const irReposicion = () => {
     history.push("/perfil/reposicion");
@@ -97,11 +98,15 @@ export default function Responsabilidades(props) {
     history.push("/perfil/cajero");
   };
 
+  const irPasillo = () => {
+    history.push("/perfil/pasillo");
+  };
+
   React.useEffect(() => {
     props.cargos.forEach((cargo, value) => {
       switch (cargo.fk_cargo) {
         case 1:
-          setDisabledReposicionInventario(false);
+          setDisabledPasillo(false);
           break;
         case 2:
           setDisabledCajero(false);
@@ -116,6 +121,12 @@ export default function Responsabilidades(props) {
         case 5:
           setDisabledReportes(false);
           setDisabledControlEmpleado(false);
+          break;
+        case 8:
+          setDisabledControlUsuario(false);
+          setDisabledProcesarPedidos(false);
+          setDisabledControlProveedor(false);
+          setDisabledControlTienda(false);
           break;
 
         default:
@@ -211,6 +222,14 @@ export default function Responsabilidades(props) {
               disabled={disabledCajero}
             >
               Sistema de Cajero
+            </Button>
+            <Button
+              variant="outlined"
+              className={classes.boton}
+              onClick={irPasillo}
+              disabled={disabledPasillo}
+            >
+              Reposición de Pasillo
             </Button>
           </Grid>
         </Grid>
