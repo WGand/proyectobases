@@ -95,7 +95,7 @@ function App() {
           <Carrito conseguirTotal={precioTotal} />
         </Route>
         <Route exact path="/perfil/reposicion">
-          <ReposicionInventario />
+          <ReposicionInventario datos={datos} />
         </Route>
         <Route exact path="/perfil/procesarpedidos">
           <ProcesarPedidos />
