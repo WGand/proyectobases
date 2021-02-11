@@ -122,7 +122,9 @@ export default function TiendaRegistrar() {
       url: "https://proyectobases1.herokuapp.com/tienda",
       data: {
         nombre: nombreTienda,
-        fk_lugar: parroquiaSelec,
+        parroquia: parroquiaSelec,
+        municipio: municipioSelec,
+        estado: estadoSelec,
       },
     }).then((response) => {
       console.log(response);
@@ -204,7 +206,7 @@ export default function TiendaRegistrar() {
     if (!listaParroquias[parroquia]) {
       fetchParroquias();
     } else {
-      setParroquiaSelec(listaParroquias[parroquia].lugar_id);
+      setParroquiaSelec(listaParroquias[parroquia].nombre);
     }
   }, [listaParroquias, parroquia, parroquiaSelec]);
 

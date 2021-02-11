@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
   },
   paperProd: {
-    width: 800,
+    width: 1000,
     margin: 30,
     marginTop: 60,
     marginBottom: 100,

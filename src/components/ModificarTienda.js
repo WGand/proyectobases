@@ -67,7 +67,6 @@ export default function ModificarTienda(props) {
   const classes = useStyles();
 
   const [nombreTienda, setNombreTienda] = React.useState("");
-  const [nombreActual, setNombreActual] = React.useState("");
   const [tiendaRespuesta, setTiendaRespuesta] = React.useState([]);
   const [tiendaExiste, setTiendaExiste] = React.useState(false);
   const [labelTienda, setLabelTienda] = React.useState("");
@@ -106,8 +105,8 @@ export default function ModificarTienda(props) {
       method: "put",
       url: "https://proyectobases1.herokuapp.com/tienda",
       data: {
-        nombre_antiguo: nombreActual,
-        nombre_nuevo: nombreTienda,
+        nombre: nombreTienda,
+        tienda_id: props.datos.tienda_id,
       },
     }).then((response) => {
       console.log(response);
@@ -139,7 +138,6 @@ export default function ModificarTienda(props) {
 
   React.useEffect(() => {
     ubicacionActual();
-    setNombreActual(props.datos.nombre);
   }, []);
 
   React.useEffect(() => {
@@ -171,7 +169,7 @@ export default function ModificarTienda(props) {
     }
   }, [ubicacion, props.datos]);
 
-  console.log("nombre viejo: " + nombreActual);
+  console.log(props.datos);
   console.log("nombre nuevo: " + nombreTienda);
 
   return (
