@@ -85,8 +85,7 @@ export default function Perfil(props) {
           >
             <Tab label="Datos" {...a11yProps(0)} />
             <Tab label="Órdenes" {...a11yProps(1)} />
-            <Tab label="Contraseña" {...a11yProps(2)} />
-            <Tab label="Responsabilidades" {...a11yProps(3)} />
+            <Tab label="Responsabilidades" {...a11yProps(2)} />
           </Tabs>
           <TabPanel value={value} index={0}>
             <PerfilDatos datos={props.datos} tipo={props.tipo} />
@@ -99,9 +98,6 @@ export default function Perfil(props) {
             />
           </TabPanel>
           <TabPanel value={value} index={2}>
-            Item Three
-          </TabPanel>
-          <TabPanel value={value} index={3}>
             <Responsabilidades cargos={props.datos[0].cargos} />
           </TabPanel>
         </div>
@@ -125,7 +121,6 @@ export default function Perfil(props) {
           >
             <Tab label="Datos" {...a11yProps(0)} />
             <Tab label="Órdenes" {...a11yProps(1)} />
-            <Tab label="Contraseña" {...a11yProps(2)} />
           </Tabs>
           <TabPanel value={value} index={0}>
             <PerfilDatos datos={props.datos} tipo={props.tipo} />
@@ -136,9 +131,6 @@ export default function Perfil(props) {
               tipo={props.tipo}
               conseguirDatosOrden={props.conseguirDatosOrden}
             />
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            Item Three
           </TabPanel>
         </div>
       </React.Fragment>

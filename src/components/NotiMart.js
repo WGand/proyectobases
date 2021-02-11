@@ -9,7 +9,9 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import { event } from "jquery";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Backdrop from "@material-ui/core/Backdrop";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   search: {
@@ -25,10 +27,6 @@ const useStyles = makeStyles((theme) => ({
     height: 120,
     margin: 20,
   },
-  container: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
   textField: {
     marginLeft: theme.spacing(4),
     marginRight: theme.spacing(2),
@@ -38,10 +36,14 @@ const useStyles = makeStyles((theme) => ({
   },
   desc: {
     marginLeft: 10,
-    marginRight: 800,
+    marginRight: 50,
     marginTop: 10,
     width: 100,
     height: 60,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 
@@ -86,8 +88,19 @@ const Boton = withStyles({
 export default function NotiMart() {
   const history = useHistory();
   const classes = useStyles();
+
   const [spacing, setSpacing] = React.useState(2);
+
   const [descuento, setDescuento] = React.useState("");
+  const [numDescuento, setNumDescuento] = React.useState(0);
+
+  const [todosProductos, setTodosProductos] = React.useState([]);
+  const [productosFiltro, setProductosFiltro] = React.useState([]);
+  const [productoSelec, setProductoSelec] = React.useState({});
+  const [filtro, setFiltro] = React.useState("");
+
+  const [disabled, setDisabled] = React.useState(false);
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   const irPerfil = () => {
     history.push("/perfil");
@@ -96,6 +109,89 @@ export default function NotiMart() {
   const handleChangeDescuento = (event) => {
     setDescuento(event.target.value);
   };
+
+  const handleChangeFiltro = (event) => {
+    setFiltro(event.target.value);
+  };
+
+  const handleClick = (index) => {
+    setProductoSelec(productosFiltro[index]);
+  };
+
+  const fetchProductos = async () => {
+    await axios({
+      method: "get",
+      url: "https://proyectobases1.herokuapp.com/producto",
+    }).then((response) => {
+      setTodosProductos(response.data);
+      setProductosFiltro(response.data);
+    });
+  };
+
+  const enviarDescuento = async () => {
+    setOpenBackdrop(true);
+    let diccionario = {
+      0: {
+        id: productoSelec.id,
+      },
+    };
+    await axios({
+      method: "post",
+      url: "https://proyectobases1.herokuapp.com/descuento",
+      data: {
+        producto: JSON.stringify(diccionario),
+        descuento: numDescuento,
+      },
+    }).then((response) => {
+      console.log(response);
+    });
+    setOpenBackdrop(false);
+  };
+
+  React.useEffect(() => {
+    fetchProductos();
+  }, []);
+
+  React.useEffect(() => {
+    switch (descuento) {
+      case "":
+        setNumDescuento(5);
+        break;
+      case 1:
+        setNumDescuento(10);
+        break;
+      case 2:
+        setNumDescuento(20);
+        break;
+      case 3:
+        setNumDescuento(50);
+        break;
+
+      default:
+        break;
+    }
+  }, [descuento]);
+
+  React.useEffect(() => {
+    if (filtro === "") {
+      setProductosFiltro(todosProductos);
+    } else {
+      let aux = todosProductos.filter((producto, value) =>
+        producto.nombre.toLowerCase().includes(filtro)
+      );
+      setProductosFiltro(aux);
+    }
+  }, [filtro]);
+
+  React.useEffect(() => {
+    if (Object.keys(productoSelec).length === 0) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [productoSelec]);
+
+  console.log(productoSelec);
 
   return (
     <React.Fragment>
@@ -116,7 +212,9 @@ export default function NotiMart() {
           }}
           className={classes.search}
           variant="outlined"
-          placeholder="Buscar producto"
+          type="search"
+          placeholder="Buscar producto..."
+          onChange={handleChangeFiltro}
         />
       </div>
       <Typography variant="h5" className="m-4">
@@ -125,40 +223,23 @@ export default function NotiMart() {
       <Grid container className={classes.root} spacing={5}>
         <Grid item xs={12}>
           <Grid container justify="center" spacing={spacing}>
-            <Button variant="outlined" className={classes.boton}>
-              Producto 1
-            </Button>
-            <Button variant="outlined" className={classes.boton}>
-              Producto 2
-            </Button>
-            <Button variant="outlined" className={classes.boton}>
-              Producto 3
-            </Button>
-            <Button variant="outlined" className={classes.boton}>
-              Producto 4
-            </Button>
-            <Button variant="outlined" className={classes.boton}>
-              Producto 5
-            </Button>
-            <Button variant="outlined" className={classes.boton}>
-              Producto 6
-            </Button>
+            {productosFiltro.map((producto, value) => (
+              <Grid key={value} item>
+                <Button
+                  variant="outlined"
+                  className={classes.boton}
+                  onClick={handleClick.bind(null, value)}
+                >
+                  {producto.nombre}
+                </Button>
+              </Grid>
+            ))}
           </Grid>
         </Grid>
       </Grid>
-      <form className={classes.container} noValidate>
-        <TextField
-          variant="outlined"
-          id="date"
-          label="Fecha"
-          type="date"
-          defaultValue="2017-05-24"
-          className={classes.textField}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-      </form>
+      <Typography variant="h5" className="m-4">
+        <b>Producto Seleccionado: {productoSelec.nombre}</b>
+      </Typography>
       <div style={{ display: "flex" }}>
         <Typography variant="h6" className="m-4">
           {" "}
@@ -177,10 +258,19 @@ export default function NotiMart() {
           <MenuItem value={2}>20%</MenuItem>
           <MenuItem value={3}>50%</MenuItem>
         </Select>
-        <Boton variant="contained" className="m-4" color="primary">
-          Generar
+        <Boton
+          variant="contained"
+          className="m-4"
+          color="primary"
+          disabled={disabled}
+          onClick={enviarDescuento}
+        >
+          Generar Descuento
         </Boton>
       </div>
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </React.Fragment>
   );
 }

@@ -198,6 +198,8 @@ export default function ControlProveedor() {
     }
   }, [rubroJuridico]);
 
+  console.log(proveedor.rif);
+
   return (
     <React.Fragment>
       <Button className="m-3" onClick={irPerfil}>
