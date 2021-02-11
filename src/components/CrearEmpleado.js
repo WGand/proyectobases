@@ -151,12 +151,17 @@ export default function CrearEmpleado() {
 
   const [horario, setHorario] = React.useState([]);
 
+  const [tienda, setTienda] = React.useState("");
+  const [tiendas, setTiendas] = React.useState([]);
+  const [tiendaSelec, setTiendaSelec] = React.useState(0);
+
   const [listaCargos, setListaCargos] = React.useState([
     { nombre: "Gerente General de promociones", id: 3 },
     { nombre: "Cajero", id: 2 },
     { nombre: "Jefe de Compras", id: 4 },
     { nombre: "Jefe de Pasillo", id: 1 },
     { nombre: "Jefe de Tienda", id: 5 },
+    { nombre: "Administrador", id: 8 },
   ]);
 
   const [cargosAgregados, setCargosAgregados] = React.useState([]);
@@ -245,6 +250,10 @@ export default function CrearEmpleado() {
     setCargosAgregados(aux);
   };
 
+  const handleChangeTienda = (event) => {
+    setTienda(event.target.value);
+  };
+
   const irControlEmpleado = () => {
     history.push("/perfil/controlempleado");
   };
@@ -272,6 +281,7 @@ export default function CrearEmpleado() {
         celular: movil,
         prefijo_celular: preMovil,
         horario: horario,
+        tienda_id: tiendaSelec,
       },
     }).then((response) => {
       console.log(response);
@@ -312,6 +322,15 @@ export default function CrearEmpleado() {
       },
     }).then((response) => {
       setRifRespuesta(response.data);
+    });
+  };
+
+  const datosTiendas = async () => {
+    await axios({
+      method: "get",
+      url: "https://proyectobases1.herokuapp.com/inventario",
+    }).then((response) => {
+      setTiendas(response.data);
     });
   };
 
@@ -383,6 +402,7 @@ export default function CrearEmpleado() {
 
   React.useEffect(() => {
     fetchEstados();
+    datosTiendas();
   }, []);
 
   React.useEffect(() => {
@@ -499,6 +519,12 @@ export default function CrearEmpleado() {
     setDiccionarioCargos(JSON.stringify(aux));
   }, [cargosAgregados]);
 
+  React.useEffect(() => {
+    if (tiendas[tienda]) {
+      setTiendaSelec(tiendas[tienda].tienda_id);
+    }
+  }, [tienda]);
+
   console.log("-------------------------");
   console.log("primer nombre: " + primNombre);
   console.log("segundo nombre: " + segNombre);
@@ -520,6 +546,7 @@ export default function CrearEmpleado() {
   console.log("--------------------------");
   console.log(cargosAgregados);
   console.log(diccionarioCargos);
+  console.log(tiendaSelec);
 
   return (
     <React.Fragment>
@@ -717,6 +744,22 @@ export default function CrearEmpleado() {
             </List>
           </Paper>
         </div>
+      </div>
+      <div class="m-4" style={{ display: "flex" }}>
+        <Typography variant="h6" className="m-4">
+          Tienda:
+        </Typography>
+        <Select
+          value={tienda}
+          onChange={handleChangeTienda}
+          displayEmpty
+          inputProps={{ "aria-label": "Without label" }}
+          variant="outlined"
+        >
+          {tiendas.map((tienda, value) => (
+            <MenuItem value={value}>{tienda.nombre}</MenuItem>
+          ))}
+        </Select>
       </div>
       <div class="m-4">
         <Typography variant="h6" className="m-2">
