@@ -4,8 +4,8 @@ import axios from "axios";
 
 const columns = [
   { field: "id", headerName: "ID", width: 70 },
-  { field: "nombre", headerName: "Nombre", width: 150 },
-  { field: "categoria", headerName: "Categoría", width: 150 },
+  { field: "nombre", headerName: "Nombre", width: 300 },
+  { field: "categoria", headerName: "Categoría", width: 200 },
   {
     field: "cantidad",
     headerName: "Cantidad",
@@ -27,7 +27,7 @@ export default function TablaProductos(props) {
   const datos = async () => {
     await axios({
       method: "post",
-      url: "https://proyectobases1.herokuapp.com/inventario",
+      url: "https://proyectobases1.herokuapp.com/inventariotiendatabla",
       data: {
         tienda_id: props.tiendaId,
       },
